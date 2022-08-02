@@ -131,16 +131,21 @@
                     <el-button 
                       slot="reference" 
                       icon="el-icon-more" 
-                      @click="dialogProjectVisible = true"
+                      @click="dialogMethodVisible = true"
                     >
                         更多
                     </el-button>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-dialog title="更多" :visible.sync="dialogProjectVisible">
-                <div>
-                  test
+              <el-dialog title="更多" :visible.sync="dialogMethodVisible">
+                <el-form :model="form_invite">
+                  <el-form-item label="成员id" :label-width="formLabelWidth">
+                    <el-input v-model="form_invite.accept_id" autocomplete="off" />
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogMethodVisible = false;">取 消</el-button>
                 </div>
               </el-dialog>
             </el-table>
@@ -331,6 +336,7 @@ export default {
       team_name: localStorage.getItem('team_name'),
       dialogInviteVisible: false,
       dialogProjectVisible: false,
+      dialogMethodVisible: false,
       memberList: [],
       deleteMemberList: [],
       powerOptions: [
