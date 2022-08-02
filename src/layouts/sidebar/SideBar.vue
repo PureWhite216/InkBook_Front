@@ -387,9 +387,16 @@ export default {
   margin: 5px 5px;
   transition: all $transitionTime;
 }
+.vertical-line {
+  position:absolute;
+  height: 800px;
+  width: 3px;
+  margin-left: 0px;
+  z-index:999;
+}
 .open-status {
   width: $menuWidth;
-  box-shadow: 2px 5px 5px rgb(202, 202, 202, 0.8);
+  //box-shadow: 2px 5px 5px rgb(202, 202, 202, 0.8);
   transition: all $transitionTime;
 }
 .close-status {
@@ -404,7 +411,7 @@ export default {
   overflow-x: hidden;
   height: 100%;
   box-sizing: border-box;
-  z-index: 999;
+  //z-index: 999;
   .vaw-menu-wrapper {
     overflow-x: hidden;
     color: white;

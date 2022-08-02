@@ -6,8 +6,8 @@
           <img :src="avatar" />
         </div>
         <span class="nick-name el-dropdown-link">
-          <span>{{ username }}</span>
-          <i class="el-icon-arrow-down tip"></i>
+<!--          <span>{{ username }}</span>-->
+          <i class="el-icon-arrow-down tip" style="color: white; margin-left: 5px"></i>
         </span>
       </div>
       <el-dropdown-menu slot="dropdown">
@@ -83,7 +83,7 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 50%;
+        border-radius: 10%;
       }
     }
   }
