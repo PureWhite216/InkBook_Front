@@ -10,7 +10,7 @@
       <div class="left"></div>
       <div class="right">
         <div class="my-width flex-sub flex justify-center align-center">
-          <div class="title margin-left">欢迎来到 金刚石文档</div>
+          <div class="title margin-left">欢迎来到 墨书</div>
         </div>
         <el-form :model="form" class="form-container">
           <div class="item-wrapper">
@@ -191,7 +191,7 @@ export default {
       width: 50px;
     }
     & img::after {
-      content: "欢迎来到金刚石文档";
+      content: "欢迎来到墨书";
     }
   }
   .login-footer-wrapper {

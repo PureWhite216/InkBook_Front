@@ -12,7 +12,7 @@
       <span
         v-show="!state.isCollapse || alwaysShow"
         class="logo-title"
-      >金刚石文档</span>
+      >墨书</span>
     </transition>
   </div>
 </template>

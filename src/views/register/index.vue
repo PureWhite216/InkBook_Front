@@ -230,7 +230,7 @@ export default {
       width: 50px;
     }
     & img::after {
-      content: "欢迎来到金刚石文档";
+      content: "欢迎来到墨书";
     }
   }
   .login-footer-wrapper {

@@ -21,6 +21,9 @@ Vue.use(LayoutStore, {
     theme: 'light'
   },
   actions: {
+    toGroupMessage() {
+      router.push('/list/table-group-message')
+    },
     onLogout() {
       resetRouter()
       Cookies.remove('admin-token')

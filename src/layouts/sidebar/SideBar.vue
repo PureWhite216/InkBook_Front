@@ -6,15 +6,58 @@
     <transition name="logo">
       <Logo v-if="showLogo" />
     </transition>
-    <ScrollerMenu>
-      <template v-for="item of routes">
-        <SideBarItem
-          :key="item.path"
-          :full-path="item.path"
-          :item="item"
-        />
-      </template>
-    </ScrollerMenu>
+    <el-menu
+      default-active="2"
+      class="el-menu-vertical-demo"
+      @open="handleOpen"
+      @close="handleClose"
+    >
+      <el-menu-item index="1">
+        <i class="el-icon-document"></i>
+        <span slot="title">最近浏览</span>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <i class="el-icon-star-off"></i>
+        <span slot="title">收藏</span>
+      </el-menu-item>
+    </el-menu>
+    <el-divider class="line" />
+    <el-button
+      class="button-create"
+      @click="dialogInviteVisible = true"
+    >创建团队
+      <i class="el-icon-plus" style="margin-left: 59px"></i>
+    </el-button>
+    <el-divider class="line" />
+    <el-button
+      class="button-create"
+      @click="toGroupMessage()"
+    >加入的团队
+      <i class="el-icon-right" style="margin-left: 40px"></i>
+    </el-button>
+    <div class="text-grey">
+      最近查看的团队
+    </div>
+    <el-menu
+      style="margin-top: 10px"
+      default-active="2"
+      class="el-menu-vertical-demo"
+      @open="handleOpen"
+      @close="handleClose"
+    >
+      <el-menu-item index="1">
+        <i class="el-icon-right"></i>
+        <span slot="title">团队1</span>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <i class="el-icon-right"></i>
+        <span slot="title">团队2</span>
+      </el-menu-item>
+      <el-menu-item index="3">
+        <i class="el-icon-right"></i>
+        <span slot="title">团队3</span>
+      </el-menu-item>
+    </el-menu>
     <div class="mobile-shadow"></div>
   </div>
 </template>
@@ -23,6 +66,7 @@
 import store from '../store/index'
 import NextPageInfo from '@/router/next-page/routes'
 import { Layout } from '@/layouts'
+import router from '@/router'
 
 export default {
   name: 'SideBar',
@@ -30,6 +74,11 @@ export default {
     showLogo: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    toGroupMessage() {
+      router.push('/list/table-group-message')
     }
   },
   data() {
@@ -316,6 +365,28 @@ export default {
 
 <style scoped lang="scss">
 @import "../../assets/styles/variables.scss";
+.text-grey {
+  margin-left: 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  color: #6C6C6C;
+  font-family: 黑体;
+}
+.button-create {
+  width: 210px;
+  border: none;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 20px;
+  text-align: left;
+  font-family: 黑体;
+}
+.line {
+  //width: 80px;
+  height: 1px;
+  margin: 5px 5px;
+  transition: all $transitionTime;
+}
 .open-status {
   width: $menuWidth;
   box-shadow: 2px 5px 5px rgb(202, 202, 202, 0.8);
