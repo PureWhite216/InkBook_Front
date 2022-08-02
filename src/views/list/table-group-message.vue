@@ -12,29 +12,12 @@
           placement="top"
           width="350"
         >
-          <p>通过ID添加协作者</p>
-          <el-input
-            v-model="form_invite.accept_id"
-            placeholder="输入ID"
-            style="width: 80%;margin: auto"
-          />
-          <p></p>
-          <el-select v-model="form_invite.power" placeholder="请选择权限">
-            <el-option
-              v-for="item in powerOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div style="text-align: left; margin: 0">
-            <el-button size="mini" style="margin-top:10px" @click="invite(), visible = false">确定</el-button>
-          </div>
           <el-button
             slot="reference"
             style="margin-right:10px"
             size="mini"
             icon="el-icon-plus"
+            @click="dialogInviteVisible = true"
           >邀请成员
           </el-button>
         </el-popover>
@@ -45,6 +28,7 @@
           width="350"
           trigger="click"
         >
+<<<<<<< HEAD
           <p>创建新项目</p>
           <el-input
             v-model="form_invite.accept_id"
@@ -52,6 +36,8 @@
             style="width: 80%;margin: auto"
           />
           <p></p>
+=======
+>>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
           <el-button
             slot="reference"
             style="margin-right:10px"
@@ -66,24 +52,6 @@
           placement="top"
           width="350"
         >
-          <p>通过ID添加协作者</p>
-          <el-input
-            v-model="form_invite.accept_id"
-            placeholder="输入ID"
-            style="width: 80%;margin: auto"
-          />
-          <p></p>
-          <el-select v-model="form_invite.power" placeholder="请选择权限">
-            <el-option
-              v-for="item in powerOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div style="text-align: left; margin: 0">
-            <el-button size="mini" style="margin-top:10px" @click="invite(), visible = false">确定</el-button>
-          </div>
           <el-button
             slot="reference"
             style="margin-right:10px"
@@ -94,7 +62,21 @@
         </el-popover>
       </template>
     </TableHeader>
+<<<<<<< HEAD
 
+=======
+    <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
+      <el-form :model="form_invite">
+        <el-form-item label="成员id" :label-width="formLabelWidth">
+          <el-input v-model="form_invite.accept_id" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogInviteVisible = false; form_invite.accept_id = '' ">取 消</el-button>
+        <el-button @click="Invite">确 定</el-button>
+      </div>
+    </el-dialog>
+>>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -196,15 +178,15 @@
         <div class="rightsidefont">
           About
         </div>
-        <el-divider></el-divider>
+        <el-divider />
         <div>
           <span>青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪</span>
-          <el-divider></el-divider>
+          <el-divider />
           <span>少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
         </div>
       </template>
     </TableBody>
-    
+
     <!--    <TableFooter-->
     <!--      :page-size="pageModel.pageSize"-->
     <!--      :total-size="pageModel.totalSize"-->
@@ -285,6 +267,7 @@ export default {
         member_id: 0,
         perm: null
       },
+      dialogInviteVisible: false,
       memberList: [],
       deleteMemberList: [],
       powerOptions: [
