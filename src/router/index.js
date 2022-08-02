@@ -233,6 +233,22 @@ export const routes = [
     hidden: true,
     children: [
       {
+        path: 'table-group-message',
+        name: 'tableGroupMessage',
+        component: () => import('@/views/list/table-group-message'),
+        meta: {
+          title: '团队信息'
+        }
+      }
+    ]
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
         path: 'table-group-member',
         name: 'tableGroupMember',
         component: () => import('@/views/list/table-group-member'),
