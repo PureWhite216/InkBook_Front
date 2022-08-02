@@ -28,21 +28,12 @@
           width="350"
           trigger="click"
         >
-<<<<<<< HEAD
-          <p>创建新项目</p>
-          <el-input
-            v-model="form_invite.accept_id"
-            placeholder="项目名称"
-            style="width: 80%;margin: auto"
-          />
-          <p></p>
-=======
->>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
           <el-button
             slot="reference"
             style="margin-right:10px"
             size="mini"
             icon="el-icon-plus"
+            @click="dialogProjectVisible = true"
           >创建新项目
           </el-button>
         </el-popover>
@@ -62,9 +53,6 @@
         </el-popover>
       </template>
     </TableHeader>
-<<<<<<< HEAD
-
-=======
     <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
       <el-form :model="form_invite">
         <el-form-item label="成员id" :label-width="formLabelWidth">
@@ -76,7 +64,17 @@
         <el-button @click="Invite">确 定</el-button>
       </div>
     </el-dialog>
->>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
+    <el-dialog title="创建新项目" :visible.sync="dialogProjectVisible">
+      <el-form :model="form_project">
+        <el-form-item label="项目名称" :label-width="formLabelWidth">
+          <el-input v-model="form_project.project_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogProjectVisible = false; form_project.project_name = '' ">取 消</el-button>
+        <el-button @click="CreateProject">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -246,6 +244,12 @@ export default {
         team_id: Number(localStorage.getItem('team_id')),
         power: null
       },
+      form_project: {
+        token: getters.getToken(state),
+        username: getters.getUserName(state),
+        project_name: '',
+        team_id: Number(localStorage.getItem('team_id'))
+      },
       form_deleteMember: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -268,6 +272,7 @@ export default {
         perm: null
       },
       dialogInviteVisible: false,
+      dialogProjectVisible: false,
       memberList: [],
       deleteMemberList: [],
       powerOptions: [
@@ -301,6 +306,9 @@ export default {
     this.getMemberList()
   },
   methods: {
+    CreateProject() {
+      this.$message.error('还没写接口哪！')
+    },
     setPerm(item) {
       this.form_setPerm.member_id = item.id
       this.$axios.post('/team/set_perm', qs.stringify(this.form_setPerm))
