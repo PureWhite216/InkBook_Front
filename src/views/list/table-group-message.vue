@@ -122,33 +122,32 @@
                 width="240"
               >
                 <template slot-scope="scope">
-                  <el-popover
-                    v-model="visible"
-                    placement="right"
-                    width="400"
-                    trigger="click"
-                  >
-                    <el-button
-                      slot="reference"
-                      icon="el-icon-more"
-                      @click="dialogMethodVisible = true"
-                    >
-                      更多
-                    </el-button>
-                  </el-popover>
+                  <el-dropdown trigger="hover" @command="onCommad">
+                    <div class="action-wrapper">
+                      <span class="nick-name el-dropdown-link">
+                        <i class="el-icon-more"></i>
+                      </span>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-user" command="personalCenter">
+                        重命名
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        退出团队
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        删除团队
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
-              <el-dialog title="更多" :visible.sync="dialogMethodVisible">
-                <el-form :model="form_invite">
-                  <el-form-item label="成员id" :label-width="formLabelWidth">
-                    <el-input v-model="form_invite.accept_id" autocomplete="off" />
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogMethodVisible = false;">取 消</el-button>
-                </div>
-              </el-dialog>
             </el-table>
+            <el-dialog title="更多" width="200px" :visible.sync="dialogMethodVisible">
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogMethodVisible = false;">取 消</el-button>
+              </div>
+            </el-dialog>
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass">成员</span>
