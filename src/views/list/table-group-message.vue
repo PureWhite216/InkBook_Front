@@ -129,10 +129,10 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-user" command="personalCenter">
+                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                         重命名
                       </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                      <el-dropdown-item icon="el-icon-close" command="logout">
                         退出团队
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
