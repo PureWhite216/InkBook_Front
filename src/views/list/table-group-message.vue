@@ -38,29 +38,20 @@
           >邀请成员
           </el-button>
         </el-popover>
+
         <el-popover
           v-model="visible"
           placement="top"
           width="350"
+          trigger="click"
         >
-          <p>通过ID添加协作者</p>
+          <p>创建新项目</p>
           <el-input
             v-model="form_invite.accept_id"
-            placeholder="输入ID"
+            placeholder="项目名称"
             style="width: 80%;margin: auto"
           />
           <p></p>
-          <el-select v-model="form_invite.power" placeholder="请选择权限">
-            <el-option
-              v-for="item in powerOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <div style="text-align: left; margin: 0">
-            <el-button size="mini" style="margin-top:10px" @click="invite(), visible = false">确定</el-button>
-          </div>
           <el-button
             slot="reference"
             style="margin-right:10px"
@@ -101,17 +92,9 @@
           >设置
           </el-button>
         </el-popover>
-
-        <el-button
-          v-if="isInited('deleteItemsModel')"
-          type="danger"
-          size="mini"
-          icon="el-icon-delete"
-          @click="deleteMultiItem"
-        >删除成员
-        </el-button>
       </template>
     </TableHeader>
+
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
