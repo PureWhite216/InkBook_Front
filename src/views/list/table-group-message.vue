@@ -57,7 +57,7 @@
                 <el-button type="text">退出团队</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                <el-button type="text">删除团队</el-button>
+                <el-button type="text" style="color: red">删除团队</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -67,7 +67,7 @@
     </TableHeader>
     <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
       <el-form :model="form_invite">
-        <el-form-item label="成员id" :label-width="formLabelWidth">
+        <el-form-item label="成员名称" :label-width="formLabelWidth">
           <el-input v-model="form_invite.accept_id" autocomplete="off" />
         </el-form-item>
       </el-form>
