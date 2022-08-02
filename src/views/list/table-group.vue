@@ -47,7 +47,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false; form2.team_name = null">取 消</el-button>
+        <el-button @click="dialogFormVisible = false; form2.team_name = '' ">取 消</el-button>
         <el-button @click="addTeam">确 定</el-button>
       </div>
     </el-dialog>
