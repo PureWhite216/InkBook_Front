@@ -31,7 +31,7 @@
     <el-divider class="line" />
     <el-button
       class="button-create"
-      @click="dialogInviteVisible = true"
+      @click="toGroupMessage()"
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
@@ -66,6 +66,7 @@
 import store from '../store/index'
 import NextPageInfo from '@/router/next-page/routes'
 import { Layout } from '@/layouts'
+import router from '@/router'
 
 export default {
   name: 'SideBar',
@@ -73,6 +74,11 @@ export default {
     showLogo: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    toGroupMessage() {
+      router.push('/list/table-group-message')
     }
   },
   data() {
