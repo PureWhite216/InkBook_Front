@@ -215,7 +215,7 @@ export default {
         .then((res) => {
           // console.log(5)
           if (res.data.result === 3) {
-            this.$message.success('非常感谢您对金刚石文档的支持，希望下次再会!')
+            this.$message.success('非常感谢您对墨书的支持，希望下次再会!')
             // this.$router.push('/login')
             store.logout()
             store.onLogout && store.onLogout()
