@@ -64,6 +64,7 @@
         <el-button @click="Invite">确 定</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="创建新项目" :visible.sync="dialogProjectVisible">
       <el-form :model="form_project">
         <el-form-item label="项目名称" :label-width="formLabelWidth">
@@ -97,7 +98,7 @@
               <el-table-column
                 align="center"
                 label="序号"
-                width="60"
+                width="100"
               >
                 <template slot-scope="scope">
                   {{ scope.$index + 1 }}
@@ -115,6 +116,33 @@
                 prop="updatetime"
                 width="320px"
               />
+              <el-table-column
+                align="center"
+                label="操作"
+                width="240"
+              >
+                <template slot-scope="scope">
+                  <el-popover
+                    v-model="visible"
+                    placement="right"
+                    width="400"
+                    trigger="click"
+                  >
+                    <el-button 
+                      slot="reference" 
+                      icon="el-icon-more" 
+                      @click="dialogProjectVisible = true"
+                    >
+                        更多
+                    </el-button>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-dialog title="更多" :visible.sync="dialogProjectVisible">
+                <div>
+                  test
+                </div>
+              </el-dialog>
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
@@ -152,13 +180,13 @@
                 align="center"
                 label="真实姓名"
                 prop="username"
-                width="240px"
+                width="150px"
               />
               <el-table-column
                 align="center"
                 label="电子邮箱"
                 prop="email"
-                width="320px"
+                width="220px"
               />
               <el-table-column
                 align="center"
@@ -166,6 +194,35 @@
                 prop="power"
                 width="100px"
               />
+              <el-table-column
+                align="center"
+                label="操作"
+                width="220"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    :underline="false"
+                    size="small"
+                    @click="toGroupFile(scope.row)"
+                  >修改权限</el-button>
+                  <el-button
+                    v-if="scope.row.power === '创建者'"
+                    type="danger"
+                    :underline="false"
+                    size="small"
+                    icon="el-icon-delete"
+                    @click="deleteItem(scope.row)"
+                  >解散</el-button>
+                  <el-button
+                    v-if="scope.row.power != '创建者'"
+                    type="danger"
+                    :underline="false"
+                    size="small"
+                    icon="el-icon-delete"
+                    @click="deleteItem(scope.row)"
+                  >踢出团队</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-tab-pane>
         </el-tabs>
@@ -490,7 +547,7 @@ export default {
   float: left;
 }
 .messagecss{
-  width: 950px;
+  width: 947px;
   margin: 10px;
 }
 .rightside{
