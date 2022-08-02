@@ -143,11 +143,6 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-dialog title="更多" width="200px" :visible.sync="dialogMethodVisible">
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogMethodVisible = false;">取 消</el-button>
-              </div>
-            </el-dialog>
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass">成员</span>
@@ -204,27 +199,21 @@
                 width="220"
               >
                 <template slot-scope="scope">
-                  <el-button
-                    :underline="false"
-                    size="small"
-                    @click="toGroupFile(scope.row)"
-                  >修改权限</el-button>
-                  <el-button
-                    v-if="scope.row.power === '创建者'"
-                    type="danger"
-                    :underline="false"
-                    size="small"
-                    icon="el-icon-delete"
-                    @click="deleteItem(scope.row)"
-                  >解散</el-button>
-                  <el-button
-                    v-if="scope.row.power != '创建者'"
-                    type="danger"
-                    :underline="false"
-                    size="small"
-                    icon="el-icon-delete"
-                    @click="deleteItem(scope.row)"
-                  >踢出团队</el-button>
+                  <el-dropdown trigger="hover" @command="onCommad">
+                    <div class="action-wrapper">
+                      <span class="nick-name el-dropdown-link">
+                        <i class="el-icon-more"></i>
+                      </span>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
+                        赋予管理员权限
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-close" command="logout">
+                        移出团队
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
