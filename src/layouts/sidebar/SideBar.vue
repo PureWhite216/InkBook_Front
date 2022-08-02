@@ -31,7 +31,7 @@
     <el-divider class="line" />
     <el-button
       class="button-create"
-      @click="toGroupMessage()"
+      @click="toGroup()"
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
@@ -77,8 +77,8 @@ export default {
     }
   },
   methods: {
-    toGroupMessage() {
-      router.push('/list/table-group-message')
+    toGroup() {
+      router.push('/list/table-group')
     }
   },
   data() {
