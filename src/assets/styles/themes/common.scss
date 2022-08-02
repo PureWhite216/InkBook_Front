@@ -108,7 +108,7 @@
   }
   .vaw-nav-bar-wrapper {
     color: $headerTextColor;
-    background-color: $headerBgColor;
+    background-color: #2c2c2c;
     border-bottom: 1px solid $headerBorderColor;
     .action-item:hover {
       cursor: pointer;
@@ -151,7 +151,7 @@
   $parent: 'light'
 ) {
   .vaw-main-layout-container {
-    background-color: $mainContentBgColor;
+    background-color: white;
     color: $mainTextColor;
   }
   .footer-container {

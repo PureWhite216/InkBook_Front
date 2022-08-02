@@ -1,32 +1,32 @@
 <template>
   <div class="action-items-wrapper">
-    <el-popover
-      v-if="state.actionItem.showMessage"
-      class="action-item"
-      trigger="click"
-      @after-enter="onPopoverAfterEnter"
-    >
-      <el-badge
-        slot="reference"
-        :value="unlookMessageCount"
-      >
-        <span class="iconfont action-item">&#xe646;</span>
-      </el-badge>
-      <MessageContent
-        ref="messageContent"
-        @clear-num="clearNum"
-      />
-    </el-popover>
-    <span
-      v-if="state.actionItem.showRefresh"
-      class="iconfont action-item"
-      @click="onRefrehRoute"
-    >&#xe6a8;</span>
-    <span
-      v-if="state.actionItem.showFullScreen && state.device !== 'mobile'"
-      class="iconfont action-item"
-      @click="onScreenFull"
-    >&#xe655;</span>
+<!--    <el-popover-->
+<!--      v-if="state.actionItem.showMessage"-->
+<!--      class="action-item"-->
+<!--      trigger="click"-->
+<!--      @after-enter="onPopoverAfterEnter"-->
+<!--    >-->
+<!--      <el-badge-->
+<!--        slot="reference"-->
+<!--        :value="unlookMessageCount"-->
+<!--      >-->
+<!--        <span class="iconfont action-item">&#xe646;</span>-->
+<!--      </el-badge>-->
+<!--      <MessageContent-->
+<!--        ref="messageContent"-->
+<!--        @clear-num="clearNum"-->
+<!--      />-->
+<!--    </el-popover>-->
+<!--    <span-->
+<!--      v-if="state.actionItem.showRefresh"-->
+<!--      class="iconfont action-item"-->
+<!--      @click="onRefrehRoute"-->
+<!--    >&#xe6a8;</span>-->
+<!--    <span-->
+<!--      v-if="state.actionItem.showFullScreen && state.device !== 'mobile'"-->
+<!--      class="iconfont action-item"-->
+<!--      @click="onScreenFull"-->
+<!--    >&#xe655;</span>-->
     <div
       v-if="state.actionItem.showSearch && state.device !== 'mobile'"
       class="input-wrapper"

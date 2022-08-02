@@ -1,10 +1,11 @@
 <template>
   <div class="logo-wrapper">
-    <img
-      v-if="showLogo"
-      class="logo-img"
-      :src="require('../../assets/work_logo.png')"
-    />
+<!--    logo图片-->
+<!--    <img-->
+<!--      v-if="showLogo"-->
+<!--      class="logo-img"-->
+<!--      :src="require('../../assets/work_logo.png')"-->
+<!--    />-->
     <transition
       v-if="showTitle"
       name="el-fade-in-linear"
@@ -12,7 +13,7 @@
       <span
         v-show="!state.isCollapse || alwaysShow"
         class="logo-title"
-      >墨书</span>
+      >InkBook</span>
     </transition>
   </div>
 </template>
@@ -45,6 +46,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/variables.scss";
 .logo-wrapper {
+  background: #2c2c2c;
   height: $logoHeight;
   display: flex;
   justify-content: center;
@@ -54,6 +56,7 @@ export default {
     width: 30px;
   }
   .logo-title {
+    color: white;
     margin-left: 5px;
     font-weight: bold;
     font-size: 24px;

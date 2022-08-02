@@ -3,9 +3,10 @@
     class="vaw-main-layout-container"
     :class="[!state.isCollapse ? 'main-layout-open-status': 'main-layout-close-status', state.isFixedNavBar ? 'main-layout_fixed-nav-bar' : 'main-layout']"
   >
+    <el-divider direction="vertical" class="vertical-line" />
     <section :class="[!state.isCollapse ? 'nav-bar-open-status' : 'nav-bar-close-status',state.isFixedNavBar ? 'fixed-nav-bar' : '',!showNavBar ? 'tab-bar-top' : '']">
       <NavBar v-if="showNavBar" />
-<!--      <TabBar :show-humburger="isShowHeader" />-->
+      <!--      <TabBar :show-humburger="isShowHeader" />-->
     </section>
     <div class="main-base-style">
       <section class="main-section">
@@ -30,12 +31,14 @@
 
 <script>
 import NavBar from './navbar/NavBar'
+// eslint-disable-next-line no-unused-vars
 import TabBar from './tabbar'
 import Main from './Main'
 import store from './store/index'
 export default {
   name: 'MainLayout',
-  components: { NavBar, Main, TabBar },
+  // eslint-disable-next-line vue/no-unused-components
+  components: { NavBar, Main },
   props: {
     showNavBar: {
       type: Boolean,
@@ -62,6 +65,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/styles/variables.scss";
+.vertical-line {
+  position:absolute;
+  height: 950px;
+  width: 1px;
+  margin-left: 0px;
+  z-index:999;
+}
 .main-layout-open-status {
   margin-left: $menuWidth;
 }

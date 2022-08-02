@@ -1,7 +1,7 @@
 <template>
   <div class="vaw-nav-bar-wrapper">
-    <Humburger />
-    <Breadcrumb v-if="state.device !== 'mobile'" />
+<!--    <Humburger />-->
+<!--    <Breadcrumb v-if="state.device !== 'mobile'" />-->
     <div style="flex: 1">
     </div>
     <div>
@@ -46,7 +46,7 @@
         </el-table>
         <el-button
           slot="reference"
-          style="margin-inline:10px"
+          style="margin-inline:10px; color: white; background: #2c2c2c"
           size="mini"
           icon="el-icon-search"
         >搜索
