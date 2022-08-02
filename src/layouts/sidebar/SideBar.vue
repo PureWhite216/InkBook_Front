@@ -24,7 +24,7 @@
     <el-divider class="line" />
     <el-button
       class="button-create"
-      @click="dialogInviteVisible = true"
+      @click="dialogCreateTeamVisible = true"
     >创建团队
       <i class="el-icon-plus" style="margin-left: 59px"></i>
     </el-button>
@@ -35,9 +35,7 @@
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
-    <div class="text-grey">
-      最近查看的团队
-    </div>
+    <div class="text-grey">最近查看的团队</div>
     <el-menu
       style="margin-top: 10px"
       default-active="2"
@@ -59,6 +57,40 @@
       </el-menu-item>
     </el-menu>
     <div class="mobile-shadow"></div>
+    <div>
+      <el-dialog
+        title="创建团队"
+        :visible.sync="dialogCreateTeamVisible"
+        width="50%"
+        append-to-body="“true”"
+        :before-close="handleClose"
+      >
+        <el-steps :active="createTeamStep" finish-status="success">
+          <el-step title="步骤 1" />
+          <el-step title="步骤 2" />
+          <el-step title="步骤 3" />
+        </el-steps>
+        <h1>创建团队</h1>
+        <div v-if="createTeamStep === 0">
+          <h3>想一个队名</h3>
+          <el-input v-model="form_createTeam.name" size="medium" placeholder="请输入团队名" />
+          <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
+        </div>
+
+        <div v-if="createTeamStep === 1">
+          <h3>你将如何描述该团队</h3>
+          <el-input v-model="form_createTeam.info" size="medium" placeholder="请输入团队描述" />
+          <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
+        </div>
+
+        <div v-if="createTeamStep === 2">
+          <h3> </h3>
+          <h3> </h3>
+          <el-button style="margin-top: 12px;" @click="dialogCreateTeamVisible = false,delay(500),createTeamStep = 0">完成创建</el-button>
+        </div>
+        <!-- <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button> -->
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -76,14 +108,14 @@ export default {
       default: true
     }
   },
-  methods: {
-    toGroup() {
-      router.push('/list/table-group')
-    }
-  },
   data() {
     return {
-      state: store.state
+      state: store.state,
+      dialogCreateTeamVisible: false,
+      createTeamStep: 0,
+      form_createTeam: {
+        team_name: ''
+      }
     }
   },
   computed: {
@@ -147,7 +179,6 @@ export default {
               component: () => import('@/views/editor/rich-text'),
               meta: {
                 title: '文档编辑'
-
               }
             }
           ]
@@ -359,6 +390,14 @@ export default {
     } else {
       this.hiddenSiderbar = false
     }
+  },
+  methods: {
+    toGroup() {
+      router.push('/list/table-group')
+    },
+    createTeamNext() {
+      if (this.createTeamStep < 3) this.createTeamStep++
+    }
   }
 }
 </script>
@@ -369,7 +408,7 @@ export default {
   margin-left: 20px;
   margin-top: 10px;
   font-size: 16px;
-  color: #6C6C6C;
+  color: #6c6c6c;
   font-family: 黑体;
 }
 .button-create {
@@ -388,11 +427,11 @@ export default {
   transition: all $transitionTime;
 }
 .vertical-line {
-  position:absolute;
+  position: absolute;
   height: 800px;
   width: 3px;
   margin-left: 0px;
-  z-index:999;
+  z-index: 999;
 }
 .open-status {
   width: $menuWidth;
