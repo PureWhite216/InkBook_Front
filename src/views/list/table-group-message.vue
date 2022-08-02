@@ -122,7 +122,7 @@
                 width="240"
               >
                 <template slot-scope="scope">
-                  <el-dropdown trigger="hover" @command="onCommad">
+                  <el-dropdown trigger="click" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
@@ -130,13 +130,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        重命名
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-close" command="logout">
-                        退出团队
+                        <el-button type="text">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        删除团队
+                        <el-button type="text">删除项目</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -199,7 +196,7 @@
                 width="220"
               >
                 <template slot-scope="scope">
-                  <el-dropdown trigger="hover" @command="onCommad">
+                  <el-dropdown trigger="click" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
@@ -207,10 +204,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
-                        赋予管理员权限
+                        <el-button type="text">赋予管理员权限</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-close" command="logout">
-                        移出团队
+                        <el-button type="text">移出团队</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
