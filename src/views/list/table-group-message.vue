@@ -128,12 +128,12 @@
                     width="400"
                     trigger="click"
                   >
-                    <el-button 
-                      slot="reference" 
-                      icon="el-icon-more" 
+                    <el-button
+                      slot="reference"
+                      icon="el-icon-more"
                       @click="dialogMethodVisible = true"
                     >
-                        更多
+                      更多
                     </el-button>
                   </el-popover>
                 </template>
