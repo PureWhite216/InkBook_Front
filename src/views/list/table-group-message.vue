@@ -48,7 +48,22 @@
             style="margin-right:10px"
             size="mini"
             icon="el-icon-plus"
-          >设置
+          ><el-dropdown trigger="click" @command="onCommad">
+          <div class="action-wrapper">
+            设置
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+              <el-button type="text">重命名</el-button>
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+              <el-button type="text">退出团队</el-button>
+            </el-dropdown-item>
+            <el-dropdown-item icon="el-icon-switch-button" command="logout">
+              <el-button type="text">删除团队</el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
           </el-button>
         </el-popover>
       </template>
