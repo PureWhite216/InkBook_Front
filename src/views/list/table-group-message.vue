@@ -28,7 +28,6 @@
           width="350"
           trigger="click"
         >
-<<<<<<< HEAD
           <p>创建新项目</p>
           <el-input
             v-model="form_invite.accept_id"
@@ -36,8 +35,6 @@
             style="width: 80%;margin: auto"
           />
           <p></p>
-=======
->>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
           <el-button
             slot="reference"
             style="margin-right:10px"
@@ -62,9 +59,7 @@
         </el-popover>
       </template>
     </TableHeader>
-<<<<<<< HEAD
 
-=======
     <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
       <el-form :model="form_invite">
         <el-form-item label="成员id" :label-width="formLabelWidth">
@@ -76,7 +71,6 @@
         <el-button @click="Invite">确 定</el-button>
       </div>
     </el-dialog>
->>>>>>> 8dc3b13c6ae41c107f0781cbec20e076e820a539
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
