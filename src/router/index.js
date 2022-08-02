@@ -219,9 +219,9 @@ export const routes = [
       {
         path: 'table-group-file',
         name: 'tableGroupFile',
-        component: () => import('@/views/list/table-group-file'),
+        component: () => import('@/views/list/table-group-message'),
         meta: {
-          title: '团队文件'
+          title: '团队信息'
         }
       }
     ]
