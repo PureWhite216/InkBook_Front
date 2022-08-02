@@ -2,7 +2,7 @@
   <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
-        <p class="teamtitle">
+        <p id="teamName" class="teamtitle" v-text="team_name">
           team_name
         </p>
       </template>
@@ -271,6 +271,7 @@ export default {
         member_id: 0,
         perm: null
       },
+      team_name: localStorage.getItem('team_name'),
       dialogInviteVisible: false,
       dialogProjectVisible: false,
       memberList: [],
