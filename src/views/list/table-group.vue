@@ -119,33 +119,25 @@
                 </div>
               </el-dialog>
               <el-button
-                :underline="false"
-                size="small"
-                @click="toGroupFile(scope.row)"
-              >进入</el-button>
-              <el-button
-                type="info"
-                :underline="false"
-                size="small"
-                :disabled="scope.row.power != '超管'"
-                @click="scope.row.dialogVisible = true"
-              >队长让位</el-button>
-              <el-button
-                v-if="scope.row.power === '超管'"
-                type="danger"
-                :underline="false"
-                size="small"
-                icon="el-icon-delete"
-                @click="deleteItem(scope.row)"
-              >解散</el-button>
-              <el-button
-                v-if="scope.row.power != '超管'"
-                type="danger"
-                :underline="false"
-                size="small"
-                icon="el-icon-delete"
-                @click="deleteItem(scope.row)"
-              >退出</el-button>
+                slot="reference"
+                class="spcbutton-style"
+              ><el-dropdown trigger="hover" @command="onCommad">
+                <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+                  <i class="el-icon-more"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                    <el-button type="text">重命名</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                    <el-button type="text" style="color: green">退出团队</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-delete-solid" command="logout">
+                    <el-button type="text" style="color: red">解散团队</el-button>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
