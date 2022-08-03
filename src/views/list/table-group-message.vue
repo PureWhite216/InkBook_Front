@@ -76,7 +76,7 @@
         <el-button @click="invite(),dialogInviteVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改团队信息" :visible.sync="dialogRenameVisible">
+    <el-dialog title="团队重命名" :visible.sync="dialogRenameVisible">
       <el-form :model="form_rename">
         <el-form-item label="新的团队名称" :label-width="formLabelWidth">
           <el-input v-model="form_rename.teamName" autocomplete="off" />
@@ -234,7 +234,7 @@
                         <el-button type="text">赋予管理员权限</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-close" command="logout">
-                        <el-button type="text">移出团队</el-button>
+                        <el-button type="text" @click="deleteMemberItem(scope.row)">移出团队</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -350,8 +350,8 @@ export default {
         token: getters.getToken(state),
         username: getters.getUserName(state),
         user_id: getters.getUserId(state),
-        team_id: Number(localStorage.getItem('team_id')),
-        deleted_id: null
+        teamId: Number(localStorage.getItem('team_id')),
+        memberId: null
       },
       form_rename: {
         token: getters.getToken(state),
@@ -615,13 +615,27 @@ export default {
           })
         })
     },
+    deleteMemberItem(item) {
+      this.$confirm('此操作将踢出用户成员' + item.username + ', 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(() => {
+        this.deleteMember(item)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          })
+        })
+    },
     deleteMember(item) {
-      this.form_deleteMember.deleted_id = item.id
+      this.form_deleteMember.memberId = item.user_id
       // console.log(item.id)
-      this.$axios.post('/team/delete_member', qs.stringify(this.form_deleteMember))
+      this.$axios.post('/team/deleteMember', qs.stringify(this.form_deleteMember))
         .then((res) => {
           // console.log(5)
-          if (res.data.result === 5) {
+          if (res.data.success) {
             this.$message.success(res.data.message)
           } else {
             this.$message.error(res.data.message)
