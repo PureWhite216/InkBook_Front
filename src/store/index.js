@@ -5,7 +5,7 @@ import logger from 'vuex/dist/logger'
 
 Vue.use(Vuex)
 
-const modulesFile = require.context('./modules', true, /\.js$/)
+const modulesFile = require.context('./modules', false, /\.js$/)
 
 const modules = modulesFile.keys().reduce((acc, cur) => {
   const key = cur.replace(/(.\/|.js$)/g, '')
