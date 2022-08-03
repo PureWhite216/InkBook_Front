@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div id="building" class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
@@ -525,6 +525,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#building{
+    background:url("../../assets/bg.jpg");
+    width:100%;			//大小设置为100%
+    height:100%;			//大小设置为100%
+    position:fixed;
+    background-size:100% 100%;
+}
 .button-style {
   margin: 10px;
   font-size: 14px;
@@ -559,6 +566,7 @@ export default {
 .messagecss{
   width: 1150px;
   margin: 10px;
+  //background-color: rgba(255, 255, 255, 0);
 }
 .rightside{
   float: right;
