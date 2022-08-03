@@ -5,6 +5,7 @@ const webpack = require('webpack')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
+
 module.exports = {
   publicPath: './',
   outputDir: 'dist',
@@ -17,6 +18,16 @@ module.exports = {
     open: true
   },
   chainWebpack(config) {
+    const oneOfsMap = config.module.rule('scss').oneOfs.store
+    oneOfsMap.forEach(item => {
+      item
+        .use('sass-resources-loader')
+        .loader('sass-resources-loader')
+        .options({
+          resources: ['./src/styles/mixin.scss', './src/styles/variables.scss']
+        })
+        .end()
+    })
     if (process.env.NODE_ENV === 'production') {
       config.plugin('compressionPlugin')
         .use(new CompressionPlugin({
@@ -44,6 +55,13 @@ module.exports = {
       .end()
   },
   configureWebpack: {
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js', '.json'],
+      alias: {
+        '@': resolve('src'),
+        'poster': resolve('src/views/posterEditor')
+      }
+    },
     plugins: [
       new webpack.ProvidePlugin({
         'window.Quill': 'quill/dist/quill.js',

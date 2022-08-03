@@ -27,6 +27,12 @@ export const routes = [
     ]
   },
   {
+    path: '/posterEditor',
+    name: 'posterEditor',
+    component: () => import('@/views/posterEditor'),
+    hidden: true
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login'),
