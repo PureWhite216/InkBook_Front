@@ -123,7 +123,7 @@
                 label="操作"
                 width="300"
               >
-                <template>
+                <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
@@ -195,7 +195,7 @@
                 label="操作"
                 width="220"
               >
-                <template>
+                <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
