@@ -125,11 +125,11 @@
                 type="info"
                 :underline="false"
                 size="small"
-                :disabled="scope.row.power != '创建者'"
+                :disabled="scope.row.power != '超管'"
                 @click="scope.row.dialogVisible = true"
               >队长让位</el-button>
               <el-button
-                v-if="scope.row.power === '创建者'"
+                v-if="scope.row.power === '超管'"
                 type="danger"
                 :underline="false"
                 size="small"
@@ -137,7 +137,7 @@
                 @click="deleteItem(scope.row)"
               >解散</el-button>
               <el-button
-                v-if="scope.row.power != '创建者'"
+                v-if="scope.row.power != '超管'"
                 type="danger"
                 :underline="false"
                 size="small"
@@ -214,9 +214,8 @@ export default {
       },
       form_disbandTeam: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
         user_id: getters.getUserId(state),
-        team_id: 0
+        teamId: 0
       },
       form_quitTeam: {
         token: getters.getToken(state),
@@ -289,7 +288,7 @@ export default {
       this.disbandTeamList = items
     },
     deleteItem(item) {
-      if (item.power === '创建者') {
+      if (item.power === '超管') {
         this.$confirm('此操作将永久解散该团队, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -304,7 +303,7 @@ export default {
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: item.power === '创建者' ? '已取消解散' : '已取消解散'
+            message: item.power === '超管' ? '已取消解散' : '已取消解散'
           })
         })
       } else {
@@ -349,11 +348,11 @@ export default {
         })
     },
     disbandTeam(item) {
-      this.form_disbandTeam.team_id = item.id
-      this.$axios.post('/team/disband_team', qs.stringify(this.form_disbandTeam))
+      this.form_disbandTeam.teamId = item.id
+      this.$axios.post('/team/delete', qs.stringify(this.form_disbandTeam))
         .then((res) => {
           // console.log(5)
-          if (res.data.result === 4) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
           } else {
             this.$message.error(res.data.message)
