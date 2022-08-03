@@ -2,8 +2,11 @@
   <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
-        <p id="projectName" class="projecttitle" v-text="project_name">
+        <p id="projectName" class="projecttitle">
           project_name
+        </p>
+        <p id="teamName" class="teamtitle">
+          该项目属于team_name
         </p>
       </template>
       <template slot="right">
@@ -14,11 +17,10 @@
         >
           <el-button
             slot="reference"
-            style="margin-right:10px"
-            size="mini"
-            icon="el-icon-plus"
+            class="button-style"
             @click="dialogInviteVisible = true"
-          >邀请成员
+          >创建文档
+            <i class="el-icon-plus"></i>
           </el-button>
         </el-popover>
 
@@ -30,11 +32,10 @@
         >
           <el-button
             slot="reference"
-            style="margin-right:10px"
-            size="mini"
-            icon="el-icon-plus"
+            class="button-style"
             @click="dialogProjectVisible = true"
-          >创建新项目
+          >创建原型
+            <i class="el-icon-plus"></i>
           </el-button>
         </el-popover>
 
@@ -45,32 +46,42 @@
         >
           <el-button
             slot="reference"
-            style="margin-right:10px"
-            size="mini"
-            icon="el-icon-plus"
+            class="button-style"
+            @click="dialogMethodVisible = true"
+          >创建uml
+            <i class="el-icon-plus"></i>
+          </el-button>
+        </el-popover>
+
+        <el-popover
+          v-model="visible"
+          placement="top"
+          width="350"
+        >
+          <el-button
+            slot="reference"
+            class="spcbutton-style"
           ><el-dropdown trigger="click" @command="onCommad">
-            <div class="action-wrapper">
-                设置
+            <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+              <i class="el-icon-setting"></i>
+              设置
             </div>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+              <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                 <el-button type="text">重命名</el-button>
-                </el-dropdown-item>
-                <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text">退出团队</el-button>
-                </el-dropdown-item>
-                <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                <el-button type="text">删除团队</el-button>
-                </el-dropdown-item>
+              </el-dropdown-item>
+              <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                <el-button type="text" style="color: red">删除项目</el-button>
+              </el-dropdown-item>
             </el-dropdown-menu>
-            </el-dropdown>
+          </el-dropdown>
           </el-button>
         </el-popover>
       </template>
     </TableHeader>
-    <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
+    <el-dialog title="创建文档" :visible.sync="dialogInviteVisible">
       <el-form :model="form_invite">
-        <el-form-item label="成员id" :label-width="formLabelWidth">
+        <el-form-item label="文档名称" :label-width="formLabelWidth">
           <el-input v-model="form_invite.accept_id" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -80,9 +91,9 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="创建新项目" :visible.sync="dialogProjectVisible">
+    <el-dialog title="创建原型" :visible.sync="dialogProjectVisible">
       <el-form :model="form_project">
-        <el-form-item label="项目名称" :label-width="formLabelWidth">
+        <el-form-item label="原型名称" :label-width="formLabelWidth">
           <el-input v-model="form_project.project_name" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -91,19 +102,30 @@
         <el-button @click="CreateProject">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="创建uml" :visible.sync="dialogMethodVisible">
+      <el-form :model="form_project">
+        <el-form-item label="uml名称" :label-width="formLabelWidth">
+          <el-input v-model="form_project.project_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogMethodVisible = false; form_project.project_name = '' ">取 消</el-button>
+        <el-button @click="CreateProject">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
           <el-tab-pane>
-            <span slot="label" class="fontClass">项目</span>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档</span>
             <el-table
               ref="table"
               v-loading="loading"
+              class="table-custom"
               :data="memberList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              :stripe="tableConfig.stripe"
-              :border="tableConfig.border"
               @selection-change="handleSelectionChange"
             >
               <el-table-column
@@ -112,29 +134,26 @@
               />
               <el-table-column
                 align="center"
-                label="序号"
-                width="100"
-              >
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
                 label="名称"
                 prop="projectname"
-                width="240px"
+                width="250px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
                 prop="updatetime"
-                width="320px"
+                width="250px"
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="user"
+                width="200px"
               />
               <el-table-column
                 align="center"
                 label="操作"
-                width="240"
+                width="200"
               >
                 <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
@@ -148,7 +167,7 @@
                         <el-button type="text">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除项目</el-button>
+                        <el-button type="text">删除文件</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -157,15 +176,14 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass">成员</span>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">原型</span>
             <el-table
               ref="table"
               v-loading="loading"
+              class="table-custom"
               :data="memberList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              :stripe="tableConfig.stripe"
-              :border="tableConfig.border"
               @selection-change="handleSelectionChange"
             >
               <el-table-column
@@ -174,41 +192,26 @@
               />
               <el-table-column
                 align="center"
-                label="序号"
-                width="60"
-              >
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="昵称"
-                prop="id"
-                width="150px"
+                label="名称"
+                prop="projectname"
+                width="250px"
               />
               <el-table-column
                 align="center"
-                label="真实姓名"
-                prop="username"
-                width="150px"
+                label="更新时间"
+                prop="updatetime"
+                width="250px"
               />
               <el-table-column
                 align="center"
-                label="电子邮箱"
-                prop="email"
-                width="220px"
-              />
-              <el-table-column
-                align="center"
-                label="身份"
-                prop="power"
-                width="100px"
+                label="创建者"
+                prop="user"
+                width="200px"
               />
               <el-table-column
                 align="center"
                 label="操作"
-                width="220"
+                width="200"
               >
                 <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
@@ -218,11 +221,69 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
-                        <el-button type="text">赋予管理员权限</el-button>
+                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                        <el-button type="text">重命名</el-button>
                       </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-close" command="logout">
-                        <el-button type="text">移出团队</el-button>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        <el-button type="text">删除文件</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">uml</span>
+            <el-table
+              ref="table"
+              v-loading="loading"
+              class="table-custom"
+              :data="memberList"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column
+                type="selection"
+                width="45"
+              />
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="projectname"
+                width="250px"
+              />
+              <el-table-column
+                align="center"
+                label="更新时间"
+                prop="updatetime"
+                width="250px"
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="user"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="操作"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <el-dropdown trigger="click" @command="onCommad">
+                    <div class="action-wrapper">
+                      <span class="nick-name el-dropdown-link">
+                        <i class="el-icon-more"></i>
+                      </span>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                        <el-button type="text">重命名</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        <el-button type="text">删除文件</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -333,7 +394,8 @@ export default {
         member_id: 0,
         perm: null
       },
-      project_name: localStorage.getItem('team_name'),
+      project_name: localStorage.getItem('project_name'),
+      team_name: localStorage.getItem('team_name'),
       dialogInviteVisible: false,
       dialogProjectVisible: false,
       dialogMethodVisible: false,
@@ -545,8 +607,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.button-style {
+  margin: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  height: 35px;
+}
+.spcbutton-style {
+  margin: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  height: 35px;
+}
 .projecttitle {
-  font-size: 30px;
+  font-size: 45px;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.teamtitle {
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 .temptablebody{
   height: 500px;
