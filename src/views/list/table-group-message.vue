@@ -67,13 +67,13 @@
     </TableHeader>
     <el-dialog title="邀请成员" :visible.sync="dialogInviteVisible">
       <el-form :model="form_invite">
-        <el-form-item label="成员名称" :label-width="formLabelWidth">
-          <el-input v-model="form_invite.accept_id" autocomplete="off" />
+        <el-form-item label="成员邮箱" :label-width="formLabelWidth">
+          <el-input v-model="form_invite.email" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogInviteVisible = false; form_invite.accept_id = '' ">取 消</el-button>
-        <el-button @click="Invite">确 定</el-button>
+        <el-button @click="dialogInviteVisible = false; form_invite.email = '' ">取 消</el-button>
+        <el-button @click="invite(),dialogInviteVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog title="修改团队信息" :visible.sync="dialogRenameVisible">
@@ -92,7 +92,7 @@
         <el-form-item label="项目名称" :label-width="formLabelWidth">
           <el-input v-model="form_createProject.project_name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="项目简介" :label-width="formLabelWidth">
+        <el-form-item label="项目简介(可不填)" :label-width="formLabelWidth">
           <el-input v-model="form_createProject.project_info" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -336,11 +336,9 @@ export default {
       visible: false,
       form_invite: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
-        send_id: getters.getUserId(state),
-        accept_id: null,
-        team_id: Number(localStorage.getItem('team_id')),
-        power: null
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id')),
+        email: ''
       },
       form_project: {
         token: getters.getToken(state),
@@ -462,14 +460,14 @@ export default {
                 real_name: ''
               }
               members.user_id = res.data.data[i].user_id
-              members.real_name = res.data.data[i].username
+              members.real_name = res.data.data[i].real_name
               members.email = res.data.data[i].email
               members.username = res.data.data[i].username
               if (res.data.data[i].user_perm === 0) {
                 members.user_perm = '超管'
-              } else if (res.data.team_member_list[i].user_perm === 1) {
+              } else if (res.data.data[i].user_perm === 1) {
                 members.user_perm = '管理员'
-              } else if (res.data.team_member_list[i].user_perm === 2) {
+              } else if (res.data.data[i].user_perm === 2) {
                 members.user_perm = '观察者'
               }
               let flag = 0
@@ -685,13 +683,14 @@ export default {
       this.$router.push('/list/table-group-file')
     },
     invite() {
-      this.$axios.post('/team/invite_member', qs.stringify(this.form_invite))
+      this.$axios.post('/team/inviteMember', qs.stringify(this.form_invite))
          .then((res) => {
-           if (res.data.result === 6) {
+           if (res.data.success) {
              this.$message.success(res.data.message)
            } else {
              this.$message.error(res.data.message)
            }
+           this.getMemberList()
          })
     },
     onRichTextEditor() {
