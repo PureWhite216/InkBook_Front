@@ -38,6 +38,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item label="真实姓名">
+              <el-input
+                v-model="personalInformation.real_name"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="ID">
               <el-input
                 v-model="personalInformation.user_id"
@@ -68,7 +76,7 @@
               <el-dialog title="修改密码" :visible.sync="dialogVisible_changePassword" width="40%" center>
                 <el-form :model="form_changePassword">
                   <el-form-item label="原密码" :label-width="formLabelWidth">
-                    <el-input v-model="form_changePassword.password" autocomplete="off" type="password" />
+                    <el-input v-model="form_changePassword.old_password" autocomplete="off" type="password" />
                   </el-form-item>
                   <el-form-item label="新密码" :label-width="formLabelWidth">
                     <el-input v-model="form_changePassword.password1" autocomplete="off" type="password" />
@@ -130,9 +138,10 @@ export default {
         password: ''
       },
       form_changePassword: {
-        authorization: getters.getToken(state),
-        username: getters.getUserName(state),
-        password: null,
+        mode: 1,
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        old_password: null,
         password1: null,
         password2: null
       },
@@ -140,6 +149,7 @@ export default {
       baseInfoModel: {
         name: '',
         id: '',
+        real_name: '',
         email: '',
         password: ''
       },
@@ -164,7 +174,7 @@ export default {
       })
     },
     clearPassword() {
-      this.form_changePassword.password = ''
+      this.form_changePassword.old_password = ''
       this.form_changePassword.password1 = ''
       this.form_changePassword.password2 = ''
     },
@@ -226,15 +236,19 @@ export default {
     },
     getPersonalInformation() {
       this.loading = true
-      this.$axios.post('/user/check_personal_infomation', qs.stringify(this.form_getPersonalInformation))
+      this.$axios.get('/user/selectUserByUserId', {
+        params: {
+          user_id: getters.getUserId(state)
+        }
+      })
         .then((res) => {
           // console.log(5)
-          if (res.data.result === 2) {
-            this.personalInformation.username = res.data.username
-            this.personalInformation.email = res.data.email
-            this.personalInformation.sex = res.data.sex
-            this.personalInformation.avatar = res.data.avatar
-            this.personalInformation.user_id = res.data.user_id
+          if (res.data.success === true) {
+            this.personalInformation.username = res.data.data.username
+            this.personalInformation.email = res.data.data.email
+            this.personalInformation.real_name = res.data.data.real_name
+           // this.personalInformation.avatar = res.data.avatar
+            this.personalInformation.user_id = res.data.data.user_id
           } else {
             this.$message.error(res.data.message)
           }
@@ -258,13 +272,10 @@ export default {
         })
     },
     changePassword() {
-      console.log(this.form_changePassword.password)
-      console.log(this.form_changePassword.password1)
-      console.log(this.form_changePassword.password2)
-      this.$axios.post('/user/change_password', qs.stringify(this.form_changePassword))
+      this.$axios.post('/user/changePassword', qs.stringify(this.form_changePassword))
         .then((res) => {
           // console.log(5)
-          if (res.data.result === 3) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
             store.logout()
             store.onLogout && store.onLogout()
