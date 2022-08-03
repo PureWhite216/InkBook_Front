@@ -1,19 +1,38 @@
 <template>
-  <div class="poster-editor" :class="{ 'init-loading': initLoading }">
-    <div class="base">
-      <!-- 左侧添加组件栏 -->
-      <left-side />
-      <!-- 主要操作区域 -->
-      <main-component ref="main" />
-      <!-- 常用功能栏 -->
-      <extend-side-bar />
-      <!-- 组件编辑区域 -->
-      <control-component />
+  <div class="main-container">
+    <el-row style="background: #2f2f2f">
+      <el-col :span="8">
+        <el-button class="backbutton" style="margin-left: 20px; margin-top: 10px">
+          <i class="el-icon-back" style="font-size: x-large"></i>
+        </el-button>
+      </el-col>
+      <el-col :span="8" style="text-align: center; margin-top: 12px">
+        <div style="font-size: 16px; color: #ececec" contenteditable="true">
+          原型名称
+        </div>
+        <div>
+          <el-button style="padding: 5px; background: #2f2f2f; border: 0">
+            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>
+          </el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <div class="poster-editor" :class="{ 'init-loading': initLoading }">
+      <div class="base">
+        <!-- 左侧添加组件栏 -->
+        <left-side />
+        <!-- 主要操作区域 -->
+        <main-component ref="main" />
+        <!-- 常用功能栏 -->
+        <extend-side-bar />
+        <!-- 组件编辑区域 -->
+        <control-component />
+      </div>
+      <!-- 图层面板 -->
+      <transition name="el-zoom-in-top">
+        <layer-panel v-show="layerPanelOpened" />
+      </transition>
     </div>
-    <!-- 图层面板 -->
-    <transition name="el-zoom-in-top">
-      <layer-panel v-show="layerPanelOpened" />
-    </transition>
   </div>
 </template>
 
@@ -187,6 +206,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .title {
+  color: #2c2c2c;
+  background-color: #2c2c2c;
+}
+.backbutton {
+  color: white;
+  background: #2c2c2c;
+  height: 35px;
+  border: 0;
+  margin-top: 5px;
+  padding: 5px;
+}
+.backbutton:hover {
+  color: white;
+  background: #000000;
+  height: 35px;
+}
+.backbutton:focus {
+  color: white;
+  background: #000000;
+  height: 35px;
+}
+.head {
+  background: #2c2c2c;
+  max-height: 45px;
+}
 .poster-editor {
   width: 100%;
   min-width: 900px;
