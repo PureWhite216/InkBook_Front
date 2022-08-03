@@ -51,6 +51,20 @@
         <el-button @click="addTeam">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="修改团队信息" :visible.sync="dialogUpdateTeam">
+      <el-form :model="form_update">
+        <el-form-item label="团队新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_update.teamName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="团队新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_update.teamInfo" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateTeam = false; form_update.project_name = '' ">取 消</el-button>
+        <el-button @click=updateTeam>确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody">
       <template>
         <el-table
@@ -127,7 +141,7 @@
                 </div>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                    <el-button type="text">修改信息</el-button>
+                    <el-button type="text" @click="form_update.teamId = scope.row.id, form_update.teamName = scope.row.name, form_update.teamInfo =scope.row.info, dialogUpdateTeam = true">修改信息</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-switch-button" command="logout">
                     <el-button type="text" style="color: green">退出团队</el-button>
@@ -184,6 +198,14 @@ export default {
         token: getters.getToken(state),
         user_id: getters.getUserId(state)
       },
+      dialogUpdateTeam: false,
+      form_update: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: '',
+        teamName: '',
+        teamInfo: ''
+      },
       form1: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -226,6 +248,18 @@ export default {
     this.Refresh()
   },
   methods: {
+    updateTeam() {
+      this.$axios.post('/team/update', qs.stringify(this.form_update))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+        this.dialogUpdateTeam = false
+        this.Refresh()
+      })
+    },
     handleCurrentChange(val) {
       this.toGroupFile(val)
     },

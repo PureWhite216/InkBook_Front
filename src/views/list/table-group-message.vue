@@ -76,7 +76,7 @@
         <el-button @click="invite(),dialogInviteVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改团队信息" :visible.sync="dialogRenameVisible">
+    <el-dialog title="团队重命名" :visible.sync="dialogRenameVisible">
       <el-form :model="form_rename">
         <el-form-item label="新的团队名称" :label-width="formLabelWidth">
           <el-input v-model="form_rename.teamName" autocomplete="off" />
