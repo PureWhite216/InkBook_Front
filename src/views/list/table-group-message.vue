@@ -101,6 +101,20 @@
         <el-button @click="createProject(), dialogCreateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="重命名项目" :visible.sync="dialogUpdateProjectVisible">
+      <el-form :model="form_project">
+        <el-form-item label="项目新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateProject.project_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="项目新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateProject.project_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateProjectVisible = false; form_updateProject.project_name = '' ">取 消</el-button>
+        <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -145,10 +159,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
+                        <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_createProject.project_name = '', form_createProject.project_info = '',dialogUpdateProjectVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除项目</el-button>
+                        <el-button type="text" @click="deleteProjectItem(scope.row)">删除项目</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -307,6 +321,18 @@ export default {
         project_name: '',
         project_info: ''
       },
+      form_deleteProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: 0
+      },
+      form_updateProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: 0,
+        project_name: '',
+        project_info: ''
+      },
       visible: false,
       form_invite: {
         token: getters.getToken(state),
@@ -352,6 +378,7 @@ export default {
       team_name: localStorage.getItem('team_name'),
       dialogInviteVisible: false,
       dialogCreateProjectVisible: false,
+      dialogUpdateProjectVisible: false,
       dialogMethodVisible: false,
       memberList: [],
       projectList: [],
@@ -500,6 +527,46 @@ export default {
             this.$message.error(res.data.message)
           }
           this.getMemberList()
+        })
+    },
+    deleteProjectItem(item) {
+      this.$confirm('此操作将使您删除此项目' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.deleteProject(item)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    deleteProject(item) {
+      this.form_deleteProject.project_id = item.project_id
+      this.$axios.post('/project/delete', qs.stringify(this.form_deleteProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getProjectList()
+        })
+    },
+    updateProject() {
+      // this.form_updateProject.project_id = item.project_id
+      this.$axios.post('/project/update', qs.stringify(this.form_updateProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getProjectList()
         })
     },
     deleteItem(item) {

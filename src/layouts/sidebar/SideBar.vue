@@ -72,7 +72,7 @@
         </el-steps>
         <h1>创建团队</h1>
         <div v-if="createTeamStep === 0">
-          <h3>想一个队名</h3>
+          <h2>想一个队名</h2>
           <el-input v-model="form_createTeam.teamName" size="medium" placeholder="请输入团队名" />
           <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
         </div>
