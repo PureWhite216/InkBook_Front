@@ -265,6 +265,38 @@ export const routes = [
     hidden: true,
     children: [
       {
+        path: 'table-recentvisit',
+        name: 'tableRecentvisit',
+        component: () => import('@/views/list/table-recentvisit'),
+        meta: {
+          title: '最近浏览'
+        }
+      }
+    ]
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'table-favorite',
+        name: 'tableFavorite',
+        component: () => import('@/views/list/table-favorite'),
+        meta: {
+          title: '收藏'
+        }
+      }
+    ]
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
         path: 'table-group-member',
         name: 'tableGroupMember',
         component: () => import('@/views/list/table-group-member'),

@@ -12,11 +12,11 @@
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="1" @click="toRecent">
         <i class="el-icon-document"></i>
         <span slot="title">最近浏览</span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="2" @click="toCollect">
         <i class="el-icon-star-off"></i>
         <span slot="title">收藏</span>
       </el-menu-item>
@@ -394,6 +394,12 @@ export default {
   methods: {
     toGroup() {
       router.push('/list/table-group')
+    },
+    toRecent(){
+      router.push('/list/table-recentvisit')
+    },
+    toCollect(){
+      router.push('/list/table-favorite')
     },
     createTeamNext() {
       if (this.createTeamStep < 3) this.createTeamStep++
