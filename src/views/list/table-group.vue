@@ -63,7 +63,7 @@
           :border="tableConfig.border"
           @selection-change="handleSelectionChange"
           highlight-current-row
-          @current-change="toGroupFile(scope.$index+1)"
+          @current-change="toGroupFile(currentRow)"
         >
           <el-table-column
             type="selection"
@@ -187,6 +187,7 @@ export default {
   data() {
     return {
       visible_applyTeam: false,
+      currentRow: null,
       form: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state)
