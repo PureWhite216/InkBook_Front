@@ -62,6 +62,8 @@
           :stripe="tableConfig.stripe"
           :border="tableConfig.border"
           @selection-change="handleSelectionChange"
+          highlight-current-row
+          @current-change="toGroupFile(scope.$index+1)"
         >
           <el-table-column
             type="selection"
