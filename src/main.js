@@ -11,9 +11,16 @@ import '@/components/common'
 import LayoutStore from '@/layouts/index'
 import { resetRouter } from './router/index'
 import Cookies from 'js-cookie'
+
+import VueAddition from '@/addition'
+import PortalVue from 'portal-vue'
+
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://101.42.171.88:8090/'
 axios.defaults.withCredentials = true
+
+Vue.use(VueAddition)
+Vue.use(PortalVue)
 Vue.use(LayoutStore, {
   state: {
     isFixedNavBar: true,

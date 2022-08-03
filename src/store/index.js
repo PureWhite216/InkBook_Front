@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import getters from './getters'
+import logger from 'vuex/dist/logger'
 
 Vue.use(Vuex)
 
@@ -12,7 +14,9 @@ const modules = modulesFile.keys().reduce((acc, cur) => {
 }, {})
 
 const store = new Vuex.Store({
-  modules
+  modules,
+  getters,
+  plugins: process.env.NODE_ENV !== 'production' ? [logger()] : []
 })
 
 export default store
