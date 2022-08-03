@@ -115,6 +115,17 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="设置权限" :visible.sync="dialogPerm">
+      <el-form :model="form_power">
+        <el-form-item label="权限（请输入“成员”或者“管理员”）" :label-width="formLabelWidth">
+          <el-input v-model="form_power.userPerm" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPerm = false; form_power.userPerm = '' ">取 消</el-button>
+        <el-button @click="givePower">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -231,7 +242,7 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
-                        <el-button type="text">赋予管理员权限</el-button>
+                        <el-button type="text" @click="form_power.memberId = scope.row.user_id, form_power.userPerm = scope.row.user_perm, dialogPerm = true">赋予管理员权限</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-close" command="logout">
                         <el-button type="text" @click="deleteMemberItem(scope.row)">移出团队</el-button>
@@ -304,10 +315,18 @@ export default {
       visible_setPerm: true,
       loading: false,
       dialogRenameVisible: false,
+      dialogPerm: false,
       form_member: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
         teamId: localStorage.getItem('team_id')
+      },
+      form_power: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: localStorage.getItem('team_id'),
+        memberId: '',
+        userPerm: ''
       },
       form_getProjectList: {
         token: getters.getToken(state),
@@ -412,6 +431,25 @@ export default {
     this.getProjectList()
   },
   methods: {
+    givePower() {
+      if (this.form_power.userPerm === '管理员') {
+        this.form_power.userPerm = 1
+      } else if (this.form_power.userPerm === '成员') {
+        this.form_power.userPerm = 2
+      } else {
+        this.form_power.userPerm = 0
+      }
+      this.$axios.post('/team/setPerm', qs.stringify(this.form_power))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+        this.dialogPerm = false
+        this.getMemberList()
+      })
+    },
     getProjectList() {
       this.loading = true
       this.projectList = []
@@ -468,7 +506,7 @@ export default {
               } else if (res.data.data[i].user_perm === 1) {
                 members.user_perm = '管理员'
               } else if (res.data.data[i].user_perm === 2) {
-                members.user_perm = '观察者'
+                members.user_perm = '成员'
               }
               let flag = 0
               for (let i = 0; i < this.memberList.length; i++) {

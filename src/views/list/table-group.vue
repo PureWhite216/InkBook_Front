@@ -62,7 +62,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdateTeam = false; form_update.project_name = '' ">取 消</el-button>
-        <el-button @click=updateTeam>确 定</el-button>
+        <el-button @click="updateTeam">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody">
