@@ -127,7 +127,7 @@
                 </div>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                    <el-button type="text">重命名</el-button>
+                    <el-button type="text">修改信息</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-switch-button" command="logout">
                     <el-button type="text" style="color: green">退出团队</el-button>
