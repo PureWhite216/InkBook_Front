@@ -1,5 +1,5 @@
 <template>
-  <div id="building" class="main-container">
+  <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
