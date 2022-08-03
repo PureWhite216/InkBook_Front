@@ -144,10 +144,10 @@
                     <el-button type="text" @click="form_update.teamId = scope.row.id, form_update.teamName = scope.row.name, form_update.teamInfo =scope.row.info, dialogUpdateTeam = true">修改信息</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                    <el-button type="text" style="color: green">退出团队</el-button>
+                    <el-button type="text" style="color: green" @click="quitTeam(scope.row)">退出团队</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-delete-solid" command="logout">
-                    <el-button type="text" style="color: red">解散团队</el-button>
+                    <el-button type="text" style="color: red" @click="deleteTeam(scope.row)">解散团队</el-button>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -238,7 +238,7 @@ export default {
         token: getters.getToken(state),
         username: getters.getUserName(state),
         user_id: getters.getUserId(state),
-        team_id: 0
+        teamId: 0
       },
       disbandTeamList: [],
       formLabelWidth: '120px'
@@ -263,17 +263,51 @@ export default {
     handleCurrentChange(val) {
       this.toGroupFile(val)
     },
-    quitTeam(item) {
-      this.form_quitTeam.team_id = item.id
-      this.$axios.post('/team/quit_team', qs.stringify(this.form_quitTeam))
+    deleteTeam(item) {
+      this.$confirm('此操作将使您删除该团队' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+      this.form_quitTeam.teamId = item.id
+      this.$axios.post('/team/delete', qs.stringify(this.form_quitTeam))
         .then((res) => {
-          if (res.data.result === 5) {
+          if (res.data.success) {
             this.$message.success(res.data.message)
+            this.Refresh()
           } else {
             this.$message.error(res.data.message)
           }
-          this.Refresh()
         })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    quitTeam(item) {
+      this.$confirm('此操作将使您退出该团队' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+      this.form_quitTeam.teamId = item.id
+      this.$axios.post('/team/quitTeam', qs.stringify(this.form_quitTeam))
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.Refresh()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     },
     applyTeam() {
       this.$axios.post('/team/apply_team', qs.stringify(this.form_applyTeam))
