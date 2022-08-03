@@ -31,7 +31,7 @@
           </div>
           <div class="item-wrapper margin-top-lg">
             <el-input
-              v-model="form.indentify_code"
+              v-model="form.verify_code"
               placeholder="请输入验证码"
               type="password"
               clearable
@@ -95,8 +95,9 @@ export default {
   data() {
     return {
       form: {
+        mode: 0,
         email: '',
-        indentify_code: '',
+        verify_code: '',
         password1: '',
         password2: ''
       },
@@ -129,7 +130,7 @@ export default {
         this.$errorMsg('请输入邮箱')
         return
       }
-      if (!this.form.indentify_code) {
+      if (!this.form.verify_code) {
         this.$errorMsg('请输入验证码')
         return
       }
@@ -142,11 +143,11 @@ export default {
         return
       }
       this.$axios.post(
-        '/user/forget_password/check_indentify',
+        '/user/changePassword',
         qs.stringify(this.form)
       )
         .then((res) => {
-          if (res.data.result === 5) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
             this.$router.push({ path: '/login' })
           } else {
@@ -160,11 +161,11 @@ export default {
         return
       }
       this.$axios.post(
-        '/user/forget_password/send_indentify',
+        '/user/sendForgotPasswordEmail',
         qs.stringify({ email: this.form.email })
       )
         .then((res) => {
-          if (res.data.result === 3) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
           } else {
             this.$message.error(res.data.message)

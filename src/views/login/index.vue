@@ -136,17 +136,31 @@ export default {
          qs.stringify(this.form)
       )
         .then((res) => {
-          data.userName = res.data.username
-          data.userId = res.data.user_id
-          data.token = res.data.authorization
-          data.avatar = res.data.avatar
           // data.unlook_message_count = res.data.unlook_message_count
-          if (res.data.result === 2) {
-            this.$store
-              .dispatch('user/saveUserInfo', data)
-              .then((_) => {
-                this.$router.push({ path: this.redirect || '/index/main' })
-              })
+          if (res.data.success === true) {
+            data.token = res.data.data.token
+            data.userId = res.data.data.user_id
+            console.log(this.formGet)
+            this.$axios.get('/user/showInfo', {
+              params: {
+                token: res.data.data.token,
+                user_id: res.data.data.user_id
+              }
+            })
+            .then(res => {
+              if (res.data.success === true) {
+                data.userName = res.data.data.username
+                data.email = res.data.data.email
+                data.real_name = res.data.data.real_name
+                this.$store
+                  .dispatch('user/saveUserInfo', data)
+                  .then((_) => {
+                    this.$router.push({ path: this.redirect || '/index/main' })
+                  })
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
           } else {
             this.$message.error(res.data.message)
           }

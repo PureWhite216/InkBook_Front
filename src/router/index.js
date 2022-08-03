@@ -315,7 +315,7 @@ export const routes = [
   {
     path: '/index/main',
     name: 'main',
-    redirect: '/list/table-latest',
+    redirect: '/list/table-group',
     hidden: true
   }
 ]

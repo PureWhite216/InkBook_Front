@@ -7,9 +7,12 @@ export default {
     this.state.cachedView = []
     state.userId = ''
     state.userName = ''
+    state.email = ''
+    state.real_name = ''
     state.avatar = ''
     state.token = ''
     localStorage.removeItem('userInfo')
     localStorage.removeItem('visited')
+    localStorage.removeItem('Token')
   }
 }
