@@ -24,7 +24,7 @@
     <el-divider class="line" />
     <el-button
       class="button-create"
-      @click="dialogCreateTeamVisible = true"
+      @click="createTeamStep = 0,dialogCreateTeamVisible = true"
     >创建团队
       <i class="el-icon-plus" style="margin-left: 59px"></i>
     </el-button>
