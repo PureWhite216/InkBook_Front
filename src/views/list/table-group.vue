@@ -86,30 +86,18 @@
             align="center"
             label="团队名"
             prop="name"
-          />
-          <el-table-column
-            align="center"
-            label="创建时间"
-            prop="time"
             width="180"
           />
           <el-table-column
             align="center"
-            label="成员数量"
-            prop="member_num"
-            width="80"
+            label="团队描述"
+            prop="info"
           />
           <el-table-column
             align="center"
-            label="文档数量"
-            prop="word_num"
-            width="80"
-          />
-          <el-table-column
-            align="center"
-            label="权限"
+            label="你的身份"
             prop="power"
-            width="140px"
+            width="80"
           />
           <el-table-column
             align="center"
@@ -199,7 +187,6 @@ export default {
       visible_applyTeam: false,
       form: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
         user_id: getters.getUserId(state)
       },
       form1: {
@@ -377,10 +364,10 @@ export default {
     Refresh() {
        this.tableLoading = true
        this.groupList = []
-       this.$axios.post('/team/get_team_list', qs.stringify(this.form))
+       this.$axios.post('/team/getTeamList', qs.stringify(this.form))
          .then((res) => {
-           if (res.data.result === 3) {
-             for (let i = 0; i < res.data.team_list.length; i++) {
+           if (res.data.success === true) {
+             for (let i = 0; i < res.data.data.length; i++) {
                const teams = {
                  name: '',
                  time: '',
@@ -390,17 +377,15 @@ export default {
                  id: 0,
                  dialogVisible: false
                 }
-               teams.name = res.data.team_list[i].team_name
-               teams.time = res.data.team_list[i].create_time
-               teams.member_num = res.data.team_list[i].member_cnt
-               teams.word_num = res.data.team_list[i].word_cnt
-               teams.id = res.data.team_list[i].team_id
-               if (res.data.team_list[i].power === 1) {
-                 teams.power = '创建者'
-               } else if (res.data.team_list[i].power === 2) {
+               teams.name = res.data.data[i].team_name
+               teams.info = res.data.data[i].team_info
+               teams.id = res.data.data[i].team_id
+               if (res.data.data[i].user_perm === 0) {
+                 teams.power = '超管'
+               } else if (res.data.data[i].user_perm === 1) {
                  teams.power = '管理员'
-               } else if (res.data.team_list[i].power === 3) {
-                 teams.power = '游客'
+               } else if (res.data.data[i].user_perm === 2) {
+                 teams.power = '成员'
                }
                let flag = 0
                for (let i = 0; i < this.groupList.length; i++) {
