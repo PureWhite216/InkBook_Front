@@ -54,10 +54,10 @@
                 <el-button type="text" @click="dialogRenameVisible = true">重命名</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text">退出团队</el-button>
+                <el-button type="text" @click="quitTeam">退出团队</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                <el-button type="text" style="color: red">删除团队</el-button>
+                <el-button type="text" style="color: red" @click="deleteTeam">删除团队</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -363,9 +363,8 @@ export default {
       },
       form_quitTeam: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
         user_id: getters.getUserId(state),
-        team_id: Number(localStorage.getItem('team_id'))
+        teamId: Number(localStorage.getItem('team_id'))
       },
       form_setPerm: {
         token: getters.getToken(state),
@@ -633,15 +632,48 @@ export default {
         })
     },
     quitTeam() {
-      this.$axios.post('/team/quit_team', qs.stringify(this.form_quitTeam))
+      this.$confirm('此操作将使您退出该团队' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.$axios.post('/team/quitTeam', qs.stringify(this.form_quitTeam))
         .then((res) => {
-          if (res.data.result === 5) {
+          if (res.data.success) {
             this.$message.success(res.data.message)
+            this.onGroupSpace()
           } else {
             this.$message.error(res.data.message)
           }
-          this.onGroupSpace()
         })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    deleteTeam() {
+      this.$confirm('此操作将使您删除该团队' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.$axios.post('/team/delete', qs.stringify(this.form_quitTeam))
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.onGroupSpace()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     },
     onGroupSpace() {
       store.toGroupSpace && store.toGroupSpace()
