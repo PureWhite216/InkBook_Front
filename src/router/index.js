@@ -249,6 +249,22 @@ export const routes = [
     hidden: true,
     children: [
       {
+        path: 'table-group-project',
+        name: 'tableGroupProject',
+        component: () => import('@/views/list/table-group-project'),
+        meta: {
+          title: '项目信息'
+        }
+      }
+    ]
+  },
+  {
+    path: '/list',
+    name: 'list',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
         path: 'table-group-member',
         name: 'tableGroupMember',
         component: () => import('@/views/list/table-group-member'),
