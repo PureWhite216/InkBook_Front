@@ -137,7 +137,7 @@
                 width="300"
               >
                 <template slot-scope="scope">
-                  <el-dropdown trigger="click" @command="onCommad">
+                  <el-dropdown trigger="hover" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
@@ -209,7 +209,7 @@
                 width="220"
               >
                 <template slot-scope="scope">
-                  <el-dropdown trigger="click" @command="onCommad">
+                  <el-dropdown trigger="hover" @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
