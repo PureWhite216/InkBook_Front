@@ -51,7 +51,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text">重命名</el-button>
+                <el-button type="text" @click="dialogRenameVisible = true">重命名</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                 <el-button type="text">退出团队</el-button>
@@ -76,7 +76,17 @@
         <el-button @click="Invite">确 定</el-button>
       </div>
     </el-dialog>
-
+    <el-dialog title="重命名团队" :visible.sync="dialogRenameVisible">
+      <el-form :model="form_rename">
+        <el-form-item label="新的团队名称" :label-width="formLabelWidth">
+          <el-input v-model="form_rename.teamName" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRenameVisible = false; form_rename.teamName = '' ">取 消</el-button>
+        <el-button @click="Rename">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="创建新项目" :visible.sync="dialogCreateProjectVisible">
       <el-form :model="form_project">
         <el-form-item label="项目名称" :label-width="formLabelWidth">
@@ -279,6 +289,7 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      dialogRenameVisible: false,
       form_member: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -317,6 +328,12 @@ export default {
         user_id: getters.getUserId(state),
         team_id: Number(localStorage.getItem('team_id')),
         deleted_id: null
+      },
+      form_rename: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id')),
+        teamName: ''
       },
       form_quitTeam: {
         token: getters.getToken(state),
@@ -456,6 +473,21 @@ export default {
           }
           this.getProjectList()
         })
+    },
+    Rename() {
+      this.$axios.post('/team/update', qs.stringify(this.form_rename))
+      .then(res => {
+          if (res.data.success === true) {
+            this.team_name = this.form_rename.teamName
+            this.$message.success(res.data.message)
+            this.dialogRenameVisible = false
+            this.form_rename.teamName = ''
+          } else {
+            this.$message.error(res.data.message)
+            this.dialogRenameVisible = false
+            this.form_rename.teamName = ''
+          }
+      })
     },
     setPerm(item) {
       this.form_setPerm.member_id = item.id
