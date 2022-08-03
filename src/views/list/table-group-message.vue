@@ -30,7 +30,7 @@
           <el-button
             slot="reference"
             class="button-style"
-            @click="dialogProjectVisible = true"
+            @click="form_createProject.project_name = '', form_createProject.project_info = '', dialogCreateProjectVisible = true"
           >创建新项目
             <i class="el-icon-plus"></i>
           </el-button>
@@ -51,7 +51,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text">重命名</el-button>
+                <el-button type="text" @click="dialogRenameVisible = true">重命名</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                 <el-button type="text">退出团队</el-button>
@@ -76,16 +76,29 @@
         <el-button @click="Invite">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="创建新项目" :visible.sync="dialogProjectVisible">
-      <el-form :model="form_project">
-        <el-form-item label="项目名称" :label-width="formLabelWidth">
-          <el-input v-model="form_project.project_name" autocomplete="off" />
+    <el-dialog title="重命名团队" :visible.sync="dialogRenameVisible">
+      <el-form :model="form_rename">
+        <el-form-item label="新的团队名称" :label-width="formLabelWidth">
+          <el-input v-model="form_rename.teamName" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogProjectVisible = false; form_project.project_name = '' ">取 消</el-button>
-        <el-button @click="CreateProject">确 定</el-button>
+        <el-button @click="dialogRenameVisible = false; form_rename.teamName = '' ">取 消</el-button>
+        <el-button @click="Rename">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="创建新项目" :visible.sync="dialogCreateProjectVisible">
+      <el-form :model="form_project">
+        <el-form-item label="项目名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createProject.project_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="项目简介" :label-width="formLabelWidth">
+          <el-input v-model="form_createProject.project_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCreateProjectVisible = false; form_createProject.project_name = '' ">取 消</el-button>
+        <el-button @click="createProject(), dialogCreateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
@@ -97,7 +110,7 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="projectList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
@@ -109,13 +122,13 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="project_name"
                 width="300px"
               />
               <el-table-column
                 align="center"
-                label="更新时间"
-                prop="updatetime"
+                label="简介"
+                prop="project_info"
                 width="300px"
               />
               <el-table-column
@@ -169,13 +182,13 @@
               <el-table-column
                 align="center"
                 label="昵称"
-                prop="id"
+                prop="username"
                 width="150px"
               />
               <el-table-column
                 align="center"
                 label="真实姓名"
-                prop="username"
+                prop="real_name"
                 width="150px"
               />
               <el-table-column
@@ -187,7 +200,7 @@
               <el-table-column
                 align="center"
                 label="身份"
-                prop="power"
+                prop="user_perm"
                 width="100px"
               />
               <el-table-column
@@ -276,11 +289,23 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      dialogRenameVisible: false,
       form_member: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
         user_id: getters.getUserId(state),
-        team_id: Number(localStorage.getItem('team_id'))
+        teamId: localStorage.getItem('team_id')
+      },
+      form_getProjectList: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        team_id: localStorage.getItem('team_id')
+      },
+      form_createProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        team_id: localStorage.getItem('team_id'),
+        project_name: '',
+        project_info: ''
       },
       visible: false,
       form_invite: {
@@ -304,6 +329,12 @@ export default {
         team_id: Number(localStorage.getItem('team_id')),
         deleted_id: null
       },
+      form_rename: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id')),
+        teamName: ''
+      },
       form_quitTeam: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -320,9 +351,10 @@ export default {
       },
       team_name: localStorage.getItem('team_name'),
       dialogInviteVisible: false,
-      dialogProjectVisible: false,
+      dialogCreateProjectVisible: false,
       dialogMethodVisible: false,
       memberList: [],
+      projectList: [],
       deleteMemberList: [],
       powerOptions: [
         {
@@ -353,10 +385,109 @@ export default {
   },
   created() {
     this.getMemberList()
+    this.getProjectList()
   },
   methods: {
-    CreateProject() {
-      this.$message.error('还没写接口哪！')
+    getProjectList() {
+      this.loading = true
+      this.projectList = []
+      this.$axios.post('/project/getProjectList', qs.stringify(this.form_getProjectList))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const projects = {
+                project_id: 0,
+                team_id: 0,
+                project_name: '',
+                project_info: ''
+              }
+              projects.project_id = res.data.data[i].project_id
+              projects.team_id = res.data.data[i].team_id
+              projects.project_name = res.data.data[i].project_name
+              projects.project_info = res.data.data[i].project_info
+              let flag = 0
+              for (let i = 0; i < this.projectList.length; i++) {
+                if (this.projectList[i].project_id === projects.project_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.projectList.push(projects) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
+    getMemberList() {
+      this.loading = true
+      this.memberList = []
+      this.$axios.post('/team/getMemberList', qs.stringify(this.form_member))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const members = {
+                user_id: 0,
+                username: '',
+                email: '',
+                user_perm: '',
+                real_name: ''
+              }
+              members.user_id = res.data.data[i].user_id
+              members.real_name = res.data.data[i].username
+              members.email = res.data.data[i].email
+              members.username = res.data.data[i].username
+              if (res.data.data[i].user_perm === 0) {
+                members.user_perm = '超管'
+              } else if (res.data.team_member_list[i].user_perm === 1) {
+                members.user_perm = '管理员'
+              } else if (res.data.team_member_list[i].user_perm === 2) {
+                members.user_perm = '观察者'
+              }
+              let flag = 0
+              for (let i = 0; i < this.memberList.length; i++) {
+                if (this.memberList[i].user_id === members.user_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.memberList.push(members) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
+    createProject() {
+      this.$axios.post('/project/create', qs.stringify(this.form_createProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getProjectList()
+        })
+    },
+    Rename() {
+      this.$axios.post('/team/update', qs.stringify(this.form_rename))
+      .then(res => {
+          if (res.data.success === true) {
+            this.team_name = this.form_rename.teamName
+            this.$message.success(res.data.message)
+            this.dialogRenameVisible = false
+            this.form_rename.teamName = ''
+          } else {
+            this.$message.error(res.data.message)
+            this.dialogRenameVisible = false
+            this.form_rename.teamName = ''
+          }
+      })
     },
     setPerm(item) {
       this.form_setPerm.member_id = item.id
@@ -453,47 +584,6 @@ export default {
     },
     onFile() {
       this.$router.push('/list/table-group-file')
-    },
-    getMemberList() {
-      this.loading = true
-      this.clearList()
-      this.$axios.post('/team/get_team_member_list', qs.stringify(this.form_member))
-        .then((res) => {
-          if (res.data.result === 4) {
-            for (let i = 0; i < res.data.team_member_list.length; i++) {
-              const members = {
-                sno: 0,
-                id: 0,
-                username: '',
-                email: '',
-                power: ''
-              }
-              members.sno = i + 1
-              members.id = res.data.team_member_list[i].id
-              members.username = res.data.team_member_list[i].username
-              members.email = res.data.team_member_list[i].email
-              if (res.data.team_member_list[i].power === 1) {
-                members.power = '队长'
-              } else if (res.data.team_member_list[i].power === 2) {
-                members.power = '开发者'
-              } else if (res.data.team_member_list[i].power === 3) {
-                members.power = '观察者'
-              }
-              let flag = 0
-              for (let i = 0; i < this.memberList.length; i++) {
-                if (this.memberList[i].id === members.id) {
-                  flag = 1
-                  break
-                }
-              }
-              if (!flag) { this.memberList.push(members) }
-              // this.$message.success(res.data.message)
-            }
-          } else {
-             this.$message.error(res.data.message)
-          }
-           this.loading = false
-         })
     },
     invite() {
       this.$axios.post('/team/invite_member', qs.stringify(this.form_invite))
