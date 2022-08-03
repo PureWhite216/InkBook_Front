@@ -24,7 +24,7 @@
     <el-divider class="line" />
     <el-button
       class="button-create"
-      @click="createTeamStep = 0,dialogCreateTeamVisible = true"
+      @click="createTeamStep = 0,form_createTeam.teamName = '',form_createTeam.teamInfo='', dialogCreateTeamVisible = true"
     >创建团队
       <i class="el-icon-plus" style="margin-left: 59px"></i>
     </el-button>
@@ -73,20 +73,20 @@
         <h1>创建团队</h1>
         <div v-if="createTeamStep === 0">
           <h3>想一个队名</h3>
-          <el-input v-model="form_createTeam.name" size="medium" placeholder="请输入团队名" />
+          <el-input v-model="form_createTeam.teamName" size="medium" placeholder="请输入团队名" />
           <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
         </div>
 
         <div v-if="createTeamStep === 1">
           <h3>你将如何描述该团队</h3>
-          <el-input v-model="form_createTeam.info" size="medium" placeholder="请输入团队描述" />
+          <el-input v-model="form_createTeam.teamInfo" size="medium" placeholder="请输入团队描述" />
           <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
         </div>
 
         <div v-if="createTeamStep === 2">
           <h3> </h3>
           <h3> </h3>
-          <el-button style="margin-top: 12px;" @click="dialogCreateTeamVisible = false,delay(500),createTeamStep = 0">完成创建</el-button>
+          <el-button style="margin-top: 12px;" @click="dialogCreateTeamVisible = false,createTeamStep = 0, createTeam()">完成创建</el-button>
         </div>
         <!-- <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button> -->
       </el-dialog>
@@ -99,6 +99,9 @@ import store from '../store/index'
 import NextPageInfo from '@/router/next-page/routes'
 import { Layout } from '@/layouts'
 import router from '@/router'
+import qs from 'qs'
+import { getters } from '@/store/modules/user.js'
+import { state } from '@/store/modules/user.js'
 
 export default {
   name: 'SideBar',
@@ -114,7 +117,10 @@ export default {
       dialogCreateTeamVisible: false,
       createTeamStep: 0,
       form_createTeam: {
-        team_name: ''
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamName: '',
+        teamInfo: ''
       }
     }
   },
@@ -395,14 +401,28 @@ export default {
     toGroup() {
       router.push('/list/table-group')
     },
-    toRecent(){
+    toRecent() {
       router.push('/list/table-recentvisit')
     },
-    toCollect(){
+    toCollect() {
       router.push('/list/table-favorite')
     },
     createTeamNext() {
       if (this.createTeamStep < 3) this.createTeamStep++
+    },
+    createTeam() {
+      this.$axios.post('/team/create', qs.stringify(this.form_createTeam))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+           } else {
+             this.$message.error(res.data.message)
+           }
+          this.getTeamList()
+         })
+    },
+    getTeamList() {
+
     }
   }
 }
