@@ -61,9 +61,9 @@
           :size="tableConfig.size"
           :stripe="tableConfig.stripe"
           :border="tableConfig.border"
-          @selection-change="handleSelectionChange"
           highlight-current-row
-          @current-change="toGroupFile(currentRow)"
+          @selection-change="handleSelectionChange"
+          @current-change="handleCurrentChange"
         >
           <el-table-column
             type="selection"
@@ -234,6 +234,9 @@ export default {
     this.Refresh()
   },
   methods: {
+    handleCurrentChange(val) {
+      this.toGroupFile(val)
+    },
     quitTeam(item) {
       this.form_quitTeam.team_id = item.id
       this.$axios.post('/team/quit_team', qs.stringify(this.form_quitTeam))
