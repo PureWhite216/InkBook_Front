@@ -32,11 +32,20 @@
           </div>
           <div class="item-wrapper margin-top-lg">
             <el-input
-              v-model="form.indentify_code"
+              v-model="form.verification_code"
               placeholder="请输入验证码"
               type="password"
               clearable
               prefix-icon="el-icon-lock"
+            />
+          </div>
+          <br />
+          <div class="item-wrapper">
+            <el-input
+              v-model="form.real_name"
+              placeholder="请输入真名（可不填）"
+              prefix-icon="el-icon-user"
+              clearable
             />
           </div>
           <br />
@@ -108,7 +117,8 @@ export default {
     return {
       form: {
         email: '',
-        indentify_code: '',
+        verification_code: '',
+        real_name: '',
         username: '',
         password1: '',
         password2: ''
@@ -146,7 +156,7 @@ export default {
         this.$errorMsg('邮箱长度不应超过30位')
         return
       }
-      if (!this.form.indentify_code) {
+      if (!this.form.verification_code) {
         this.$errorMsg('请输入验证码')
         return
       }
@@ -171,11 +181,11 @@ export default {
         return
       }
       this.$axios.post(
-        '/user/register/check_indentify',
+        '/user/register',
         qs.stringify(this.form)
       )
         .then((res) => {
-          if (res.data.result === 5) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
             this.$router.push({ path: '/login' })
           } else {
@@ -189,11 +199,11 @@ export default {
         return
       }
       this.$axios.post(
-        '/user/register/send_indentify',
+        '/user/sendRegistrationVerificationCode',
         qs.stringify({ email: this.form.email })
       )
         .then((res) => {
-          if (res.data.result === 3) {
+          if (res.data.success === true) {
             this.$message.success(res.data.message)
           } else {
             this.$message.error(res.data.message)

@@ -5,7 +5,8 @@ const userInfoString = localStorage.getItem('userInfo')
 const userInfo = JSON.parse(userInfoString || '{}')
 export const state = {
   userId: userInfo.userId || '',
-  userName: userInfo.userName || '',
+  userName: userInfo.userName || '', dengluemail: userInfo.email || '',
+  real_name: userInfo.real_name || '',
   avatar: userInfo.avatar || '',
   token: userInfo.token || '',
   unlook_message_count: userInfo.unlook_message_count || ''
@@ -31,6 +32,8 @@ export const getters = {
     state.userId = null
     state.userName = null
     state.avatar = null
+    state.email = null
+    state.real_name = null
     state.token = null
     state.unlook_message_count = null
   }
@@ -64,6 +67,8 @@ const mutations = {
   SAVE_USER_INFO(state, userInfo) {
     state.userId = userInfo.userId
     state.userName = userInfo.userName
+    state.email = userInfo.email
+    state.real_name = userInfo.real_name
     state.avatar = userInfo.avatar
     state.token = userInfo.token
     localStorage.setItem('userInfo', JSON.stringify(userInfo))
@@ -75,6 +80,8 @@ const mutations = {
     // 这里只是在本地模拟删除了用户信息，在真实场景下需要 调后台登出接口 来真正实现登出功能
     state.userId = ''
     state.userName = ''
+    state.real_name = ''
+    state.email = ''
     state.avatar = ''
     state.token = ''
     resetRouter()
