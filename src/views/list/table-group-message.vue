@@ -3,12 +3,12 @@
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <el-button
-            slot="reference"
-            class="back-button"
-            @click="toProjectlist()"
-            float="left"
+          slot="reference"
+          class="back-button"
+          float="left"
+          @click="toProjectlist()"
         >
-        <i class="el-icon-back"></i>
+          <i class="el-icon-back"></i>
         </el-button>
         <p id="teamName" class="teamtitle" v-text="team_name">
           team_name
@@ -761,7 +761,7 @@ export default {
       this.$router.push('/list/table-group-project')
     },
     toProjectlist() {
-      this.$router.push('/list/table-group')
+      this.$router.replace('/list/table-group')
     },
     invite() {
       this.$axios.post('/team/inviteMember', qs.stringify(this.form_invite))
