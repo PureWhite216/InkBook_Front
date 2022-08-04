@@ -2,6 +2,14 @@
   <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
+        <el-button
+            slot="reference"
+            class="back-button"
+            @click="toProject()"
+            float="left"
+        >
+        <i class="el-icon-back"></i>
+        </el-button>
         <p id="projectName" class="projecttitle">
           {{ project_name }}
         </p>
@@ -477,6 +485,9 @@ export default {
     onFile() {
       this.$router.push('/list/table-group-file')
     },
+    toProject() {
+      this.$router.push('/list/table-group-message')
+    },
     getMemberList() {
       this.loading = true
       this.clearList()
@@ -560,6 +571,14 @@ export default {
   color: black;
   height: 35px;
 }
+.back-button{
+  margin: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  height: 40px;
+  width: 50px;
+}
 .spcbutton-style {
   margin: 20px;
   font-size: 14px;
@@ -572,10 +591,12 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  float:right;
+  
 }
 .teamtitle {
   font-size: 16px;
-  margin-left: 10px;
+  margin-left: 100px;
   margin-top: 10px;
   margin-bottom: 20px;
 }

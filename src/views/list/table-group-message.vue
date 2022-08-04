@@ -2,6 +2,14 @@
   <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
+        <el-button
+            slot="reference"
+            class="back-button"
+            @click="toProjectlist()"
+            float="left"
+        >
+        <i class="el-icon-back"></i>
+        </el-button>
         <p id="teamName" class="teamtitle" v-text="team_name">
           team_name
         </p>
@@ -751,6 +759,9 @@ export default {
       localStorage.setItem('project_name', item.project_name)
       this.$router.push('/list/table-group-project')
     },
+    toProjectlist() {
+      this.$router.push('/list/table-group')
+    },
     invite() {
       this.$axios.post('/team/inviteMember', qs.stringify(this.form_invite))
          .then((res) => {
@@ -794,6 +805,14 @@ export default {
   color: black;
   height: 45px;
 }
+.back-button{
+  margin: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  height: 40px;
+  width: 50px;
+}
 .table-custom {
 
 }
@@ -802,6 +821,7 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  float: right;
 }
 .temptablebody{
   height: 500px;
