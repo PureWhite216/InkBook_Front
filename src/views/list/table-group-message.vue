@@ -138,8 +138,8 @@
               :data="projectList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
               :cell-style="tableConfig.cellStyle"
+              @selection-change="handleSelectionChange"
               @row-dblclick="handleCurrentChange"
             >
               <el-table-column
@@ -168,21 +168,21 @@
                     slot="reference"
                     class="spcbutton-style"
                   >
-                  <el-dropdown trigger="click" @command="onCommad">
-                    <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
-                      <span class="nick-name el-dropdown-link">
-                        <i class="el-icon-more"></i>
-                      </span>
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text" @click="deleteProjectItem(scope.row)">删除项目</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
+                    <el-dropdown trigger="click" @command="onCommad">
+                      <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+                        <span class="nick-name el-dropdown-link">
+                          <i class="el-icon-more"></i>
+                        </span>
+                      </div>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                          <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                          <el-button type="text" @click="deleteProjectItem(scope.row)">删除项目</el-button>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
                   </el-button>
                 </template>
               </el-table-column>
@@ -245,21 +245,21 @@
                     slot="reference"
                     class="spcbutton-style"
                   >
-                  <el-dropdown trigger="click"  @command="onCommad">
-                    <div class="action-wrapper">
-                      <span class="nick-name el-dropdown-link">
-                        <i class="el-icon-more"></i>
-                      </span>
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
-                        <el-button type="text" @click="form_power.memberId = scope.row.user_id, form_power.userPerm = scope.row.user_perm, dialogPerm = true">赋予管理员权限</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-close" command="logout">
-                        <el-button type="text" @click="deleteMemberItem(scope.row)">移出团队</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
+                    <el-dropdown trigger="click" @command="onCommad">
+                      <div class="action-wrapper">
+                        <span class="nick-name el-dropdown-link">
+                          <i class="el-icon-more"></i>
+                        </span>
+                      </div>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-circle-check" command="personalCenter">
+                          <el-button type="text" @click="form_power.memberId = scope.row.user_id, form_power.userPerm = scope.row.user_perm, dialogPerm = true">赋予管理员权限</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-close" command="logout">
+                          <el-button type="text" @click="deleteMemberItem(scope.row)">移出团队</el-button>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
                   </el-button>
                 </template>
               </el-table-column>
@@ -275,9 +275,8 @@
         </div>
         <el-divider />
         <div>
-          <span>青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪</span>
+          <span>{{ teamInfo }}</span>
           <el-divider />
-          <span>少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
         </div>
       </template>
     </TableBody>
@@ -333,6 +332,7 @@ export default {
         user_id: getters.getUserId(state),
         teamId: localStorage.getItem('team_id')
       },
+      teamInfo: localStorage.getItem('team_info'),
       form_power: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),

@@ -271,6 +271,7 @@ export default {
     toGroupFile(item) {
       localStorage.setItem('team_id', item.id.toString())
       localStorage.setItem('team_name', item.name)
+      localStorage.setItem('team_info', item.info)
       store.toGroupFile && store.toGroupFile()
     },
     addTeam() {
