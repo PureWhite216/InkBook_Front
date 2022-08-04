@@ -757,6 +757,7 @@ export default {
     toProject(item) {
       localStorage.setItem('project_id', item.project_id)
       localStorage.setItem('project_name', item.project_name)
+      localStorage.setItem('project_info', item.project_info)
       this.$router.push('/list/table-group-project')
     },
     toProjectlist() {
