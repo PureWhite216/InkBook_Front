@@ -431,6 +431,7 @@ export default {
   },
   methods: {
     toDocEditor(val) {
+      localStorage.setItem('doc_id', val.doc_id)
       this.$router.push('/editor/rich-text')
     },
     deleteDoc() {
