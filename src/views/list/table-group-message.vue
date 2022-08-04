@@ -133,14 +133,14 @@
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">项目</span>
             <el-table
               ref="table"
-              v-loading="loading"
+              v-loading="tableloading"
               class="table-custom"
               :data="projectList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              highlight-current-row
               @selection-change="handleSelectionChange"
-              @current-change="handleCurrentChange"
+              :cell-style="tableConfig.cellStyle"
+              @row-dblclick="handleCurrentChange"
             >
               <el-table-column
                 type="selection"
@@ -168,7 +168,7 @@
                     slot="reference"
                     class="spcbutton-style"
                   >
-                  <el-dropdown trigger="hover" @command="onCommad">
+                  <el-dropdown trigger="click" @command="onCommad">
                     <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
@@ -245,7 +245,7 @@
                     slot="reference"
                     class="spcbutton-style"
                   >
-                  <el-dropdown trigger="hover"  @command="onCommad">
+                  <el-dropdown trigger="click"  @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
