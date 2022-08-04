@@ -70,9 +70,6 @@ export default {
     this.unlookMessageCount = localStorage.getItem('unlook_message_count')
   },
   mounted() {
-    this.$nextTick(() => {
-      setInterval(this.getUnlookMessageCount, 5000)
-    })
   },
   methods: {
     getUnlookMessageCount() {

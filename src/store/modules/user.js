@@ -16,6 +16,9 @@ export const getters = {
   getAvatar(state) {
     return state.avatar
   },
+  changeAvatar(state, avatar) {
+    state.avatar = avatar
+  },
   getUserName(state) {
     return state.userName
   },

@@ -54,7 +54,7 @@
           />
           <el-table-column
             align="center"
-            label="超级管理员"
+            label="团队信息"
             prop="info"
           />
           <el-table-column

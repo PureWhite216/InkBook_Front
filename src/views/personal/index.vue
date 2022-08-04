@@ -18,14 +18,14 @@
           <el-col :span="24">
             <el-form-item label="头像">
               <el-upload
-                :http-request="httpRequest"
+                class="avatar-uploader"
+                action="http://101.42.171.88:8090/user/uploadFile?token=<getters.getToken(state)>"
+                :on-success="handleChange"
+                :before-upload="beforeUpload"
                 :show-file-list="false"
-                action=""
               >
-                <el-avatar
-                  :size="80"
-                  :src="personalInformation.avatar"
-                />
+                <img v-if="personalInformation.avatar" :src="personalInformation.avatar" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -119,7 +119,7 @@ export default {
     return {
       dialogVisible_changePassword: false,
       loading: false,
-      file: File,
+      file: '',
       personalInformation: {
         username: null,
         email: null,
@@ -160,18 +160,25 @@ export default {
     this.getPersonalInformation()
   },
   methods: {
-    httpRequest(file) {
-      this.file = file
+    handleChange(res, file) {
+      console.log(res.data.message)
+      if (res.data.success) {
+        this.$message.success(res.data.message)
+      } else {
+        this.$message.error(res.data.message)
+      }
     },
-    submit() {
-      this.$axios.post('/user/upload_avatar', qs.stringify({ 'username': getters.getUserName(state), 'file': this.file }))
-      .then(res => {
-        if (res.data.result === 1) {
-          this.$message.success(res.data.message)
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
+    beforeUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 10
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 10MB!')
+      }
+      return isJPG && isLt2M
     },
     clearPassword() {
       this.form_changePassword.old_password = ''
@@ -247,7 +254,7 @@ export default {
             this.personalInformation.username = res.data.data.username
             this.personalInformation.email = res.data.data.email
             this.personalInformation.real_name = res.data.data.real_name
-           // this.personalInformation.avatar = res.data.avatar
+            this.personalInformation.avatar = res.data.data.avatar
             this.personalInformation.user_id = res.data.data.user_id
           } else {
             this.$message.error(res.data.message)
@@ -293,6 +300,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 .content-wrapper {
   overflow-y: auto;
   @media screen and (max-width: 768px) {
