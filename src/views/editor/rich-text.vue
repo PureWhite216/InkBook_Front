@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <el-card :body-style="{padding: '0'}">
+    <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
         <el-link :underline="false">文章标题</el-link>
       </template>
@@ -13,102 +13,25 @@
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
+      style="max-width: 950px; margin: auto"
     >
       <template #header>
         <div class="flex">
           <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
           <el-button
-            style="margin-inline:10px"
-            type="danger"
-            size="mini"
+            style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="back()"
-          >退出编辑
+          >
+            <i class="el-icon-back"></i>
+            退出编辑
           </el-button>
-          <el-popover
-            v-model="comment_visible"
-            placement="top"
-            width="600"
-          >
-            <p>添加评论</p>
-            <el-input
-              v-model="form_addComment.comment_content"
-              placeholder="输入评论"
-              style="width: 80%;margin: auto"
-            />
-            <div style="text-align: left; margin: 0">
-              <el-button size="mini" style="margin-top:10px" @click="addComment(), form_addComment.comment_content= null, comment_visible = false">确定</el-button>
-            </div>
-            <el-table :data="commentList" height="400">
-              <el-table-column width="120" property="username" label="名称" />
-              <el-table-column width="120" property="time" label="时间" />
-              <el-table-column width="300" property="content" label="评论" />
-            </el-table>
-            <el-button
-              slot="reference"
-              style="margin-inline:10px"
-              size="mini"
-              icon="el-icon-plus"
-            >评论
-            </el-button>
-          </el-popover>
-          <el-popover
-            v-model="invite_visible"
-            placement="top"
-            width="400"
-          >
-            <p>通过ID添加协作者</p>
-            <el-input
-              v-model="form_invite.accept_id"
-              placeholder="输入用户ID"
-              style="width: 80%;margin: auto"
-            />
-            <div style="text-align: left; margin: 0">
-              <el-button size="mini" style="margin-top:10px" @click="addCooperator(), form_invite.accept_id=null, invite_visible = false">确定</el-button>
-            </div>
-            <el-table v-loading="loading" :data="cooperatorList" height="400">
-              <el-table-column width="60" property="id" label="ID" />
-              <el-table-column width="140" property="username" label="名称" />
-              <el-table-column
-                align="center"
-                label="操作"
-                width="200"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    :underline="false"
-                    text-align="left"
-                    icon="el-icon-delete"
-                    @click="deleteCooperator(scope.row)"
-                  >解除协作</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-button
-              v-if="isShow"
-              slot="reference"
-              style="margin-inline:10px"
-              size="mini"
-              icon="el-icon-plus"
-            >协作
-            </el-button>
-          </el-popover>
           <el-button
-            size="mini"
+            style="margin-inline:10px; background: #49aaef; color: white; border: 0"
             @click="Save"
-          >保存</el-button>
-          <el-button
-            size="mini"
-            :underline="false"
-            @click="Like"
-          >收藏</el-button>
-          <el-button
-            type="warning"
-            size="mini"
-            @click="share"
-          >分享</el-button>
+          >
+            <i class="el-icon-plus"></i>
+            保存</el-button>
         </div>
       </template>
       <!-- <el-dialog title="分享二维码" :visible.sync="dialogVisible_share">
@@ -121,7 +44,7 @@
       <RichTextEditor
         ref="richTextEditor"
         v-model="editor"
-        :height="600"
+        :height="1000"
       />
     </el-card>
     <div
