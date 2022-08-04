@@ -138,7 +138,9 @@
               :data="projectList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
+              highlight-current-row
               @selection-change="handleSelectionChange"
+              @current-change="handleCurrentChange"
             >
               <el-table-column
                 type="selection"
@@ -725,14 +727,19 @@ export default {
         })
       })
     },
+    handleCurrentChange(val) {
+      this.toProject(val)
+    },
     onGroupSpace() {
       store.toGroupSpace && store.toGroupSpace()
     },
     clearList() {
       this.memberList = []
     },
-    onFile() {
-      this.$router.push('/list/table-group-file')
+    toProject(item) {
+      localStorage.setItem('project_id', item.project_id)
+      localStorage.setItem('project_name', item.project_name)
+      this.$router.push('/list/table-group-project')
     },
     invite() {
       this.$axios.post('/team/inviteMember', qs.stringify(this.form_invite))
