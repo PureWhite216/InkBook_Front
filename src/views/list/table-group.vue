@@ -94,12 +94,6 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="团队id"
-            prop="id"
-            width="100"
-          />
-          <el-table-column
-            align="center"
             label="团队名"
             prop="name"
             width="180"
@@ -111,7 +105,12 @@
           />
           <el-table-column
             align="center"
-            label="你的身份"
+            label="超级管理员"
+            prop="info"
+          />
+          <el-table-column
+            align="center"
+            label="我的身份"
             prop="power"
             width="80"
           />
