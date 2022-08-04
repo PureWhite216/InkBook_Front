@@ -2,7 +2,7 @@
   <div class="main-container">
     <el-row style="background: #2f2f2f">
       <el-col :span="8">
-        <el-button class="backbutton" style="margin-left: 20px; margin-top: 10px">
+        <el-button class="backbutton" style="margin-left: 20px; margin-top: 10px" @click="back">
           <i class="el-icon-back" style="font-size: x-large"></i>
         </el-button>
       </el-col>
@@ -45,6 +45,7 @@ import extendSideBar from './extendSideBar'
 import layerPanel from './extendSideBar/layerPanel'
 import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
+import router from '@/router'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -138,6 +139,9 @@ export default {
       killAutoSaveTask: 'backup/killAutoSaveTask',
       backupInvoker: 'backup/invoker'
     }),
+    back() {
+      router.push('/list/table-group-project')
+    },
     keydownHandle(e) {
       if (e.target !== this.body) {
         return
