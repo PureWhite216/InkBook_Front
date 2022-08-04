@@ -1,12 +1,11 @@
 <template>
-  <div class="main-container">
-    <TableHeader :can-collapsed="false">
+  <div class="main-container" style="position:fixed;">
+    <TableHeader :can-collapsed="false" style="float:absolut">
       <template slot="left">
         <p id="projectName" class="projecttitle">
           最近浏览
         </p>
       </template>
-      
     </TableHeader>
     
     <TableBody ref="tableBody" class="temptablebody">
