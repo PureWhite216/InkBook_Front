@@ -56,7 +56,7 @@ export default {
   background-size: cover;
   background-position: 50% 50%;
   height: 200vh;
-  font: 900 28rem '';
+  font: 1000 28rem '';
   line-height: 130vh;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -80,7 +80,7 @@ export default {
 .enterbutton{
   background: rgba(225, 143, 143, 0);
   color: white;
-  font: 400 9rem '';
+  font: 400 6rem '';
   border: 0;
 }
 .enterbutton:hover{
