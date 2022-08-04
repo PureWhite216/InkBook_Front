@@ -106,12 +106,15 @@
     <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
       <el-form :model="form_page">
         <el-form-item label="原型名称" :label-width="formLabelWidth">
-          <el-input v-model="form_page.project_name" autocomplete="off" />
+          <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="原型简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_createAxure.axure_info" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
-        <el-button @click="CreatePage">确 定</el-button>
+        <el-button @click="createAxure(), dialogPageVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -129,6 +132,21 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="修改文档信息" :visible.sync="dialogUpdateDocInfoVisible">
+      <el-form :model="form_updateDocInfo">
+        <el-form-item label="文档新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateDocInfo.doc_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="文档新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateDocInfo.doc_description" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateDocInfoVisible = false">取 消</el-button>
+        <el-button @click="updateDocInfo(), dialogUpdateDocInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -143,6 +161,7 @@
               :cell-style="tableConfig.cellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toDocEditor"
             >
               <el-table-column
                 type="selection"
@@ -180,10 +199,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
+                        <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除文件</el-button>
+                        <el-button type="text"  @click="form_deleteDoc.doc_id = scope.row.doc_id, deleteDoc()">删除文件</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -197,10 +216,11 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toAxureEditor"
             >
               <el-table-column
                 type="selection"
@@ -209,7 +229,7 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="axure_name"
                 width="250px"
               />
               <el-table-column
@@ -238,7 +258,7 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
+                        <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
                         <el-button type="text">删除文件</el-button>
@@ -310,6 +330,26 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_createAxure: {
+        token: getters.getToken(state),
+        axure_name: null,
+        axure_info: null,
+        project_id: localStorage.getItem('project_id')
+      },
+      form_getAxureList: {
+        token: getters.getToken(state),
+        project_id: localStorage.getItem('project_id')
+      },
+      form_deleteDoc: {
+        token: getters.getToken(state),
+        doc_id: null
+      },
+      form_updateDocInfo: {
+        token: getters.getToken(state),
+        doc_id: null,
+        doc_name: null,
+        doc_description: null
+      },
       form_deleteProject: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -342,6 +382,10 @@ export default {
         page_name: '',
         team_id: Number(localStorage.getItem('team_id'))
       },
+      form_getDocInfo: {
+        token: getters.getToken(state),
+        doc_id: localStorage.getItem('doc_id')
+      },
       form_deleteMember: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -369,7 +413,8 @@ export default {
       dialogPageVisible: false,
       dialogMethodVisible: false,
       dialogUpdateProjectVisible: false,
-      memberList: [],
+      dialogUpdateDocInfoVisible: false,
+      axureList: [],
       deleteMemberList: [],
       docList: [],
       powerOptions: [
@@ -401,8 +446,115 @@ export default {
   },
   created() {
     this.getDocList()
+    this.getAxureList()
+    localStorage.setItem('flag', 'user')
+    localStorage.setItem('enable', 'true')
   },
   methods: {
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      this.$router.push('/posterEditor')
+    },
+    createAxure() {
+      this.$axios.post('/axure/create', qs.stringify(this.form_createAxure))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+             this.getAxureList()
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
+    getAxureList() {
+      this.loading = true
+      this.axureList = []
+      this.$axios.post('/axure/getAxureList', qs.stringify(this.form_getAxureList))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              let flag = 0
+              for (let i = 0; i < this.axureList.length; i++) {
+                if (this.axureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.axureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
+    toDocEditor(val) {
+      localStorage.setItem('doc_id', val.doc_id)
+      localStorage.setItem('doc_name', val.doc_name)
+      this.$axios.post('/doc/getDocInfo', qs.stringify(this.form_getDocInfo))
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('doc_content', res.data.data.doc_content)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+      this.$router.push('/editor/rich-text')
+    },
+    deleteDoc() {
+      this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.$axios.post('/doc/deleteDoc', qs.stringify(this.form_deleteDoc))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getDocList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    updateDocInfo() {
+      this.$axios.post('/doc/updateDocInfo', qs.stringify(this.form_updateDocInfo))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getDocList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     deleteProject() {
       this.$confirm('此操作将使您删除此项目' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -441,6 +593,7 @@ export default {
         })
     },
     getDocList() {
+      this.docList = []
       this.$axios.get('/doc/getDocList', {
               params: {
                 token: getters.getToken(state),
@@ -587,47 +740,6 @@ export default {
     },
     toProject() {
       this.$router.replace('/list/table-group-message')
-    },
-    getMemberList() {
-      this.loading = true
-      this.clearList()
-      this.$axios.post('/team/get_team_member_list', qs.stringify(this.form_member))
-        .then((res) => {
-          if (res.data.result === 4) {
-            for (let i = 0; i < res.data.team_member_list.length; i++) {
-              const members = {
-                sno: 0,
-                id: 0,
-                username: '',
-                email: '',
-                power: ''
-              }
-              members.sno = i + 1
-              members.id = res.data.team_member_list[i].id
-              members.username = res.data.team_member_list[i].username
-              members.email = res.data.team_member_list[i].email
-              if (res.data.team_member_list[i].power === 1) {
-                members.power = '队长'
-              } else if (res.data.team_member_list[i].power === 2) {
-                members.power = '开发者'
-              } else if (res.data.team_member_list[i].power === 3) {
-                members.power = '观察者'
-              }
-              let flag = 0
-              for (let i = 0; i < this.memberList.length; i++) {
-                if (this.memberList[i].id === members.id) {
-                  flag = 1
-                  break
-                }
-              }
-              if (!flag) { this.memberList.push(members) }
-              // this.$message.success(res.data.message)
-            }
-          } else {
-             this.$message.error(res.data.message)
-          }
-           this.loading = false
-         })
     },
     createWord() {
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))

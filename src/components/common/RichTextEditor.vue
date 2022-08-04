@@ -71,7 +71,7 @@ export default {
       }
       this.quill = new Quill(this.$refs.richTextEditor, options)
       // JSON.parse(localStorage.getItem('word_content'))
-      if (localStorage.getItem('flag') === 'team') { this.quill.setContents(JSON.parse(localStorage.getItem('team_word_content'))) } else { this.quill.setContents(JSON.parse(localStorage.getItem('user_word_content'))) }
+      if (localStorage.getItem('flag') === 'team') { this.quill.setContents(JSON.parse(localStorage.getItem('team_word_content'))) } else { this.quill.setContents(JSON.parse(localStorage.getItem('doc_content'))) }
       if (localStorage.getItem('enable') === 'false') {
         this.quill.enable(false)
       }
