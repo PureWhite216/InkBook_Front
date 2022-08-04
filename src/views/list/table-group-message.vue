@@ -205,6 +205,7 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
+              :cell-style="tableConfig.cellStyle"
             >
               <el-table-column
                 type="selection"
