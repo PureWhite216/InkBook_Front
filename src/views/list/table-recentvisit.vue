@@ -23,10 +23,6 @@
               @selection-change="handleSelectionChange"
             >
               <el-table-column
-                type="selection"
-                width="45"
-              />
-              <el-table-column
                 align="center"
                 label="名称"
                 prop="projectname"
@@ -92,10 +88,6 @@
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column
-                type="selection"
-                width="45"
-              />
               <el-table-column
                 align="center"
                 label="名称"
