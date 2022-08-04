@@ -10,7 +10,7 @@
       <div class="left"></div>
       <div class="right">
         <div class="my-width flex-sub flex justify-center align-center">
-          <div class="title margin-left">欢迎来到 墨书</div>
+          <div class="title margin-left" style="font-size: 40px">欢迎来到 墨书</div>
         </div>
         <el-form :model="form" class="form-container">
           <div class="item-wrapper">
@@ -30,12 +30,12 @@
               prefix-icon="el-icon-lock"
             />
           </div>
-          <div class="item-wrapper">
-            <VawVerify
-              class="margin-top-lg"
-              @verify-success="onVerifySuccess"
-            />
-          </div>
+<!--          <div class="item-wrapper">-->
+<!--            <VawVerify-->
+<!--              class="margin-top-lg"-->
+<!--              @verify-success="onVerifySuccess"-->
+<!--            />-->
+<!--          </div>-->
           <div class="flex-sub"></div>
           <div class="margin-top-lg">
             <el-button
@@ -97,7 +97,7 @@ export default {
       ImageMobileBg1,
       redirect: '',
       autoLogin: false,
-      verifyState: false,
+      verifyState: true,
       defaultTheme: this.$layoutStore.state.theme
     }
   },
