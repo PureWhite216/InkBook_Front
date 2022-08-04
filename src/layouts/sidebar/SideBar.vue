@@ -7,10 +7,8 @@
       <Logo v-if="showLogo" />
     </transition>
     <el-menu
-      default-active="2"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
+      ref="elMenu1"
     >
       <el-menu-item index="1" @click="toRecent">
         <i class="el-icon-document"></i>
@@ -38,20 +36,18 @@
     <div class="text-grey">最近查看的团队</div>
     <el-menu
       style="margin-top: 10px"
-      default-active="2"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
+      ref="elMenu2"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="1" @click="recentGroup()">
         <i class="el-icon-right"></i>
         <span slot="title">团队1</span>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="2" @click="recentGroup()">
         <i class="el-icon-right"></i>
         <span slot="title">团队2</span>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="3" @click="recentGroup()">
         <i class="el-icon-right"></i>
         <span slot="title">团队3</span>
       </el-menu-item>
@@ -96,8 +92,6 @@
 
 <script>
 import store from '../store/index'
-import NextPageInfo from '@/router/next-page/routes'
-import { Layout } from '@/layouts'
 import router from '@/router'
 import qs from 'qs'
 import { getters } from '@/store/modules/user.js'
@@ -124,262 +118,6 @@ export default {
       }
     }
   },
-  computed: {
-    routes() {
-      return [
-        ...NextPageInfo,
-        {
-          path: '/redirect',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: '/redirect/:path(.*)',
-              component: () => import('@/views/redirect/index')
-            }
-          ]
-        },
-        {
-          path: '/login',
-          name: 'login',
-          component: () => import('@/views/login'),
-          hidden: true
-        },
-        {
-          path: '/register',
-          name: 'register',
-          component: () => import('@/views/register'),
-          hidden: true
-        },
-        {
-          path: '/forget',
-          name: 'forget',
-          component: () => import('@/views/forget'),
-          hidden: true
-        },
-        {
-          path: '/personal',
-          name: 'personal',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'center',
-              name: 'personalCenter',
-              component: () => import('@/views/personal'),
-              meta: {
-                title: '个人中心'
-              }
-            }
-          ]
-        },
-        {
-          path: '/editor',
-          name: 'editor',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'rich-text',
-              name: 'richText',
-              component: () => import('@/views/editor/rich-text'),
-              meta: {
-                title: '文档编辑'
-              }
-            }
-          ]
-        },
-        {
-          path: '/editor',
-          name: 'editor',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'rich-text-group',
-              name: 'richTextGroup',
-              component: () => import('@/views/editor/rich-text-group'),
-              meta: {
-                title: '团队文档编辑'
-              }
-            }
-          ]
-        },
-        {
-          path: '/editor',
-          name: 'editor',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'rich-text-readonly',
-              name: 'richTextReadOnly',
-              component: () => import('@/views/editor/rich-text-readonly'),
-              meta: {
-                title: '只读文档'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'table-template',
-              name: 'tableTemplate',
-              component: () => import('@/views/list/table-template'),
-              meta: {
-                title: '模板选择'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-latest',
-              name: 'tableLatest',
-              component: () => import('@/views/list/table-latest'),
-              meta: {
-                title: '最近浏览文件'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-like',
-              name: 'tableLike',
-              component: () => import('@/views/list/table-like'),
-              meta: {
-                title: '最近收藏文件'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-created',
-              name: 'tableCreated',
-              component: () => import('@/views/list/table-created'),
-              meta: {
-                title: '个人文件'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-share',
-              name: 'tableShare',
-              component: () => import('@/views/list/table-share'),
-              meta: {
-                title: '共享给我'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-group',
-              name: 'tableGroup',
-              component: () => import('@/views/list/table-group'),
-              meta: {
-                title: '团队空间'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'table-group-member',
-              name: 'tableGroupMember',
-              component: () => import('@/views/list/table-group-member'),
-              meta: {
-                title: '团队成员'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: true,
-          children: [
-            {
-              path: 'table-group-file',
-              name: 'tableGroupFile',
-              component: () => import('@/views/list/table-group-file'),
-              meta: {
-                title: '团队文件'
-              }
-            }
-          ]
-        },
-        {
-          path: '/list',
-          name: 'list',
-          component: Layout,
-          hidden: false,
-          children: [
-            {
-              path: 'table-recover',
-              name: 'tableRecover',
-              component: () => import('@/views/list/table-recover'),
-              meta: {
-                title: '回收站'
-              }
-            }
-          ]
-        },
-        {
-          path: '/',
-          name: 'root',
-          redirect: '/index/main',
-          hidden: true
-        },
-        {
-          path: '/index/main',
-          name: 'main',
-          redirect: '/list/table-latest',
-          hidden: true
-        }
-      ].filter((it) => !!it.name)
-    }
-  },
   watch: {
     $route(to, from) {
       if (to.meta.hiddenSiderbar) {
@@ -398,13 +136,20 @@ export default {
     }
   },
   methods: {
+    recentGroup() {
+      this.$refs.elMenu1.activeIndex = null
+    },
     toGroup() {
       router.push('/list/table-group')
+      this.$refs.elMenu1.activeIndex = null
+      this.$refs.elMenu2.activeIndex = null
     },
     toRecent() {
+      this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-recentvisit')
     },
     toCollect() {
+      this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-favorite')
     },
     createTeamNext() {
