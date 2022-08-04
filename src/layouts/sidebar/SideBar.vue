@@ -160,11 +160,13 @@ export default {
            } else {
              this.$message.error(res.data.message)
            }
-          this.getTeamList()
+          this.refresh()
          })
     },
-    getTeamList() {
-
+    refresh() {
+      this.$router.replace({
+        path: '/redirect' + this.$route.path
+      })
     }
   }
 }

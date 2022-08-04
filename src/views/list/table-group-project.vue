@@ -2,13 +2,22 @@
   <div class="main-container">
     <TableHeader :can-collapsed="false">
       <template slot="left">
+        <el-button
+          slot="reference"
+          class="back-button"
+          @click="toProject()"
+          float="left"
+        >
+        <i class="el-icon-back"></i>
+        </el-button>
         <p id="projectName" class="projecttitle">
           {{ project_name }}
         </p>
         <p id="teamName" class="teamtitle">
-          该项目属于{{ team_name }}
+          该项目属于团队{{ team_name }}
         </p>
       </template>
+      
       <template slot="right">
         <el-popover
           v-model="visible"
@@ -18,7 +27,7 @@
           <el-button
             slot="reference"
             class="button-style"
-            @click="dialogInviteVisible = true"
+            @click="dialogWordVisible = true"
           >创建文档
             <i class="el-icon-plus"></i>
           </el-button>
@@ -33,7 +42,7 @@
           <el-button
             slot="reference"
             class="button-style"
-            @click="dialogProjectVisible = true"
+            @click="dialogPageVisible = true"
           >创建原型
             <i class="el-icon-plus"></i>
           </el-button>
@@ -79,39 +88,30 @@
         </el-popover>
       </template>
     </TableHeader>
-    <el-dialog title="创建文档" :visible.sync="dialogInviteVisible">
-      <el-form :model="form_invite">
+    <el-dialog title="创建文档" :visible.sync="dialogWordVisible">
+      <el-form :model="form_word">
         <el-form-item label="文档名称" :label-width="formLabelWidth">
-          <el-input v-model="form_invite.accept_id" autocomplete="off" />
+          <el-input v-model="form_word.doc_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="文档简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_word.doc_description" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogInviteVisible = false; form_invite.accept_id = '' ">取 消</el-button>
-        <el-button @click="Invite">确 定</el-button>
+        <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
+        <el-button @click="dialogWordVisible = false; createWord()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="创建原型" :visible.sync="dialogProjectVisible">
-      <el-form :model="form_project">
+    <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
+      <el-form :model="form_page">
         <el-form-item label="原型名称" :label-width="formLabelWidth">
-          <el-input v-model="form_project.project_name" autocomplete="off" />
+          <el-input v-model="form_page.project_name" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogProjectVisible = false; form_project.project_name = '' ">取 消</el-button>
-        <el-button @click="CreateProject">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="创建uml" :visible.sync="dialogMethodVisible">
-      <el-form :model="form_project">
-        <el-form-item label="uml名称" :label-width="formLabelWidth">
-          <el-input v-model="form_project.project_name" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogMethodVisible = false; form_project.project_name = '' ">取 消</el-button>
-        <el-button @click="CreateProject">确 定</el-button>
+        <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
+        <el-button @click="CreatePage">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
@@ -123,7 +123,7 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="docList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
@@ -135,19 +135,19 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="doc_name"
                 width="250px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="updatetime"
+                prop="last_edit_time"
                 width="250px"
               />
               <el-table-column
                 align="center"
                 label="创建者"
-                prop="user"
+                prop="creator_name"
                 width="200px"
               />
               <el-table-column
@@ -243,9 +243,8 @@
         </div>
         <el-divider />
         <div>
-          <span>青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪</span>
+          <span>{{ project_info }}</span>
           <el-divider />
-          <span>少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
         </div>
       </template>
     </TableBody>
@@ -301,19 +300,18 @@ export default {
         user_id: getters.getUserId(state),
         team_id: Number(localStorage.getItem('team_id'))
       },
+      project_info: localStorage.getItem('project_info'),
       visible: false,
-      form_invite: {
+      form_word: {
         token: getters.getToken(state),
-        username: getters.getUserName(state),
-        send_id: getters.getUserId(state),
-        accept_id: null,
-        team_id: Number(localStorage.getItem('team_id')),
-        power: null
+        project_id: localStorage.getItem('project_id'),
+        doc_name: '',
+        doc_description: ''
       },
-      form_project: {
+      form_page: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
-        project_name: '',
+        page_name: '',
         team_id: Number(localStorage.getItem('team_id'))
       },
       form_deleteMember: {
@@ -339,11 +337,12 @@ export default {
       },
       project_name: localStorage.getItem('project_name'),
       team_name: localStorage.getItem('team_name'),
-      dialogInviteVisible: false,
-      dialogProjectVisible: false,
+      dialogWordVisible: false,
+      dialogPageVisible: false,
       dialogMethodVisible: false,
       memberList: [],
       deleteMemberList: [],
+      docList: [],
       powerOptions: [
         {
           value: 1,
@@ -372,13 +371,56 @@ export default {
     }
   },
   created() {
-    this.getMemberList()
+    this.getDocList()
   },
   methods: {
+    getDocList() {
+      this.$axios.get('/doc/getDocList', {
+              params: {
+                token: getters.getToken(state),
+                project_id: localStorage.getItem('project_id')
+              }
+            })
+            .then(res => {
+              if (res.data.success) {
+                for (let i = 0; i < res.data.data.length; i++) {
+              const docs = {
+                doc_name: null,
+                last_edit_time: null,
+                project_id: null,
+                doc_description: null,
+                creator_id: null,
+                doc_content: null,
+                creator_name: null,
+                doc_id: null
+              }
+              docs.doc_name = res.data.data[i].doc_name
+              docs.last_edit_time = res.data.data[i].last_edit_time
+              docs.project_id = res.data.data[i].project_id
+              docs.doc_description = res.data.data[i].doc_description
+              docs.creator_id = res.data.data[i].creator_id
+              docs.doc_content = res.data.data[i].doc_content
+              docs.creator_name = res.data.data[i].creator_name
+              docs.doc_id = res.data.data[i].doc_id
+              let flag = 0
+              for (let i = 0; i < this.docList.length; i++) {
+                if (this.docList[i].doc_id === docs.doc_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.docList.push(docs) }
+              // this.$message.success(res.data.message)
+            }
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
+    },
     createUML() {
       router.push('/drawio')
     },
-    CreateProject() {
+    CreatePage() {
       this.$message.error('还没写接口哪！')
     },
     setPerm(item) {
@@ -477,6 +519,9 @@ export default {
     onFile() {
       this.$router.push('/list/table-group-file')
     },
+    toProject() {
+      this.$router.push('/list/table-group-message')
+    },
     getMemberList() {
       this.loading = true
       this.clearList()
@@ -518,11 +563,12 @@ export default {
            this.loading = false
          })
     },
-    invite() {
-      this.$axios.post('/team/invite_member', qs.stringify(this.form_invite))
+    createWord() {
+      this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))
          .then((res) => {
-           if (res.data.result === 6) {
+           if (res.data.success) {
              this.$message.success(res.data.message)
+             this.getDocList()
            } else {
              this.$message.error(res.data.message)
            }
@@ -560,6 +606,14 @@ export default {
   color: black;
   height: 35px;
 }
+.back-button{
+  margin: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  height: 40px;
+  width: 50px;
+}
 .spcbutton-style {
   margin: 20px;
   font-size: 14px;
@@ -572,10 +626,10 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  float:right;
 }
 .teamtitle {
   font-size: 16px;
-  margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
 }
