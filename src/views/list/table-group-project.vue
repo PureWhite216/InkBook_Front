@@ -3,10 +3,10 @@
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <el-button
-            slot="reference"
-            class="back-button"
-            @click="toProject()"
-            float="left"
+          slot="reference"
+          class="back-button"
+          @click="toProject()"
+          float="left"
         >
         <i class="el-icon-back"></i>
         </el-button>
@@ -17,6 +17,7 @@
           该项目属于团队{{ team_name }}
         </p>
       </template>
+      
       <template slot="right">
         <el-popover
           v-model="visible"
@@ -616,7 +617,7 @@ export default {
   height: 35px;
 }
 .back-button{
-  margin: 8px;
+  margin: 15px;
   font-size: 12px;
   font-weight: bold;
   color: black;
@@ -636,11 +637,9 @@ export default {
   margin-top: 10px;
   margin-bottom: 20px;
   float:right;
-  
 }
 .teamtitle {
   font-size: 16px;
-  margin-left: 100px;
   margin-top: 10px;
   margin-bottom: 20px;
 }
