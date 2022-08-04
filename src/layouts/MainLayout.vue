@@ -67,7 +67,7 @@ export default {
 @import "../assets/styles/variables.scss";
 .vertical-line {
   position:absolute;
-  height: 950px;
+  height: 90%;
   width: 1px;
   margin-left: 0px;
   z-index:999;

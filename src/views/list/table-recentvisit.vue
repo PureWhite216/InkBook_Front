@@ -1,13 +1,13 @@
 <template>
   <div class="main-container" style="position:fixed;">
-    <TableHeader :can-collapsed="false" style="float:absolut">
+    <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
           最近浏览
         </p>
       </template>
     </TableHeader>
-    
+
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -83,76 +83,6 @@
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">原型</span>
-            <el-table
-              ref="table"
-              v-loading="loading"
-              class="table-custom"
-              :data="memberList"
-              :header-cell-style="tableConfig.headerCellStyle"
-              :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column
-                type="selection"
-                width="45"
-              />
-              <el-table-column
-                align="center"
-                label="名称"
-                prop="projectname"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="所属团队"
-                prop="updatetime"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="所属项目"
-                prop="user"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="更新时间"
-                prop="user"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="创建者"
-                prop="user"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="操作"
-                width="100"
-              >
-                <template slot-scope="scope">
-                  <el-dropdown trigger="click" @command="onCommad">
-                    <div class="action-wrapper">
-                      <span class="nick-name el-dropdown-link">
-                        <i class="el-icon-more"></i>
-                      </span>
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除文件</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">uml</span>
             <el-table
               ref="table"
               v-loading="loading"
