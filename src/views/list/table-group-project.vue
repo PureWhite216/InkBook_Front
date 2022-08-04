@@ -106,12 +106,15 @@
     <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
       <el-form :model="form_page">
         <el-form-item label="原型名称" :label-width="formLabelWidth">
-          <el-input v-model="form_page.project_name" autocomplete="off" />
+          <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="原型简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_createAxure.axure_info" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
-        <el-button @click="CreatePage">确 定</el-button>
+        <el-button @click="createAxure(), dialogPageVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -213,10 +216,11 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toAxureEditor"
             >
               <el-table-column
                 type="selection"
@@ -225,7 +229,7 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="axure_name"
                 width="250px"
               />
               <el-table-column
@@ -326,6 +330,16 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_createAxure: {
+        token: getters.getToken(state),
+        axure_name: null,
+        axure_info: null,
+        project_id: localStorage.getItem('project_id')
+      },
+      form_getAxureList: {
+        token: getters.getToken(state),
+        project_id: localStorage.getItem('project_id')
+      },
       form_deleteDoc: {
         token: getters.getToken(state),
         doc_id: null
@@ -400,7 +414,7 @@ export default {
       dialogMethodVisible: false,
       dialogUpdateProjectVisible: false,
       dialogUpdateDocInfoVisible: false,
-      memberList: [],
+      axureList: [],
       deleteMemberList: [],
       docList: [],
       powerOptions: [
@@ -432,10 +446,67 @@ export default {
   },
   created() {
     this.getDocList()
+    this.getAxureList()
     localStorage.setItem('flag', 'user')
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      this.$router.push('/posterEditor')
+    },
+    createAxure() {
+      this.$axios.post('/axure/create', qs.stringify(this.form_createAxure))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+             this.getAxureList()
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
+    getAxureList() {
+      this.loading = true
+      this.axureList = []
+      this.$axios.post('/axure/getAxureList', qs.stringify(this.form_getAxureList))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              let flag = 0
+              for (let i = 0; i < this.axureList.length; i++) {
+                if (this.axureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.axureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
@@ -669,47 +740,6 @@ export default {
     },
     toProject() {
       this.$router.replace('/list/table-group-message')
-    },
-    getMemberList() {
-      this.loading = true
-      this.clearList()
-      this.$axios.post('/team/get_team_member_list', qs.stringify(this.form_member))
-        .then((res) => {
-          if (res.data.result === 4) {
-            for (let i = 0; i < res.data.team_member_list.length; i++) {
-              const members = {
-                sno: 0,
-                id: 0,
-                username: '',
-                email: '',
-                power: ''
-              }
-              members.sno = i + 1
-              members.id = res.data.team_member_list[i].id
-              members.username = res.data.team_member_list[i].username
-              members.email = res.data.team_member_list[i].email
-              if (res.data.team_member_list[i].power === 1) {
-                members.power = '队长'
-              } else if (res.data.team_member_list[i].power === 2) {
-                members.power = '开发者'
-              } else if (res.data.team_member_list[i].power === 3) {
-                members.power = '观察者'
-              }
-              let flag = 0
-              for (let i = 0; i < this.memberList.length; i++) {
-                if (this.memberList[i].id === members.id) {
-                  flag = 1
-                  break
-                }
-              }
-              if (!flag) { this.memberList.push(members) }
-              // this.$message.success(res.data.message)
-            }
-          } else {
-             this.$message.error(res.data.message)
-          }
-           this.loading = false
-         })
     },
     createWord() {
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))
