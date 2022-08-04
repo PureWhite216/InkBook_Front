@@ -129,6 +129,21 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="修改文档信息" :visible.sync="dialogUpdateDocInfoVisible">
+      <el-form :model="form_updateDocInfo">
+        <el-form-item label="文档新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateDocInfo.doc_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="文档新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateDocInfo.doc_description" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateDocInfoVisible = false">取 消</el-button>
+        <el-button @click="updateDocInfo(), dialogUpdateDocInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -180,10 +195,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
+                        <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除文件</el-button>
+                        <el-button type="text"  @click="form_deleteDoc.doc_id = scope.row.doc_id, deleteDoc()">删除文件</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -238,7 +253,7 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
+                        <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
                         <el-button type="text">删除文件</el-button>
@@ -310,6 +325,16 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_deleteDoc: {
+        token: getters.getToken(state),
+        doc_id: null
+      },
+      form_updateDocInfo: {
+        token: getters.getToken(state),
+        doc_id: null,
+        doc_name: null,
+        doc_description: null
+      },
       form_deleteProject: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -369,6 +394,7 @@ export default {
       dialogPageVisible: false,
       dialogMethodVisible: false,
       dialogUpdateProjectVisible: false,
+      dialogUpdateDocInfoVisible: false,
       memberList: [],
       deleteMemberList: [],
       docList: [],
@@ -403,6 +429,41 @@ export default {
     this.getDocList()
   },
   methods: {
+    deleteDoc() {
+      this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.$axios.post('/doc/deleteDoc', qs.stringify(this.form_deleteDoc))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getDocList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    updateDocInfo() {
+      this.$axios.post('/doc/updateDocInfo', qs.stringify(this.form_updateDocInfo))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getDocList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     deleteProject() {
       this.$confirm('此操作将使您删除此项目' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -441,6 +502,7 @@ export default {
         })
     },
     getDocList() {
+      this.docList = []
       this.$axios.get('/doc/getDocList', {
               params: {
                 token: getters.getToken(state),
