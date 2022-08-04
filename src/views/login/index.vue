@@ -90,7 +90,8 @@ export default {
     return {
       form: {
         username: '',
-        password: ''
+        password: '',
+        keep_login: true
       },
       ImageBg1,
       ImageMobileBg1,

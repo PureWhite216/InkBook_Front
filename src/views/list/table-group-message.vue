@@ -51,7 +51,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text" @click="dialogRenameVisible = true">修改团队信息</el-button>
+                <el-button type="text" @click="dialogRenameVisible = true">团队重命名</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                 <el-button type="text" @click="quitTeam">退出团队</el-button>
