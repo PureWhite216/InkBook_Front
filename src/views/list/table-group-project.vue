@@ -98,7 +98,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
-        <el-button @click="CreateWord">确 定</el-button>
+        <el-button @click="dialogWordVisible = false; createWord()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -562,11 +562,12 @@ export default {
            this.loading = false
          })
     },
-    CreateWord() {
+    createWord() {
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))
          .then((res) => {
            if (res.data.success) {
              this.$message.success(res.data.message)
+             this.getDocList()
            } else {
              this.$message.error(res.data.message)
            }
