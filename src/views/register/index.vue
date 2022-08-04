@@ -10,7 +10,7 @@
       <div class="left"></div>
       <div class="right">
         <div class="my-width flex justify-center align-center" >
-          <div class="title margin-left" style="font-size: 40px; margin-bottom: 20px">注册</div>
+          <div class="title margin-left" style="font-size: 40px; margin-bottom: 50px">注册</div>
         </div>
         <el-form :model="form" class="form-container">
           <div class="item-wrapper">
