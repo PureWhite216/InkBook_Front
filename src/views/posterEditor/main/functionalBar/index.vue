@@ -14,7 +14,7 @@
         </el-tooltip>
       </li>
       <li @click="savePage">
-        <i class="el-icon-upload" />
+        <i class="el-icon-upload"></i>
         <span>
           <el-badge is-dot :hidden="!isUnsavedState">
             {{ savePageLoading ? '正在保存' : '保存页面' }}
@@ -22,7 +22,7 @@
         </span>
       </li>
       <li @click="closeEditor">
-        <i class="el-icon-circle-close" />
+        <i class="el-icon-circle-close"></i>
         <span>关闭编辑器</span>
       </li>
     </ul>

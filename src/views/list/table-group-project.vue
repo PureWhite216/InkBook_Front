@@ -202,7 +202,7 @@
                         <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text"  @click="form_deleteDoc.doc_id = scope.row.doc_id, deleteDoc()">删除文件</el-button>
+                        <el-button type="text" @click="form_deleteDoc.doc_id = scope.row.doc_id, deleteDoc()">删除文件</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -510,7 +510,12 @@ export default {
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
-      this.$axios.post('/doc/getDocInfo', qs.stringify(this.form_getDocInfo))
+      this.$axios.get('/doc/getDocInfo', {
+        params: {
+          token: getters.getToken(state),
+          doc_id: localStorage.getItem('doc_id')
+        }
+      })
       .then(res => {
         if (res.data.success) {
           localStorage.setItem('doc_content', res.data.data.doc_content)
