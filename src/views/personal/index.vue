@@ -17,15 +17,20 @@
         >
           <el-col :span="24">
             <el-form-item label="头像">
+              <el-avatar :size="100" :src="personalInformation.avatar" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item>
               <el-upload
+                ref="upload"
                 class="avatar-uploader"
-                action="http://101.42.171.88:8090/user/uploadFile?token=<getters.getToken(state)>"
-                :on-success="handleChange"
-                :before-upload="beforeUpload"
+                :limit="5"
+                action=""
+                :http-request="changeFile"
                 :show-file-list="false"
               >
-                <img v-if="personalInformation.avatar" :src="personalInformation.avatar" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-button icon="el-icon-upload" type="primary">修改头像</el-button>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -120,6 +125,7 @@ export default {
       dialogVisible_changePassword: false,
       loading: false,
       file: '',
+      Token: getters.getToken(state),
       personalInformation: {
         username: null,
         email: null,
@@ -160,13 +166,33 @@ export default {
     this.getPersonalInformation()
   },
   methods: {
-    handleChange(res, file) {
-      console.log(res.data.message)
-      if (res.data.success) {
-        this.$message.success(res.data.message)
-      } else {
-        this.$message.error(res.data.message)
-      }
+    changeFile (file) {
+      console.log('file', file)
+      const fd = new FormData()
+      fd.append('file', file.file)
+      fd.append('token', getters.getToken(state))
+      this.$axios('/user/uploadFile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: fd
+      })
+      .then(res => {
+        if (res.data.success) {
+            this.$axios.post('/user/modifyUserInfo', qs.stringify({ token: getters.getToken(state), avatar: res.data.data.url }))
+          .then(res => {
+            if (res.data.success) {
+               this.$message.success(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+            this.getPersonalInformation()
+            getters.changeAvatar(state, this.personalInformation.avatar)
+            location.reload()
+          })
+        }
+      })
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'

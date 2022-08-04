@@ -3,10 +3,10 @@
     <el-dropdown trigger="hover" @command="onCommad">
       <div class="action-wrapper">
         <div class="avatar">
-          <img :src="avatar" />
+          <el-avatar :size="35" :src="personalInformation.avatar" />
         </div>
         <span class="nick-name el-dropdown-link">
-<!--          <span>{{ username }}</span>-->
+          <!--          <span>{{ username }}</span>-->
           <i class="el-icon-arrow-down tip" style="color: white; margin-left: 5px"></i>
         </span>
       </div>
@@ -32,6 +32,9 @@ export default {
   name: 'VAWAvatar',
   data() {
     return {
+      personalInformation: {
+        avatar: ''
+      },
       avatar: getters.getAvatar(state),
       state: store.state
     }
@@ -41,7 +44,25 @@ export default {
       username: 'user/getUserName'
     })
   },
+  created() {
+    this.getPersonalInformation()
+  },
   methods: {
+    getPersonalInformation() {
+      this.loading = true
+      this.$axios.get('/user/selectUserByUserId', {
+        params: {
+          user_id: getters.getUserId(state)
+        }
+      })
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success === true) {
+            this.personalInformation.avatar = res.data.data.avatar
+          }
+          this.loading = false
+        })
+    },
     onCommad(command) {
       switch (command) {
         case 'personalCenter':
