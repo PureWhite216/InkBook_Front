@@ -5,10 +5,10 @@
         <el-button
           slot="reference"
           class="back-button"
-          @click="toProject()"
           float="left"
+          @click="toProject()"
         >
-        <i class="el-icon-back"></i>
+          <i class="el-icon-back"></i>
         </el-button>
         <p id="projectName" class="projecttitle">
           {{ project_name }}
@@ -17,7 +17,7 @@
           该项目属于团队{{ team_name }}
         </p>
       </template>
-      
+
       <template slot="right">
         <el-popover
           v-model="visible"
@@ -77,10 +77,10 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text">重命名</el-button>
+                <el-button type="text" @click="dialogUpdateProjectVisible = true">重命名</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                <el-button type="text" style="color: red">删除项目</el-button>
+                <el-button type="text" style="color: red" @click="deleteProject">删除项目</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -112,6 +112,21 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
         <el-button @click="CreatePage">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
+      <el-form :model="form_project">
+        <el-form-item label="项目新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateProject.project_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="项目新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateProject.project_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateProjectVisible = false; form_updateProject.project_name = '' ">取 消</el-button>
+        <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
@@ -294,6 +309,18 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_deleteProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: localStorage.getItem('project_id')
+      },
+      form_updateProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: localStorage.getItem('project_id'),
+        project_name: '',
+        project_info: ''
+      },
       form_member: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -340,6 +367,7 @@ export default {
       dialogWordVisible: false,
       dialogPageVisible: false,
       dialogMethodVisible: false,
+      dialogUpdateProjectVisible: false,
       memberList: [],
       deleteMemberList: [],
       docList: [],
@@ -374,6 +402,43 @@ export default {
     this.getDocList()
   },
   methods: {
+    deleteProject() {
+      this.$confirm('此操作将使您删除此项目' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+      this.$axios.post('/project/delete', qs.stringify(this.form_deleteProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.toProject()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    updateProject() {
+      // this.form_updateProject.project_id = item.project_id
+      this.$axios.post('/project/update', qs.stringify(this.form_updateProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.project_name = this.form_updateProject.project_name
+            this.project_info = this.form_updateProject.project_info
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     getDocList() {
       this.$axios.get('/doc/getDocList', {
               params: {
@@ -520,7 +585,7 @@ export default {
       this.$router.push('/list/table-group-file')
     },
     toProject() {
-      this.$router.push('/list/table-group-message')
+      this.$router.replace('/list/table-group-message')
     },
     getMemberList() {
       this.loading = true
