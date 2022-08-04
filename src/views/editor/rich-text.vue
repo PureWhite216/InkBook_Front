@@ -20,7 +20,7 @@
           <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
           <el-button
-            style="margin-inline:10px; background: orange; color: white; border: 0"
+            style="margin-inline:10px; background: #ec5b1d; color: white; border: 0"
             @click="back()"
           >
             <i class="el-icon-back"></i>
@@ -32,6 +32,12 @@
           >
             <i class="el-icon-plus"></i>
             保存</el-button>
+          <el-button
+            style="margin-inline:10px; background: orange; color: white; border: 0"
+            @click="Like"
+          >
+            <i class="el-icon-star-on"></i>
+            收藏</el-button>
         </div>
       </template>
       <!-- <el-dialog title="分享二维码" :visible.sync="dialogVisible_share">
