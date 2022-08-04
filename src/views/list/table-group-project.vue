@@ -3,10 +3,10 @@
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
-          project_name
+          {{ project_name }}
         </p>
         <p id="teamName" class="teamtitle">
-          该项目属于team_name
+          该项目属于{{ team_name }}
         </p>
       </template>
       <template slot="right">
@@ -276,7 +276,7 @@ import store from '@/layouts/store'
 import qs from 'qs'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
-import router from "@/router";
+import router from '@/router'
 export default {
   name: 'TableGroupMember',
   // eslint-disable-next-line vue/no-unused-components
