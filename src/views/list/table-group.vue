@@ -1,43 +1,10 @@
 <template>
   <div class="main-container">
     <TableHeader :can-collapsed="false">
-      <template slot="right">
-        <el-popover
-          v-model="visible_applyTeam"
-          placement="top"
-          width="350"
-        >
-          <p>通过ID申请加入团队</p>
-          <el-input
-            v-model="form_applyTeam.team_id"
-            placeholder="输入团队ID"
-            style="width: 80%;margin: auto"
-          />
-          <p></p>
-          <div style="text-align: left; margin: 0">
-            <el-button size="mini" style="margin-top:10px" @click="applyTeam(), visible_applyTeam = false, form_applyTeam.team_id = null">确定</el-button>
-          </div>
-          <el-button
-            slot="reference"
-            style="margin-right:10px"
-            size="mini"
-            icon="el-icon-plus"
-          >申请加入
-          </el-button>
-        </el-popover>
-        <el-button
-          size="mini"
-          icon="el-icon-plus"
-          @click="dialogFormVisible = true"
-        >创建团队
-        </el-button>
-        <el-button
-          type="danger"
-          size="mini"
-          icon="el-icon-delete"
-          @click="deleteMultiItem"
-        >解散/退出
-        </el-button>
+      <template slot="left">
+        <p id="projectName" class="projecttitle">
+          加入的团队
+        </p>
       </template>
     </TableHeader>
     <el-dialog title="创建团队" :visible.sync="dialogFormVisible">
@@ -72,36 +39,18 @@
           v-loading="tableLoading"
           :data="groupList"
           :header-cell-style="tableConfig.headerCellStyle"
+          :cell-style="tableConfig.cellStyle"
           :size="tableConfig.size"
-          :stripe="tableConfig.stripe"
-          :border="tableConfig.border"
-          highlight-current-row
-          @selection-change="handleSelectionChange"
-          @current-change="handleCurrentChange"
+          @row-dblclick="handleCurrentChange"
         >
           <el-table-column
-            type="selection"
             width="45"
           />
           <el-table-column
             align="center"
-            label="序号"
-            width="80"
-          >
-            <template slot-scope="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
             label="团队名"
             prop="name"
-            width="180"
-          />
-          <el-table-column
-            align="center"
-            label="团队描述"
-            prop="info"
+            width="400"
           />
           <el-table-column
             align="center"
@@ -112,7 +61,6 @@
             align="center"
             label="我的身份"
             prop="power"
-            width="80"
           />
           <el-table-column
             align="center"
@@ -122,8 +70,8 @@
             <template slot-scope="scope">
               <el-button
                 slot="reference"
-                class="spcbutton-style"
-              ><el-dropdown trigger="hover" @command="onCommad">
+                class="morebutton"
+              ><el-dropdown trigger="click">
                 <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
                   <i class="el-icon-more"></i>
                 </div>
@@ -132,7 +80,7 @@
                     <el-button type="text" @click="form_update.teamId = scope.row.id, form_update.teamName = scope.row.name, form_update.teamInfo =scope.row.info, dialogUpdateTeam = true">修改信息</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                    <el-button type="text" style="color: green" @click="quitTeam(scope.row)">退出团队</el-button>
+                    <el-button type="text" style="color: red" @click="quitTeam(scope.row)">退出团队</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item icon="el-icon-delete-solid" command="logout">
                     <el-button type="text" style="color: red" @click="deleteTeam(scope.row)">解散团队</el-button>
@@ -474,5 +422,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.morebutton {
+  padding: 5px;
+  border: 0;
+}
+.projecttitle {
+  font-size: 45px;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 </style>

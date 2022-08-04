@@ -51,14 +51,14 @@ export default {
     return {
       dataList: [],
       tableConfig: {
-        stripe: this.$layoutStore.state.theme !== 'dark',
-        border: this.$layoutStore.state.theme !== 'dark',
         size: 'small',
-        headerCellStyle: this.$layoutStore.state.theme === 'dark' ? {
-          color: '#ffffff'
-        } : {
+        headerCellStyle: {
           backgroundColor: 'rgb(255, 255, 255)',
+          'text-align': 'left',
           color: '#333333'
+        },
+        cellStyle: {
+          'text-align': 'left'
         },
         height: '100%'
       },
