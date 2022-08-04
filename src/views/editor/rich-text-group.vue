@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <el-card :body-style="{padding: '0'}">
+    <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
         <el-link :underline="false">文章标题</el-link>
       </template>
@@ -13,6 +13,7 @@
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
+      style="max-width: 950px; margin: auto"
     >
       <template #header>
         <div class="flex">
