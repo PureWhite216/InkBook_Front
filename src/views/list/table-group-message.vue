@@ -149,11 +149,9 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
-              @selection-change="handleSelectionChange"
               @row-dblclick="handleCurrentChange"
             >
               <el-table-column
-                type="selection"
                 width="45"
               />
               <el-table-column
@@ -166,17 +164,17 @@
                 align="center"
                 label="简介"
                 prop="project_info"
-                width="300px"
+                width="400px"
               />
               <el-table-column
                 align="center"
                 label="操作"
-                width="300"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-button
                     slot="reference"
-                    class="spcbutton-style"
+                    class="morebutton"
                   >
                     <el-dropdown trigger="click" @command="onCommad">
                       <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
@@ -207,49 +205,38 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
-              @selection-change="handleSelectionChange"
             >
               <el-table-column
-                type="selection"
                 width="45"
               />
               <el-table-column
                 align="center"
-                label="序号"
-                width="60"
-              >
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="昵称"
+                label="名称"
                 prop="username"
-                width="150px"
+                width="200px"
               />
               <el-table-column
                 align="center"
                 label="真实姓名"
                 prop="real_name"
-                width="150px"
+                width="200px"
               />
               <el-table-column
                 align="center"
                 label="电子邮箱"
                 prop="email"
-                width="220px"
+                width="250px"
               />
               <el-table-column
                 align="center"
                 label="身份"
                 prop="user_perm"
-                width="100px"
+                width="150px"
               />
               <el-table-column
                 align="center"
                 label="操作"
-                width="220"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-button
@@ -802,6 +789,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.morebutton {
+  padding: 5px;
+  border: 0;
+}
 .button-style {
   margin: 10px;
   font-size: 16px;
@@ -819,7 +810,7 @@ export default {
   border: 0;
 }
 .table-custom {
-
+  width: 1000px;
 }
 .teamtitle {
   font-size: 50px;

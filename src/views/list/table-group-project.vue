@@ -165,18 +165,16 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :cell-style="tableConfig.cellStyle"
               :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
               @row-dblclick="toDocEditor"
             >
               <el-table-column
-                type="selection"
-                width="45"
+                width="20"
               />
               <el-table-column
                 align="center"
                 label="名称"
                 prop="doc_name"
-                width="250px"
+                width="375px"
               />
               <el-table-column
                 align="center"
@@ -193,7 +191,7 @@
               <el-table-column
                 align="center"
                 label="操作"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
@@ -224,18 +222,16 @@
               :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
               @row-dblclick="toAxureEditor"
             >
               <el-table-column
-                type="selection"
-                width="45"
+                width="20"
               />
               <el-table-column
                 align="center"
                 label="名称"
                 prop="axure_name"
-                width="250px"
+                width="375px"
               />
               <el-table-column
                 align="center"
@@ -252,7 +248,7 @@
               <el-table-column
                 align="center"
                 label="操作"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-dropdown trigger="click" @command="onCommad">
@@ -787,6 +783,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.morebutton {
+  padding: 5px;
+  border: 0;
+}
 .button-style {
   margin: 10px;
   font-size: 16px;
