@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
-    <el-row style="background: #2f2f2f">
+    <el-row style="background: #2f2f2f; min-height: 40px">
       <el-col :span="8">
-        <el-button class="backbutton" style="margin-left: 20px; margin-top: 10px" @click="back">
+        <el-button class="backbutton" style="margin-left: 20px; margin-top: 3px" @click="back">
           <i class="el-icon-back" style="font-size: x-large"></i>
         </el-button>
       </el-col>
@@ -11,9 +11,9 @@
           原型名称
         </div>
         <div>
-          <el-button style="padding: 5px; background: #2f2f2f; border: 0">
-            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>
-          </el-button>
+<!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
+<!--            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>-->
+<!--          </el-button>-->
         </div>
       </el-col>
     </el-row>
@@ -217,7 +217,7 @@ export default {
 .backbutton {
   color: white;
   background: #2c2c2c;
-  height: 35px;
+  height: 30px;
   border: 0;
   margin-top: 5px;
   padding: 5px;
@@ -234,12 +234,12 @@ export default {
 }
 .head {
   background: #2c2c2c;
-  max-height: 45px;
+  min-height: 5%;
 }
 .poster-editor {
   width: 100%;
   min-width: 900px;
-  height: 100%;
+  height: 96%;
   background-color: #fff;
   position: fixed;
   &.init-loading {

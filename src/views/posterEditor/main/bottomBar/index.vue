@@ -6,7 +6,7 @@
         <span>{{ `宽${canvasSize.width}px` }}</span>
         <span>{{ `高${canvasSize.height}px` }}</span>
         <el-popover
-          placement="top"
+          placeement="top"
           title="修改画布大小"
           width="200"
           trigger="click"

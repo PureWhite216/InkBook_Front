@@ -7,7 +7,6 @@
         type="number"
         style="width:120px"
         size="mini"
-        disabled
       />
     </div>
     <div class="item">
