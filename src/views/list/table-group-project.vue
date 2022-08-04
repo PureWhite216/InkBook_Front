@@ -368,6 +368,10 @@ export default {
         page_name: '',
         team_id: Number(localStorage.getItem('team_id'))
       },
+      form_getDocInfo: {
+        token: getters.getToken(state),
+        doc_id: localStorage.getItem('doc_id')
+      },
       form_deleteMember: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -428,10 +432,21 @@ export default {
   },
   created() {
     this.getDocList()
+    localStorage.setItem('flag', 'user')
+    localStorage.setItem('enable', 'true')
   },
   methods: {
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
+      localStorage.setItem('doc_name', val.doc_name)
+      this.$axios.post('/doc/getDocInfo', qs.stringify(this.form_getDocInfo))
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('doc_content', res.data.data.doc_content)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
       this.$router.push('/editor/rich-text')
     },
     deleteDoc() {

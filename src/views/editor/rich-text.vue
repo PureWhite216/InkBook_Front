@@ -167,12 +167,10 @@ export default {
         word_id: localStorage.getItem('word_id'),
         word_name: ''
       },
-      form2: {
+      form_save: {
         token: getters.getToken(state),
-        user_id: getters.getUserId(state),
-        username: getters.getUserName(state),
-        word_id: localStorage.getItem('word_id'),
-        word_content: ''
+        doc_id: localStorage.getItem('doc_id'),
+        doc_content: ''
       },
       form3: {
         token: getters.getToken(state),
@@ -220,7 +218,7 @@ export default {
       isShow: true,
       invite_visible: false,
       comment_visible: false,
-      title: localStorage.getItem('word_name'),
+      title: localStorage.getItem('doc_name'),
       htmlContent: '',
       jsonContent: '',
       comment: '',
@@ -282,7 +280,7 @@ export default {
         })
     },
     back() {
-      store.toTableLatest && store.toTableLatest()
+      this.$router.go(-1)
     },
     deleteCooperator(item) {
       this.form_deleteCooperator.cooperation_id = item.id
@@ -369,31 +367,16 @@ export default {
         )
     },
     Save() {
-      this.form2.word_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
-      if (localStorage.getItem('shareFlag') === 'true') {
-        this.$axios.post('/worddocx/user_save_cooperation_word', qs.stringify(this.form2))
+      this.form_save.doc_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
+        this.$axios.post('/doc/save', qs.stringify(this.form_save))
           .then((res) => {
-              if (res.data.result === 4) {
+              if (res.data.success) {
                 this.$message.success(res.data.message)
               } else {
                 this.$message.error(res.data.message)
               }
             }
           )
-        localStorage.setItem('shareFlag', 'false')
-      } else {
-        this.$axios.post('/worddocx/user_save_edit_word', qs.stringify(this.form2))
-          .then((res) => {
-              if (res.data.result === 3) {
-                this.$message.success(res.data.message)
-              } else {
-                this.$message.error(res.data.message)
-              }
-            }
-          )
-        this.form1.word_name = this.title
-        this.$axios.post('/worddocx/user_rename_word', qs.stringify(this.form1))
-      }
     },
     exitEdit() {
       this.form.word_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
