@@ -9,8 +9,8 @@
     <div class="flex form-wrapper">
       <div class="left"></div>
       <div class="right">
-        <div class="my-width flex-sub flex justify-center align-center">
-          <div class="title margin-left">注册</div>
+        <div class="my-width flex justify-center align-center" >
+          <div class="title margin-left" style="font-size: 40px; margin-bottom: 20px">注册</div>
         </div>
         <el-form :model="form" class="form-container">
           <div class="item-wrapper">
@@ -323,14 +323,14 @@ export default {
         }
         .form-container {
           width: 50%;
-          height: 70%;
-          margin-bottom: 10%;
+          height: 80%;
+          margin-bottom: 30%;
           text-align: center;
           background: rgba(183, 183, 183, 0.2);
-          padding: 5%;
+          //padding: 5%;
           border-radius: 5px;
           border: 2px solid #fff;
-          display: flex;
+          //display: flex;
           flex-direction: column;
           justify-content: space-between;
           .item-wrapper {
