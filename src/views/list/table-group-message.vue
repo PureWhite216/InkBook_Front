@@ -23,6 +23,7 @@
           <el-button
             slot="reference"
             class="button-style"
+            style="border-color: #ffd45c"
             @click="dialogInviteVisible = true"
           >邀请成员
             <i class="el-icon-user"></i>
@@ -38,6 +39,7 @@
           <el-button
             slot="reference"
             class="button-style"
+            style="border-color: #57b1ff"
             @click="form_createProject.project_name = '', form_createProject.project_info = '', dialogCreateProjectVisible = true"
           >创建新项目
             <i class="el-icon-plus"></i>
@@ -804,6 +806,7 @@ export default {
   margin: 10px;
   font-size: 16px;
   font-weight: bold;
+  border-width: 3px;
   color: black;
   height: 45px;
 }

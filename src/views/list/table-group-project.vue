@@ -29,6 +29,7 @@
           <el-button
             slot="reference"
             class="button-style"
+            style="border-color: #57b1ff"
             @click="dialogWordVisible = true"
           >创建文档
             <i class="el-icon-plus"></i>
@@ -44,6 +45,7 @@
           <el-button
             slot="reference"
             class="button-style"
+            style="border-color: #a15aff"
             @click="dialogPageVisible = true"
           >创建原型
             <i class="el-icon-plus"></i>
@@ -59,6 +61,7 @@
             slot="reference"
             class="button-style"
             @click="createUML()"
+            style="border-color: #ffd45c"
           >创建uml
             <i class="el-icon-plus"></i>
           </el-button>
@@ -71,7 +74,7 @@
         >
           <el-button
             slot="reference"
-            class="spcbutton-style"
+            class="button-style"
           ><el-dropdown trigger="click" @command="onCommad">
             <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
               <i class="el-icon-setting"></i>
@@ -786,10 +789,11 @@ export default {
 <style lang="scss" scoped>
 .button-style {
   margin: 10px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
+  border-width: 3px;
   color: black;
-  height: 35px;
+  height: 45px;
 }
 .back-button{
   margin-top: 20px;

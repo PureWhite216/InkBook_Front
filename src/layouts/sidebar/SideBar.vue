@@ -11,11 +11,11 @@
       ref="elMenu1"
     >
       <el-menu-item index="1" @click="toRecent">
-        <i class="el-icon-document"></i>
+        <i class="el-icon-document" style="color: #3297ff"></i>
         <span slot="title">最近浏览</span>
       </el-menu-item>
       <el-menu-item index="2" @click="toCollect">
-        <i class="el-icon-star-off"></i>
+        <i class="el-icon-star-off" style="color: #ffc226"></i>
         <span slot="title">收藏</span>
       </el-menu-item>
     </el-menu>
