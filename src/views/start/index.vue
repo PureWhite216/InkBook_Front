@@ -1,17 +1,17 @@
 <template>
   <div class="big-body">
-    <div class="style1">墨书<br />团队协作与管理平台</div>
-    <div class="background"><span>InkBook</span></div>
+    <div class="style1">全新<br/>团队协作与管理平台</div>
+    <div class="background"><div style="padding-top: 500px">INK<br />BOOK</div></div>
     <div class="style2">
       <el-button class="enterbutton" @click="enter">开始体验<i class="el-icon-right"></i></el-button>
     </div>
-    <div class="style3" @click="enter">
-      In winter, it is covered with snow and snow. When you climb to Jinding, you can see far and wide, and the
-      scenery is very magnificent; West overlooking Aiai snow peak, Gongga Mountain and Wawu mountain, the mountains
-      connect the sky; Looking south at the top of Ten Thousand Buddhas, the clouds are rolling and the momentum is
-      magnificent; A panoramic view of the Pingchuan River in the north is as beautiful as a shop, with a panoramic
-      view of the Dadu River and Qingyi River
-    </div>
+<!--    <div class="style3" @click="enter">-->
+<!--      In winter, it is covered with snow and snow. When you climb to Jinding, you can see far and wide, and the-->
+<!--      scenery is very magnificent; West overlooking Aiai snow peak, Gongga Mountain and Wawu mountain, the mountains-->
+<!--      connect the sky; Looking south at the top of Ten Thousand Buddhas, the clouds are rolling and the momentum is-->
+<!--      magnificent; A panoramic view of the Pingchuan River in the north is as beautiful as a shop, with a panoramic-->
+<!--      view of the Dadu River and Qingyi River-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -56,8 +56,8 @@ export default {
   background-size: cover;
   background-position: 50% 50%;
   height: 200vh;
-  font: 1000 28rem '';
-  line-height: 130vh;
+  font: 1000 32rem '';
+  line-height: 35vh;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -101,7 +101,7 @@ export default {
   position: absolute;
   letter-spacing: 2px;
   text-align: center;
-  top: 100vh;
+  top: 130vh;
   width: 80%;
   color: #fff;
   left: 50%;
