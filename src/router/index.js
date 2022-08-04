@@ -33,6 +33,12 @@ export const routes = [
     hidden: true
   },
   {
+    path: '/drawio',
+    name: 'drawio',
+    component: () => import('@/views/drawio'),
+    hidden: true
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login'),

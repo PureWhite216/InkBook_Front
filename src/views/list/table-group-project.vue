@@ -3,10 +3,10 @@
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
-          project_name
+          {{ project_name }}
         </p>
         <p id="teamName" class="teamtitle">
-          该项目属于team_name
+          该项目属于{{ team_name }}
         </p>
       </template>
       <template slot="right">
@@ -47,7 +47,7 @@
           <el-button
             slot="reference"
             class="button-style"
-            @click="dialogMethodVisible = true"
+            @click="createUML()"
           >创建uml
             <i class="el-icon-plus"></i>
           </el-button>
@@ -233,64 +233,6 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
-          <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">uml</span>
-            <el-table
-              ref="table"
-              v-loading="loading"
-              class="table-custom"
-              :data="memberList"
-              :header-cell-style="tableConfig.headerCellStyle"
-              :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column
-                type="selection"
-                width="45"
-              />
-              <el-table-column
-                align="center"
-                label="名称"
-                prop="projectname"
-                width="250px"
-              />
-              <el-table-column
-                align="center"
-                label="更新时间"
-                prop="updatetime"
-                width="250px"
-              />
-              <el-table-column
-                align="center"
-                label="创建者"
-                prop="user"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="操作"
-                width="200"
-              >
-                <template slot-scope="scope">
-                  <el-dropdown trigger="click" @command="onCommad">
-                    <div class="action-wrapper">
-                      <span class="nick-name el-dropdown-link">
-                        <i class="el-icon-more"></i>
-                      </span>
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text">重命名</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除文件</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
         </el-tabs>
       </template>
     </TableBody>
@@ -334,6 +276,7 @@ import store from '@/layouts/store'
 import qs from 'qs'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
+import router from '@/router'
 export default {
   name: 'TableGroupMember',
   // eslint-disable-next-line vue/no-unused-components
@@ -432,6 +375,9 @@ export default {
     this.getMemberList()
   },
   methods: {
+    createUML() {
+      router.push('/drawio')
+    },
     CreateProject() {
       this.$message.error('还没写接口哪！')
     },
