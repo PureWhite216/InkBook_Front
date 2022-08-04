@@ -10,12 +10,14 @@
         >
           <i class="el-icon-back"></i>
         </el-button>
-        <p id="projectName" class="projecttitle">
-          {{ project_name }}
-        </p>
-        <p id="teamName" class="teamtitle">
-          该项目属于团队{{ team_name }}
-        </p>
+        <div style="float: right">
+          <div id="projectName" class="projecttitle">
+            {{ project_name }}
+          </div>
+          <div id="teamName" class="teamtitle">
+            该项目属于团队{{ team_name }}
+          </div>
+        </div>
       </template>
 
       <template slot="right">
@@ -790,12 +792,12 @@ export default {
   height: 35px;
 }
 .back-button{
-  margin: 15px;
-  font-size: 12px;
+  margin-top: 20px;
+  font-size: 26px;
   font-weight: bold;
   color: black;
-  height: 40px;
-  width: 50px;
+  padding: 5px;
+  border: 0;
 }
 .spcbutton-style {
   margin: 20px;
@@ -809,12 +811,16 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
-  float:right;
+  float:left;
 }
 .teamtitle {
-  font-size: 16px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-left: 20px;
+  font-family: 黑体;
+  font-size: 18px;
+  color: #777777;
+  float:right;
+  white-space: nowrap;
 }
 .temptablebody{
   height: 500px;

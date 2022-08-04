@@ -272,7 +272,7 @@ export default {
       localStorage.setItem('team_id', item.id.toString())
       localStorage.setItem('team_name', item.name)
       localStorage.setItem('team_info', item.info)
-      store.toGroupFile && store.toGroupFile()
+      store.toGroupMessage && store.toGroupMessage()
     },
     addTeam() {
       this.$axios.post('/team/create_team', qs.stringify(this.form2))

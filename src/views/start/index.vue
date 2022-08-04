@@ -1,6 +1,6 @@
 <template>
   <div class="big-body">
-    <div class="style1">全新<br/>团队协作与管理平台</div>
+    <div class="style1">年轻人的第一款<br/>团队协作与管理平台</div>
     <div class="background"><div style="padding-top: 500px">INK<br />BOOK</div></div>
     <div class="style2">
       <el-button class="enterbutton" @click="enter">开始体验<i class="el-icon-right"></i></el-button>

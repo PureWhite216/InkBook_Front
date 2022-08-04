@@ -235,8 +235,8 @@ export const routes = [
     hidden: true,
     children: [
       {
-        path: 'table-group-file',
-        name: 'tableGroupFile',
+        path: 'table-group-message',
+        name: 'tableGroupMessage',
         component: () => import('@/views/list/table-group-message'),
         meta: {
           title: '团队信息'

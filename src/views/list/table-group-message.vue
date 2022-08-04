@@ -808,12 +808,12 @@ export default {
   height: 45px;
 }
 .back-button{
-  margin: 8px;
-  font-size: 12px;
+  margin-top: 20px;
+  font-size: 26px;
   font-weight: bold;
   color: black;
-  height: 40px;
-  width: 50px;
+  padding: 5px;
+  border: 0;
 }
 .table-custom {
 
