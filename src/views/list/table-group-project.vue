@@ -266,7 +266,7 @@
                         <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text">删除文件</el-button>
+                        <el-button type="text" @click="deleteAxure(scope.row)">删除原型</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -336,6 +336,10 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_deleteAxure: {
+        token: getters.getToken(state),
+        axure_id: null
+      },
       form_createAxure: {
         token: getters.getToken(state),
         axure_name: null,
@@ -457,6 +461,30 @@ export default {
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    deleteAxure(item) {
+      this.$confirm('此操作将使您删除此原型' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+      this.form_deleteAxure.axure_id = item.axure_id
+      this.$axios.post('/axure/delete', qs.stringify(this.form_deleteAxure))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getAxureList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     toAxureEditor(val) {
       localStorage.setItem('axure_id', val.axure_id)
       localStorage.setItem('axure_name', val.axure_name)
