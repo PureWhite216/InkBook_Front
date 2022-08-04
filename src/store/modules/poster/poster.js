@@ -7,8 +7,10 @@ import _set from 'lodash/set'
 import { changeCompositionPositionHandler } from './helpers'
 import history from './history'
 import backup from './backup'
-import { addActivityPageConfig } from '@/api/activity'
+// import { addActivityPageConfig } from '@/api/activity'
 import { Message } from 'element-ui'
+import qs from 'qs'
+import axios from 'axios'
 
 function getState() {
     const state = {
@@ -496,16 +498,23 @@ const actions = {
                 })
             ]
         }
-        return addActivityPageConfig(requestData).then(
-            res => {
-                Message.success('保存成功')
-                commit(MTS.SET_UNSAVED_STATE, false)
-                return res
-            },
-            () => {
-                Message.error('保存失败')
-                return Promise.reject()
-            }
+      const form_saveAxure = {
+        token: localStorage.getItem('Token'),
+        axure_id: localStorage.getItem('axure_id'),
+        title: requestData['title'],
+        items: JSON.stringify(requestData['items']),
+        config: requestData['config']
+      }
+      console.log(form_saveAxure)
+     return axios.post('/axure/update', qs.stringify(form_saveAxure))
+        .then(res => {
+            Message.success('保存成功')
+            return res
+          },
+          () => {
+            Message.error('保存失败')
+            return Promise.reject()
+          }
         )
     }
 }

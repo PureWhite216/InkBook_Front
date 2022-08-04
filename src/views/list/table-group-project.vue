@@ -314,6 +314,7 @@ import BaseForm from '@/components/common/BaseForm.vue'
 import draggable from '@/directive/draggable'
 import store from '@/layouts/store'
 import qs from 'qs'
+import { mapActions, mapState } from 'poster/poster.vuex'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import router from '@/router'
@@ -460,6 +461,7 @@ export default {
       localStorage.setItem('axure_id', val.axure_id)
       localStorage.setItem('axure_name', val.axure_name)
       localStorage.setItem('axure_info', val.axure_info)
+      localStorage.setItem('Token', getters.getToken(state))
       this.$router.push('/posterEditor')
     },
     createAxure() {
