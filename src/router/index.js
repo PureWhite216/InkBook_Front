@@ -39,6 +39,12 @@ export const routes = [
     hidden: true
   },
   {
+    path: '/start',
+    name: 'start',
+    component: () => import('@/views/start'),
+    hidden: true
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login'),
