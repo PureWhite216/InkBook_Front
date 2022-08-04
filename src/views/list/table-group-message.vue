@@ -162,8 +162,12 @@
                 width="300"
               >
                 <template slot-scope="scope">
+                  <el-button
+                    slot="reference"
+                    class="spcbutton-style"
+                  >
                   <el-dropdown trigger="hover" @command="onCommad">
-                    <div class="action-wrapper">
+                    <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
                       </span>
@@ -177,6 +181,7 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -234,7 +239,11 @@
                 width="220"
               >
                 <template slot-scope="scope">
-                  <el-dropdown trigger="hover" @command="onCommad">
+                  <el-button
+                    slot="reference"
+                    class="spcbutton-style"
+                  >
+                  <el-dropdown trigger="hover"  @command="onCommad">
                     <div class="action-wrapper">
                       <span class="nick-name el-dropdown-link">
                         <i class="el-icon-more"></i>
@@ -249,6 +258,7 @@
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>

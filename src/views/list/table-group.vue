@@ -120,17 +120,6 @@
             width="260"
           >
             <template slot-scope="scope">
-              <el-dialog title="队长权限转让" :visible.sync="scope.row.dialogVisible">
-                <el-form :model="form1">
-                  <el-form-item label="转让成员id" :label-width="formLabelWidth">
-                    <el-input v-model="form1.member_id" autocomplete="off" />
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="scope.row.dialogVisible = false; form1.member_id = null; form1.team_id = null">取 消</el-button>
-                  <el-button @click="Leader_change(scope.row),scope.row.dialogVisible = false">确 定</el-button>
-                </div>
-              </el-dialog>
               <el-button
                 slot="reference"
                 class="spcbutton-style"
