@@ -204,8 +204,8 @@
               :data="memberList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
-              @selection-change="handleSelectionChange"
               :cell-style="tableConfig.cellStyle"
+              @selection-change="handleSelectionChange"
             >
               <el-table-column
                 type="selection"

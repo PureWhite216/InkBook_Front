@@ -158,6 +158,7 @@
               :cell-style="tableConfig.cellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toDocEditor"
             >
               <el-table-column
                 type="selection"
@@ -429,6 +430,9 @@ export default {
     this.getDocList()
   },
   methods: {
+    toDocEditor(val) {
+      this.$router.push('/editor/rich-text')
+    },
     deleteDoc() {
       this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
