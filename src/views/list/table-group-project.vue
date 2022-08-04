@@ -121,10 +121,11 @@
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档</span>
             <el-table
               ref="table"
-              v-loading="loading"
+              v-loading="tableloading"
               class="table-custom"
               :data="docList"
               :header-cell-style="tableConfig.headerCellStyle"
+              :cell-style="tableConfig.cellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
             >
