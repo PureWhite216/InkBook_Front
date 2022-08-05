@@ -435,7 +435,7 @@ const actions = {
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
       console.log(pageConfig)
         let recoverData = {}
-        if (!pageConfig || !isPlainObject(pageConfig)) {
+        if (false) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
             recoverData = {
                 background: new BackgroundWidget(),
@@ -444,7 +444,7 @@ const actions = {
             }
         } else {
             commit(MTS.SET_PAGE_CONFIG_ID, pageConfig.pageConfigId)
-            const baseConfig = JSON.parse(pageConfig.config)
+            const baseConfig = pageConfig.config
             const posterItems = pageConfig.items
             let background
             try {
