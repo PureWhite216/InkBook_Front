@@ -44,18 +44,18 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-button
-          slot="reference"
-          style="margin-inline:10px; color: white; background: #2c2c2c"
-          size="mini"
-          icon="el-icon-search"
-        >搜索
-        </el-button>
+<!--        <el-button-->
+<!--          slot="reference"-->
+<!--          style="margin-inline:10px; color: white; background: #2c2c2c"-->
+<!--          size="mini"-->
+<!--          icon="el-icon-search"-->
+<!--        >搜索-->
+<!--        </el-button>-->
       </el-popover>
     </div>
-    <div class="right-wrapper">
-      <ActionItems />
-    </div>
+<!--    <div class="right-wrapper">-->
+<!--      <ActionItems />-->
+<!--    </div>-->
     <div class="avatar-wrapper">
       <VAWAvatar />
     </div>
