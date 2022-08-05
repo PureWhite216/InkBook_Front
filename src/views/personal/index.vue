@@ -34,6 +34,7 @@
               </el-upload>
             </el-form-item>
           </el-col>
+
           <el-col :span="24">
             <el-form-item label="名称">
               <el-input
@@ -42,6 +43,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="24">
             <el-form-item label="真实姓名">
               <el-input
@@ -97,16 +99,31 @@
               </el-dialog>
             </el-form-item>
           </el-col>
-          <el-col style="margin-left: 40px">
-            <el-button
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              style="margin-bottom: 20px"
-              :underline="false"
-              @click="logOff_1"
-            >注销账号</el-button>
-          </el-col>
+          <el-button 
+            icon="el-icon-upload" 
+            class="button-style" 
+            type="primary"
+            @click="dialogVisiblechange = true"
+          >
+          修改个人信息
+          </el-button>
+          <el-dialog title="修改密码" :visible.sync="dialogVisiblechange" width="40%" center>
+            <el-form :model="form_changePassword">
+              <el-form-item label="新昵称" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.name" autocomplete="off"/>
+              </el-form-item>
+              <el-form-item label="充填姓名" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.real_name" autocomplete="off"/>
+              </el-form-item>
+              <el-form-item label="新邮箱" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.email" autocomplete="off"/>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisiblechange = false, clearPassword()">取 消</el-button>
+              <el-button @click="changePassword(), dialogVisiblechange = false, clearPassword()">确 定</el-button>
+            </div>
+          </el-dialog>
         </el-form>
       </el-card>
     </div>
@@ -123,6 +140,7 @@ export default {
   data() {
     return {
       dialogVisible_changePassword: false,
+      dialogVisiblechange: false,
       loading: false,
       file: '',
       Token: getters.getToken(state),
@@ -326,6 +344,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.button-style {
+  margin-left: 40px;
+  font-size: 14px;
+  //color: rgb(255, 255, 255);
+  height: 35px;
+  margin-bottom: 5px;
+}
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
