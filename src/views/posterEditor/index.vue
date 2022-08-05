@@ -11,9 +11,9 @@
           原型名称
         </div>
         <div>
-<!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
-<!--            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>-->
-<!--          </el-button>-->
+          <!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
+          <!--            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>-->
+          <!--          </el-button>-->
         </div>
       </el-col>
     </el-row>
@@ -46,6 +46,7 @@ import layerPanel from './extendSideBar/layerPanel'
 import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
+import qs from 'qs'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -66,6 +67,10 @@ export default {
   },
   data() {
     return {
+      form_update: {
+        token: localStorage.getItem('Token'),
+        axure_id: localStorage.getItem('axure_id')
+      },
       initLoading: false
     }
   },
@@ -110,6 +115,7 @@ export default {
       background: 'rgba(255, 255, 255, 0.6)'
     })
     await this.resetState()
+    await this.updatePage()
     loading.close()
     this.initLoading = false
   },
@@ -130,7 +136,8 @@ export default {
       'copyWidget',
       'setLayerPanel',
       'setReferenceLineVisible',
-      'resetState'
+      'resetState',
+      'updatePageConfig'
     ]),
     ...mapActions({
       undo: 'history/undo',
@@ -141,6 +148,20 @@ export default {
     }),
     back() {
       router.push('/list/table-group-project')
+    },
+    updatePage() {
+      this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
+        .then(res => {
+          if (res.data.success) {
+            const pageConfig = {
+              pageConfigId: res.data.data.config_id,
+              config: res.data.data.config,
+              items: JSON.parse(res.data.data.items)
+            }
+            console.log(pageConfig)
+            this.updatePageConfig(pageConfig)
+          }
+        })
     },
     keydownHandle(e) {
       if (e.target !== this.body) {

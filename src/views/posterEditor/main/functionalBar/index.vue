@@ -31,14 +31,9 @@
 
 <script>
 import { mapActions, mapState } from 'poster/poster.vuex'
-import qs from 'qs'
 export default {
   data() {
     return {
-      form_update: {
-        token: localStorage.getItem('Token'),
-        axure_id: localStorage.getItem('axure_id')
-      },
       savePageLoading: false,
       updatePageLoading: false
     }
@@ -46,26 +41,8 @@ export default {
   computed: {
     ...mapState(['isUnsavedState', 'posterItems'])
   },
-  created() {
-    this.updatePage()
-  },
   methods: {
-    ...mapActions(['saveActivityPageConfig', 'updatePageConfig']),
-    updatePage() {
-      this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
-      .then(res => {
-        if (res.data.success) {
-          const pageConfig = {
-            pageConfigId: res.data.data.config_id,
-            config: res.data.data.config,
-            items: JSON.parse(res.data.data.items)
-          }
-          this.updatePageLoading = true
-          this.updatePageConfig(pageConfig)
-          this.updatePageLoading = false
-        }
-      })
-    },
+    ...mapActions(['saveActivityPageConfig']),
     closeEditor() {
       this.$router.back()
     },

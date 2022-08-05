@@ -2,7 +2,7 @@
   <div id="layer-panel" class="layer-panel poster-editor_deactivated-ignore">
     <div v-drag:#layer-panel class="header">
       <div class="title">图层面板</div>
-      <i class="el-icon-close" @click="close" />
+      <i class="el-icon-close" @click="close"></i>
     </div>
     <div class="content">
       <el-scrollbar

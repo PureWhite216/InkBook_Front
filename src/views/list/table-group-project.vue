@@ -82,7 +82,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text" @click="dialogUpdateProjectVisible = true">重命名</el-button>
+                <el-button type="text" @click="form_updateProject.project_name = project_name, form_updateProject.project_info = project_info, dialogUpdateProjectVisible = true">修改项目信息</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-switch-button" command="logout">
                 <el-button type="text" style="color: red" @click="deleteProject">删除项目</el-button>
@@ -124,7 +124,7 @@
     </el-dialog>
 
     <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
-      <el-form :model="form_project">
+      <el-form :model="form_updateProject">
         <el-form-item label="项目新名称" :label-width="formLabelWidth">
           <el-input v-model="form_updateProject.project_name" autocomplete="off" />
         </el-form-item>
@@ -317,7 +317,7 @@ import BaseForm from '@/components/common/BaseForm.vue'
 import draggable from '@/directive/draggable'
 import store from '@/layouts/store'
 import qs from 'qs'
-import { mapActions, mapState } from 'poster/poster.vuex'
+// import { mapActions, mapState } from 'poster/poster.vuex'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import router from '@/router'
@@ -575,7 +575,7 @@ export default {
               // this.$message.success(res.data.message)
             }
           } else {
-             //this.$message.error(res.data.message)
+             // this.$message.error(res.data.message)
           }
            this.loading = false
          })
@@ -665,6 +665,8 @@ export default {
             this.$message.success(res.data.message)
             this.project_name = this.form_updateProject.project_name
             this.project_info = this.form_updateProject.project_info
+            localStorage.setItem('project_name', this.project_name)
+            localStorage.setItem('project_info', this.project_info)
           } else {
             this.$message.error(res.data.message)
           }
