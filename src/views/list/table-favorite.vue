@@ -23,6 +23,7 @@
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toDocEditor"
             >
               <el-table-column
                 align="center"
@@ -85,40 +86,41 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toAxureEditor"
             >
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="axure_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属团队"
-                prop="updatetime"
+                prop="team_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属项目"
-                prop="user"
+                prop="project_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="user"
+                prop="last_edit"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="创建者"
-                prop="user"
+                prop="create_user"
                 width="200px"
               />
               <el-table-column
@@ -244,6 +246,7 @@ export default {
       memberList: [],
       deleteMemberList: [],
       docList: [],
+      axureList: [],
       powerOptions: [
         {
           value: 1,
@@ -273,8 +276,86 @@ export default {
   },
   created() {
     this.getFavoriteDocList()
+    this.getFavoriteAxureList()
   },
   methods: {
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      localStorage.setItem('Token', getters.getToken(state))
+      this.$router.push('/posterEditor')
+    },
+    toDocEditor(val) {
+      localStorage.setItem('doc_id', val.doc_id)
+      localStorage.setItem('doc_name', val.doc_name)
+      localStorage.setItem('is_favorite', val.is_favorite)
+      this.$axios.get('/doc/getDocInfo', {
+        params: {
+          token: getters.getToken(state),
+          doc_id: localStorage.getItem('doc_id')
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('doc_content', res.data.data.doc_content)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+      this.$router.push('/editor/rich-text')
+    },
+    getFavoriteAxureList() {
+      this.loading = true
+      this.axureList = []
+      this.$axios.get('/axure/getFavoriteAxureList', {
+              params: {
+                token: getters.getToken(state)
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null,
+                last_edit: null,
+                create_user: null,
+                team_name: null,
+                project_name: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
+              axures.team_name = res.data.data[i].team_name
+              axures.project_name = res.data.data[i].project_name
+              let flag = 0
+              for (let i = 0; i < this.axureList.length; i++) {
+                if (this.axureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.axureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     getFavoriteDocList() {
       this.docList = []
       this.$axios.get('/user/favoriteList', {

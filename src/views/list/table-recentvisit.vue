@@ -89,6 +89,7 @@
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
+              @row-dblclick="toAxureEditor"
             >
               <el-table-column
                 align="center"
@@ -279,6 +280,13 @@ export default {
     this.getAxureList()
   },
   methods: {
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      localStorage.setItem('Token', getters.getToken(state))
+      this.$router.push('/posterEditor')
+    },
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
