@@ -2,7 +2,8 @@ import * as MTS from './poster.mutations'
 // import { Message } from 'element-ui'
 import { Widget, BackgroundWidget, CopiedWidget } from 'poster/widgetConstructor'
 import { arrMoveTop, arrMoveUpper, arrMoveLower, arrMoveBottom } from 'poster/utils'
-import { isPlainObject } from '@/utils'
+// import { isPlainObject } from '@/utils'
+import { isPlainObject } from 'lodash'
 import _set from 'lodash/set'
 import { changeCompositionPositionHandler } from './helpers'
 import history from './history'
@@ -435,7 +436,7 @@ const actions = {
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
       console.log(pageConfig)
         let recoverData = {}
-        if (false) {
+        if (!pageConfig || !isPlainObject(pageConfig)) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
             recoverData = {
                 background: new BackgroundWidget(),
