@@ -183,7 +183,7 @@ export default {
       localStorage.setItem('team_id', item.team_id)
       localStorage.setItem('team_name', item.team_name)
       localStorage.setItem('team_info', item.team_info)
-      this.$router.push('/list/table-group-message')
+      this.$router.push('/redirect' + '/list/table-group-message')
     },
     toGroup() {
       router.push('/list/table-group')
