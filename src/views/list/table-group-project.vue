@@ -222,6 +222,7 @@
               :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
               @row-dblclick="toAxureEditor"
             >
               <el-table-column
