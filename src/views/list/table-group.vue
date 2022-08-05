@@ -23,8 +23,8 @@
         <el-form-item label="团队新名称" :label-width="formLabelWidth">
           <el-input v-model="form_update.teamName" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="团队新简介（可不填）" :label-width="formLabelWidth">
-          <el-input v-model="form_update.teamInfo" autocomplete="off" />
+        <el-form-item label="团队新简介(可不填)" :label-width="formLabelWidth">
+          <el-input v-model="form_update.teamInfo" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -177,7 +177,7 @@ export default {
         teamId: 0
       },
       disbandTeamList: [],
-      formLabelWidth: '120px'
+      formLabelWidth: '150px'
     }
   },
   created() {
