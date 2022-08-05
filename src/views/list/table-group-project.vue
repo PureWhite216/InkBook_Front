@@ -617,6 +617,7 @@ export default {
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
+      localStorage.setItem('is_favorite', val.is_favorite)
       this.$axios.get('/doc/getDocInfo', {
         params: {
           token: getters.getToken(state),

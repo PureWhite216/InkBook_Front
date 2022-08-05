@@ -33,11 +33,19 @@
             <i class="el-icon-plus"></i>
             保存</el-button>
           <el-button
+            v-if="!is_favorite"
             style="margin-inline:10px; background: orange; color: white; border: 0"
-            @click="Like"
+            @click="likeDoc"
           >
             <i class="el-icon-star-on"></i>
             收藏</el-button>
+          <el-button
+            v-if="is_favorite"
+            style="margin-inline:10px; background: orange; color: white; border: 0"
+            @click="unlikeDoc"
+          >
+            <i class="el-icon-star-off"></i>
+            取消收藏</el-button>
         </div>
       </template>
       <!-- <el-dialog title="分享二维码" :visible.sync="dialogVisible_share">
@@ -80,6 +88,12 @@ export default {
   components: { RichTextEditor },
   data() {
     return {
+      is_favorite: localStorage.getItem('is_favorite'),
+      form_likeDoc: {
+        token: getters.getToken(state),
+        doc_id: null,
+        undo: null
+      },
       imgUrl: '',
       dialogVisible_share: false,
       form: {
@@ -187,6 +201,32 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    likeDoc() {
+      this.form_likeDoc.doc_id = localStorage.getItem('doc_id')
+      this.form_likeDoc.undo = false
+      this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
+         .then((res) => {
+           if (res.data.success) {
+            this.is_favorite = true
+             this.$message.success(res.data.message)
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
+    unlikeDoc() {
+      this.form_likeDoc.doc_id = localStorage.getItem('doc_id')
+      this.form_likeDoc.undo = true
+      this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
+         .then((res) => {
+           if (res.data.success) {
+            this.is_favorite = false
+             this.$message.success(res.data.message)
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
     share() {
       this.$axios.post('/worddocx/share', qs.stringify(this.form4))
         .then(res => {
