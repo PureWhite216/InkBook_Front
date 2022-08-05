@@ -21,6 +21,7 @@
               :data="docList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
             >
               <el-table-column
@@ -87,6 +88,7 @@
               :data="memberList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
             >
               <el-table-column
@@ -153,6 +155,7 @@
               :data="memberList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
               @selection-change="handleSelectionChange"
             >
               <el-table-column

@@ -415,20 +415,6 @@ export default {
       memberList: [],
       projectList: [],
       deleteMemberList: [],
-      powerOptions: [
-        {
-          value: 1,
-          label: '队长'
-        },
-        {
-          value: 2,
-          label: '开发者'
-        },
-        {
-          value: 3,
-          label: '观察者'
-        }
-      ],
       userModel: {
         address: '',
         avatar: '',
