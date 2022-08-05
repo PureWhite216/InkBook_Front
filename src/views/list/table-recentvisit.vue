@@ -84,7 +84,7 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="axureList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
@@ -93,31 +93,31 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="axure_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属团队"
-                prop="updatetime"
+                prop="team_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属项目"
-                prop="user"
+                prop="project_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="user"
+                prop="last_edit"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="创建者"
-                prop="user"
+                prop="create_user"
                 width="200px"
               />
               <el-table-column
@@ -193,6 +193,9 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_getAxureList: {
+        token: getters.getToken(state)
+      },
       form_member: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -243,6 +246,7 @@ export default {
       memberList: [],
       deleteMemberList: [],
       docList: [],
+      axureList: [],
       powerOptions: [
         {
           value: 1,
@@ -272,8 +276,56 @@ export default {
   },
   created() {
     this.getDocList()
+    this.getAxureList()
   },
   methods: {
+    getAxureList() {
+      this.loading = true
+      this.axureList = []
+      this.$axios.post('/axure/getRecentViewList', qs.stringify(this.form_getAxureList))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null,
+                last_edit: null,
+                create_user: null,
+                team_name: null,
+                project_name: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
+              axures.team_name = res.data.data[i].team_name
+              axures.project_name = res.data.data[i].project_name
+              let flag = 0
+              for (let i = 0; i < this.axureList.length; i++) {
+                if (this.axureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.axureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     getDocList() {
       this.docList = []
       this.$axios.get('/user/recentlyViewedList', {
