@@ -60,8 +60,8 @@
           <el-button
             slot="reference"
             class="button-style"
-            @click="createUML()"
             style="border-color: #ffd45c"
+            @click="createUML()"
           >创建uml
             <i class="el-icon-plus"></i>
           </el-button>
@@ -216,10 +216,10 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-star-on" command="personalCenter">
+                      <el-dropdown-item v-if="!scope.row.is_favorite" icon="el-icon-star-on" command="personalCenter">
                         <el-button type="text" @click="likeDoc(scope.row)">收藏</el-button>
                       </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-star-off" command="personalCenter">
+                      <el-dropdown-item v-if="scope.row.is_favorite" icon="el-icon-star-off" command="personalCenter">
                         <el-button type="text" @click="unlikeDoc(scope.row)">取消收藏</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
@@ -617,6 +617,7 @@ export default {
     toDocEditor(val) {
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
+      localStorage.setItem('is_favorite', val.is_favorite)
       this.$axios.get('/doc/getDocInfo', {
         params: {
           token: getters.getToken(state),
@@ -725,7 +726,8 @@ export default {
                 creator_id: null,
                 doc_content: null,
                 creator_name: null,
-                doc_id: null
+                doc_id: null,
+                is_favorite: null
               }
               docs.doc_name = res.data.data[i].doc_name
               docs.last_edit_time = res.data.data[i].last_edit_time
@@ -735,6 +737,7 @@ export default {
               docs.doc_content = res.data.data[i].doc_content
               docs.creator_name = res.data.data[i].creator_name
               docs.doc_id = res.data.data[i].doc_id
+              docs.is_favorite = res.data.data[i].is_favorite
               let flag = 0
               for (let i = 0; i < this.docList.length; i++) {
                 if (this.docList[i].doc_id === docs.doc_id) {
