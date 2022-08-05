@@ -127,9 +127,15 @@
     </el-dialog>
     <el-dialog title="设置权限" :visible.sync="dialogPerm">
       <el-form :model="form_power">
-        <el-form-item label="权限（请输入“成员”或者“管理员”）" :label-width="formLabelWidth">
-          <el-input v-model="form_power.userPerm" autocomplete="off" />
-        </el-form-item>
+        
+        <el-select v-model="form_power.userPerm" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogPerm = false; form_power.userPerm = '' ">取 消</el-button>
@@ -409,20 +415,6 @@ export default {
       memberList: [],
       projectList: [],
       deleteMemberList: [],
-      powerOptions: [
-        {
-          value: 1,
-          label: '队长'
-        },
-        {
-          value: 2,
-          label: '开发者'
-        },
-        {
-          value: 3,
-          label: '观察者'
-        }
-      ],
       userModel: {
         address: '',
         avatar: '',
@@ -433,7 +425,19 @@ export default {
         nickName: '',
         status: 0,
         vip: 1
-      }
+      },
+      options: [{
+          value: '0',
+          label: '超管'
+        }, {
+          value: '1',
+          label: '管理员'
+        }, {
+          value: '2',
+          label: '成员'
+        }, 
+      ],
+      value:'',
     }
   },
   created() {
