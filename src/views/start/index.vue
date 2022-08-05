@@ -5,17 +5,10 @@
     <div class="style2">
       <el-button class="enterbutton" @click="enter">开始体验<i class="el-icon-right"></i></el-button>
     </div>
-<!--    <div class="style3" @click="enter">-->
-<!--      In winter, it is covered with snow and snow. When you climb to Jinding, you can see far and wide, and the-->
-<!--      scenery is very magnificent; West overlooking Aiai snow peak, Gongga Mountain and Wawu mountain, the mountains-->
-<!--      connect the sky; Looking south at the top of Ten Thousand Buddhas, the clouds are rolling and the momentum is-->
-<!--      magnificent; A panoramic view of the Pingchuan River in the north is as beautiful as a shop, with a panoramic-->
-<!--      view of the Dadu River and Qingyi River-->
-<!--    </div>-->
   </div>
 </template>
 
-<script>
+<script scoped>
 import router from '@/router'
 
 export default {
