@@ -99,24 +99,24 @@
               </el-dialog>
             </el-form-item>
           </el-col>
-          <el-button 
-            icon="el-icon-upload" 
-            class="button-style" 
+          <el-button
+            icon="el-icon-upload"
+            class="button-style"
             type="primary"
             @click="dialogVisiblechange = true"
           >
-          修改个人信息
+            修改个人信息
           </el-button>
-          <el-dialog title="修改密码" :visible.sync="dialogVisiblechange" width="40%" center>
+          <el-dialog title="修改个人信息" :visible.sync="dialogVisiblechange" width="40%" center>
             <el-form :model="form_changePassword">
-              <el-form-item label="新昵称" :label-width="formLabelWidth">
-                <el-input v-model="baseInfoModel.name" autocomplete="off"/>
+              <el-form-item label="名称" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.name" autocomplete="off" />
               </el-form-item>
-              <el-form-item label="充填姓名" :label-width="formLabelWidth">
-                <el-input v-model="baseInfoModel.real_name" autocomplete="off"/>
+              <el-form-item label="真实姓名" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.real_name" autocomplete="off" />
               </el-form-item>
-              <el-form-item label="新邮箱" :label-width="formLabelWidth">
-                <el-input v-model="baseInfoModel.email" autocomplete="off"/>
+              <el-form-item label="邮箱" :label-width="formLabelWidth">
+                <el-input v-model="baseInfoModel.email" autocomplete="off" />
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
