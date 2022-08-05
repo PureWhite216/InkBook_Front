@@ -127,8 +127,7 @@
     </el-dialog>
     <el-dialog title="设置权限" :visible.sync="dialogPerm">
       <el-form :model="form_power">
-        
-        <el-select v-model="form_power.userPerm" placeholder="请选择">
+        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -446,13 +445,13 @@ export default {
   },
   methods: {
     givePower() {
-      if (this.form_power.userPerm === '管理员') {
+      /*if (this.form_power.userPerm === '管理员') {
         this.form_power.userPerm = 1
       } else if (this.form_power.userPerm === '成员') {
         this.form_power.userPerm = 2
       } else {
         this.form_power.userPerm = 0
-      }
+      }*/
       this.$axios.post('/team/setPerm', qs.stringify(this.form_power))
       .then(res => {
         if (res.data.success) {
