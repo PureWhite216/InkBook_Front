@@ -7,8 +7,8 @@
       <Logo v-if="showLogo" />
     </transition>
     <el-menu
-      ref="elMenu1"
       class="el-menu-vertical-demo"
+      ref="elMenu1"
     >
       <el-menu-item index="1" @click="toRecent">
         <i class="el-icon-document" style="color: #3297ff"></i>
@@ -33,17 +33,15 @@
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
-    <div class="text-grey">最近查看的团队</div>
-    <el-menu
-      v-for="(item,index) in recentTeamList"
-      :key="index"
-      ref="elMenu2"
-      style="margin-top: 10px"
-      class="el-menu-vertical-demo"
-    >
-      <!-- <el-menu-item index="1" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队1</span>
+    <!--    <div class="text-grey">最近查看的团队</div>-->
+    <!--   <el-menu -->
+    <!--   </el-menu>  style="margin-top: 10px" -->
+    <!--    class="el-menu-vertical-demo" --> 
+    <!--   ref="elMenu2" -->  
+    <!--  >  -->
+     <!--  <el-menu-item index="1" @click="recentGroup()">  --> 
+       <!--    <i class="el-icon-right"></i>--> 
+      <!--<span slot="title">团队1</span>
       </el-menu-item>
       <el-menu-item index="2" @click="recentGroup()">
         <i class="el-icon-right"></i>
@@ -52,12 +50,8 @@
       <el-menu-item index="3" @click="recentGroup()">
         <i class="el-icon-right"></i>
         <span slot="title">团队3</span>
-      </el-menu-item> -->
-      <el-menu-item @click="toGroupFile(item)">
-        <i class="el-icon-right"></i>
-        <span slot="title">{{ item.team_name }}</span>
       </el-menu-item>
-    </el-menu>
+    </el-menu>    -->  
     <div class="mobile-shadow"></div>
     <div>
       <el-dialog
@@ -118,8 +112,7 @@ export default {
         user_id: getters.getUserId(state),
         teamName: '',
         teamInfo: ''
-      },
-      recentTeamList: []
+      }
     }
   },
   watch: {
@@ -139,51 +132,9 @@ export default {
       this.hiddenSiderbar = false
     }
   },
-  created() {
-    this.getRecentTeam()
-  },
   methods: {
-    getRecentTeam() {
-      this.recentTeamList = []
-      this.$axios.get('/team/getRecentViewList', {
-              params: {
-                token: getters.getToken(state)
-              }
-            })
-            .then(res => {
-              if (res.data.success) {
-                for (let i = 0; i < res.data.data.length; i++) {
-                  const teams = {
-                    team_id: null,
-                    team_name: null,
-                    team_info: null
-                  }
-                  teams.team_name = res.data.data[i].team_name
-                  teams.team_info = res.data.data[i].team_info
-                  teams.team_id = res.data.data[i].team_id
-                  let flag = 0
-                  for (let i = 0; i < this.recentTeamList.length; i++) {
-                    if (this.recentTeamList[i].team_id === teams.team_id) {
-                      flag = 1
-                      break
-                    }
-                  }
-                  if (!flag) { this.recentTeamList.push(teams) }
-              // this.$message.success(res.data.message)
-            }
-              } else {
-                this.$message.error(res.data.message)
-              }
-            })
-    },
     recentGroup() {
       this.$refs.elMenu1.activeIndex = null
-    },
-    toGroupFile(item) {
-      localStorage.setItem('team_id', item.team_id)
-      localStorage.setItem('team_name', item.team_name)
-      localStorage.setItem('team_info', item.team_info)
-      this.$router.push('/redirect' + '/list/table-group-message')
     },
     toGroup() {
       router.push('/list/table-group')
