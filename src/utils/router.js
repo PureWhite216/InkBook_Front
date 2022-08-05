@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
   if (whiteList.includes(to.name)) {
     next()
     NProgress.done()
-  } else if (to.name !== 'login' && !getters.getToken(state) && to.name !== 'register' && to.name !== 'forget' && to.name !== 'share') {
+  } else if (to.name !== 'login' && !getters.getToken(state) && to.name !== 'register' && to.name !== 'forget' && to.name !== 'start' && to.name !== 'share') {
     alert('请先登录！')
     next({ name: 'login' })
     NProgress.done()

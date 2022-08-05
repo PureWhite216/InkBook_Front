@@ -8,7 +8,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item" :class="{ disabled: !couldUndo }" @click="undo">
-          <i class="icon-undo" />
+          <i class="icon-undo"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -23,7 +23,7 @@
           :class="{ disabled: !couldRedo }"
           @click="redo"
         >
-          <i class="icon-undo" />
+          <i class="icon-undo"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -37,7 +37,7 @@
           :class="{ active: layerPanelOpened }"
           @click="openLayer"
         >
-          <i class="icon-layer" />
+          <i class="icon-layer"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -55,7 +55,7 @@
         >
           <reference-line />
           <div slot="reference" class="item">
-            <i class="icon-grid" />
+            <i class="icon-grid"></i>
           </div>
         </el-popover>
       </el-tooltip>
@@ -67,7 +67,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item" @click="openSettingCenter('dataBackup')">
-          <i class="el-icon-document-copy" />
+          <i class="el-icon-document-copy"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -77,7 +77,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item" @click="exportH5">
-          <i class="icon-h5" />
+          <i class="icon-h5"></i>
         </div>
       </el-tooltip>
       <!-- <el-tooltip
@@ -97,7 +97,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item" @click="openSettingCenter('shortcut')">
-          <i class="el-icon-thumb" />
+          <i class="el-icon-thumb"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -107,7 +107,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item" @click="openSettingCenter">
-          <i class="el-icon-set-up" />
+          <i class="el-icon-set-up"></i>
         </div>
       </el-tooltip>
       <el-tooltip
@@ -119,7 +119,7 @@
         transition="el-zoom-in-center"
       >
         <div class="item">
-          <i :class="item.icon" />
+          <i :class="item.icon"></i>
         </div>
       </el-tooltip>
     </div>

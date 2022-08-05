@@ -274,7 +274,7 @@ export default {
   methods: {
     getDocList() {
       this.docList = []
-      this.$axios.get('/doc/getDocList', {
+      this.$axios.get('/user/recentlyViewedList', {
               params: {
                 token: getters.getToken(state)
               }
@@ -290,7 +290,10 @@ export default {
                 creator_id: null,
                 doc_content: null,
                 creator_name: null,
-                doc_id: null
+                doc_id: null,
+                team_name: null,
+                project_name: null,
+                create_user: null
               }
               docs.doc_name = res.data.data[i].doc_name
               docs.last_edit_time = res.data.data[i].last_edit_time
@@ -300,6 +303,9 @@ export default {
               docs.doc_content = res.data.data[i].doc_content
               docs.creator_name = res.data.data[i].creator_name
               docs.doc_id = res.data.data[i].doc_id
+              docs.team_name = res.data.data[i].team_name
+              docs.project_name = res.data.data[i].project_name
+              docs.create_user = res.data.data[i].create_user
               let flag = 0
               for (let i = 0; i < this.docList.length; i++) {
                 if (this.docList[i].doc_id === docs.doc_id) {

@@ -82,7 +82,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                <el-button type="text" @click="dialogUpdateProjectVisible = true">重命名</el-button>
+                <el-button type="text" @click="form_updateProject.project_name = project_name, form_updateProject.project_info = project_info, dialogUpdateProjectVisible = true">修改项目信息</el-button>
               </el-dropdown-item>
               <el-dropdown-item icon="el-icon-switch-button" command="logout">
                 <el-button type="text" style="color: red" @click="deleteProject">删除项目</el-button>
@@ -124,7 +124,7 @@
     </el-dialog>
 
     <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
-      <el-form :model="form_project">
+      <el-form :model="form_updateProject">
         <el-form-item label="项目新名称" :label-width="formLabelWidth">
           <el-input v-model="form_updateProject.project_name" autocomplete="off" />
         </el-form-item>
@@ -150,6 +150,21 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdateDocInfoVisible = false">取 消</el-button>
         <el-button @click="updateDocInfo(), dialogUpdateDocInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="修改原型信息" :visible.sync="dialogUpdateAxureInfoVisible">
+      <el-form :model="form_updateDocInfo">
+        <el-form-item label="原型新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateAxureInfo.axure_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="原型新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateAxureInfo.axure_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateAxureInfoVisible = false">取 消</el-button>
+        <el-button @click="updateAxureInfo(), dialogUpdateAxureInfoVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
@@ -266,7 +281,7 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
-                        <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
+                        <el-button type="text" @click="form_updateAxureInfo.axure_id = scope.row.axure_id, dialogUpdateAxureInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
                         <el-button type="text" @click="deleteAxure(scope.row)">删除原型</el-button>
@@ -317,7 +332,7 @@ import BaseForm from '@/components/common/BaseForm.vue'
 import draggable from '@/directive/draggable'
 import store from '@/layouts/store'
 import qs from 'qs'
-import { mapActions, mapState } from 'poster/poster.vuex'
+// import { mapActions, mapState } from 'poster/poster.vuex'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import router from '@/router'
@@ -339,6 +354,12 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_updateAxureInfo: {
+        token: getters.getToken(state),
+        axure_id: null,
+        axure_name: null,
+        axure_info: null
+      },
       form_likeDoc: {
         token: getters.getToken(state),
         doc_id: null,
@@ -432,6 +453,7 @@ export default {
       dialogMethodVisible: false,
       dialogUpdateProjectVisible: false,
       dialogUpdateDocInfoVisible: false,
+      dialogUpdateAxureInfoVisible: false,
       axureList: [],
       deleteMemberList: [],
       docList: [],
@@ -469,6 +491,18 @@ export default {
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    updateAxureInfo() {
+      this.$axios.post('/axure/updateInfo', qs.stringify(this.form_updateAxureInfo))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getAxureList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     likeDoc(item) {
       this.form_likeDoc.doc_id = item.doc_id
       this.form_likeDoc.undo = false
@@ -575,7 +609,7 @@ export default {
               // this.$message.success(res.data.message)
             }
           } else {
-             //this.$message.error(res.data.message)
+             // this.$message.error(res.data.message)
           }
            this.loading = false
          })
@@ -665,6 +699,8 @@ export default {
             this.$message.success(res.data.message)
             this.project_name = this.form_updateProject.project_name
             this.project_info = this.form_updateProject.project_info
+            localStorage.setItem('project_name', this.project_name)
+            localStorage.setItem('project_info', this.project_info)
           } else {
             this.$message.error(res.data.message)
           }

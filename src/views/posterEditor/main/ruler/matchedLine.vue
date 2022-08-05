@@ -5,13 +5,13 @@
       :key="'col' + index"
       class="reference-line column"
       :style="{ left: item + 'px' }"
-    />
+    ></div>
     <div
       v-for="(item, index) in matchedLine.row"
       :key="'row' + index"
       class="reference-line row"
       :style="{ top: item + 'px',...rowElPositionFix }"
-    />
+    ></div>
   </div>
 </template>
 
