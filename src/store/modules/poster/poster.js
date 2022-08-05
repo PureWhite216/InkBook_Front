@@ -433,6 +433,7 @@ const actions = {
      * 参数pageConfig是从后台获取到的页面配置信息
      */
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
+      console.log(pageConfig)
         let recoverData = {}
         if (!pageConfig || !isPlainObject(pageConfig)) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
