@@ -754,7 +754,8 @@ export default {
             })
     },
     createUML() {
-      router.push('/drawio')
+      // router.push('/drawio')
+      window.location.href = 'https://www.draw.io/index.html'
     },
     CreatePage() {
       this.$message.error('还没写接口哪！')
