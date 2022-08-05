@@ -6,9 +6,9 @@
           收藏
         </p>
       </template>
-      
+
     </TableHeader>
-    
+
     <TableBody ref="tableBody" class="temptablebody">
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
@@ -18,7 +18,7 @@
               ref="table"
               v-loading="loading"
               class="table-custom"
-              :data="memberList"
+              :data="docList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               @selection-change="handleSelectionChange"
@@ -26,31 +26,31 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="projectname"
+                prop="doc_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属团队"
-                prop="updatetime"
+                prop="team_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="所属项目"
-                prop="user"
+                prop="project_name"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="user"
+                prop="last_edit_time"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="创建者"
-                prop="user"
+                prop="creator_name"
                 width="200px"
               />
               <el-table-column
@@ -307,6 +307,7 @@ export default {
       dialogMethodVisible: false,
       memberList: [],
       deleteMemberList: [],
+      docList: [],
       powerOptions: [
         {
           value: 1,
@@ -335,9 +336,52 @@ export default {
     }
   },
   created() {
-    this.getMemberList()
+    this.getFavoriteDocList()
   },
   methods: {
+    getFavoriteDocList() {
+      this.docList = []
+      this.$axios.get('/user/favoriteList', {
+              params: {
+                token: getters.getToken(state)
+              }
+            })
+            .then(res => {
+              if (res.data.success) {
+                for (let i = 0; i < res.data.data.length; i++) {
+              const docs = {
+                doc_name: null,
+                last_edit_time: null,
+                project_id: null,
+                doc_description: null,
+                creator_id: null,
+                doc_content: null,
+                creator_name: null,
+                doc_id: null
+              }
+              docs.doc_name = res.data.data[i].doc_name
+              docs.last_edit_time = res.data.data[i].last_edit_time
+              docs.project_id = res.data.data[i].project_id
+              docs.doc_description = res.data.data[i].doc_description
+              docs.creator_id = res.data.data[i].creator_id
+              docs.doc_content = res.data.data[i].doc_content
+              docs.creator_name = res.data.data[i].creator_name
+              docs.doc_id = res.data.data[i].doc_id
+              let flag = 0
+              for (let i = 0; i < this.docList.length; i++) {
+                if (this.docList[i].doc_id === docs.doc_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.docList.push(docs) }
+              // this.$message.success(res.data.message)
+            }
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
+    },
     CreateProject() {
       this.$message.error('还没写接口哪！')
     },

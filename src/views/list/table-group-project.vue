@@ -237,13 +237,13 @@
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="updatetime"
+                prop="last_edit"
                 width="250px"
               />
               <el-table-column
                 align="center"
                 label="创建者"
-                prop="user"
+                prop="create_user"
                 width="200px"
               />
               <el-table-column
@@ -514,7 +514,9 @@ export default {
                 axure_name: null,
                 title: null,
                 config: null,
-                items: null
+                items: null,
+                last_edit: null,
+                create_user: null
               }
               axures.axure_info = res.data.data[i].axure_info
               axures.axure_id = res.data.data[i].axure_id
@@ -523,6 +525,8 @@ export default {
               axures.title = res.data.data[i].title
               axures.config = res.data.data[i].config
               axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
               let flag = 0
               for (let i = 0; i < this.axureList.length; i++) {
                 if (this.axureList[i].axure_id === axures.axure_id) {
