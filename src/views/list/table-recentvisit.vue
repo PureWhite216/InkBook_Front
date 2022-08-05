@@ -15,13 +15,13 @@
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档</span>
             <el-table
               ref="table"
-              v-loading="loading"
+              v-loading="tableloading"
               class="table-custom"
               :data="docList"
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
-              @selection-change="handleSelectionChange"
+              @row-dblclick="toDocEditor"
             >
               <el-table-column
                 align="center"
@@ -279,6 +279,25 @@ export default {
     this.getAxureList()
   },
   methods: {
+    toDocEditor(val) {
+      localStorage.setItem('doc_id', val.doc_id)
+      localStorage.setItem('doc_name', val.doc_name)
+      localStorage.setItem('is_favorite', val.is_favorite)
+      this.$axios.get('/doc/getDocInfo', {
+        params: {
+          token: getters.getToken(state),
+          doc_id: localStorage.getItem('doc_id')
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('doc_content', res.data.data.doc_content)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+      this.$router.push('/editor/rich-text')
+    },
     getAxureList() {
       this.loading = true
       this.axureList = []
