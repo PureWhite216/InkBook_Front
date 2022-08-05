@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
 import store from './store'
 import axios from 'axios'
 import './icons'
@@ -14,6 +13,7 @@ import Cookies from 'js-cookie'
 
 import VueAddition from '@/addition'
 import PortalVue from 'portal-vue'
+import router from './router'
 
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://101.42.171.88:8090/'

@@ -8,6 +8,7 @@ function resolve(dir) {
 
 module.exports = {
   publicPath: './',
+  base: '.',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: true,
