@@ -33,25 +33,6 @@
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
-    <!--    <div class="text-grey">最近查看的团队</div>-->
-    <!--   <el-menu -->
-    <!--   </el-menu>  style="margin-top: 10px" -->
-    <!--    class="el-menu-vertical-demo" --> 
-    <!--   ref="elMenu2" -->  
-    <!--  >  -->
-     <!--  <el-menu-item index="1" @click="recentGroup()">  --> 
-       <!--    <i class="el-icon-right"></i>--> 
-      <!--<span slot="title">团队1</span>
-      </el-menu-item>
-      <el-menu-item index="2" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队2</span>
-      </el-menu-item>
-      <el-menu-item index="3" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队3</span>
-      </el-menu-item>
-    </el-menu>    -->  
     <div class="mobile-shadow"></div>
     <div>
       <el-dialog
@@ -139,14 +120,11 @@ export default {
     toGroup() {
       router.push('/list/table-group')
       this.$refs.elMenu1.activeIndex = null
-      this.$refs.elMenu2.activeIndex = null
     },
     toRecent() {
-      this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-recentvisit')
     },
     toCollect() {
-      this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-favorite')
     },
     createTeamNext() {
