@@ -359,7 +359,7 @@ export const routes = [
   {
     path: '/',
     name: 'root',
-    redirect: '/start',
+    redirect: '/login',
     hidden: true
   },
   {
