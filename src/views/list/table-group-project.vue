@@ -201,6 +201,12 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-star-on" command="personalCenter">
+                        <el-button type="text" @click="likeDoc(scope.row)">收藏</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-star-off" command="personalCenter">
+                        <el-button type="text" @click="unlikeDoc(scope.row)">取消收藏</el-button>
+                      </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                         <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
@@ -333,6 +339,11 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_likeDoc: {
+        token: getters.getToken(state),
+        doc_id: null,
+        undo: null
+      },
       form_deleteAxure: {
         token: getters.getToken(state),
         axure_id: null
@@ -458,6 +469,32 @@ export default {
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    likeDoc(item) {
+      this.form_likeDoc.doc_id = item.doc_id
+      this.form_likeDoc.undo = false
+      this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+             this.getDocList()
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
+    unlikeDoc(item) {
+      this.form_likeDoc.doc_id = item.doc_id
+      this.form_likeDoc.undo = true
+      this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+             this.getDocList()
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
     deleteAxure(item) {
       this.$confirm('此操作将使您删除此原型' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
