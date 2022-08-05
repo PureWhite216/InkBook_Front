@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="8" style="text-align: center; margin-top: 12px">
         <div style="font-size: 16px; color: #ececec" contenteditable="true">
-          原型名称
+          {{ axure_name }}
         </div>
         <div>
           <!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
@@ -71,6 +71,7 @@ export default {
         token: localStorage.getItem('Token'),
         axure_id: localStorage.getItem('axure_id')
       },
+      axure_name: localStorage.getItem('axure_name'),
       pageConfig: {
         pageConfigId: '',
         config: '',
