@@ -399,7 +399,7 @@ export default {
                if (!flag) { this.groupList.push(teams) }
              }
            } else {
-             this.$message.error(res.data.message)
+             //this.$message.error(res.data.message)
            }
            this.tableLoading = false
          })
