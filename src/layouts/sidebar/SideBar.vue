@@ -33,7 +33,6 @@
     >加入的团队
       <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
-<<<<<<< HEAD
     <!--    <div class="text-grey">最近查看的团队</div>-->
     <!--   <el-menu -->
     <!--   </el-menu>  style="margin-top: 10px" -->
@@ -44,20 +43,6 @@
        <!--    <i class="el-icon-right"></i>--> 
       <!--   <span slot="title">团队1</span> -->  
      <!-- </el-menu-item>
-=======
-    <div class="text-grey">最近查看的团队</div>
-    <el-menu
-      v-for="(item,index) in recentTeamList"
-      :key="index"
-      ref="elMenu2"
-      style="margin-top: 10px"
-      class="el-menu-vertical-demo"
-    >
-      <!-- <el-menu-item index="1" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队1</span>
-      </el-menu-item>
->>>>>>> 6525213a2f3816de030758dcd02f93ab438fea13
       <el-menu-item index="2" @click="recentGroup()">
         <i class="el-icon-right"></i>
         <span slot="title">团队2</span>
