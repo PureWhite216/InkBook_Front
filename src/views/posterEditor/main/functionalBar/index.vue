@@ -1,18 +1,6 @@
 <template>
   <div class="functional-bar">
     <ul>
-      <li class="github">
-        <el-tooltip
-          effect="dark"
-          content="希望大佬们能给我点颗星⭐"
-          placement="bottom"
-          transition="el-zoom-in-center"
-        >
-          <span>
-            <a href="https://github.com/a7650/h5-editor" target="blank">GitHub</a>
-          </span>
-        </el-tooltip>
-      </li>
       <li @click="savePage">
         <i class="el-icon-upload"></i>
         <span>
@@ -20,10 +8,6 @@
             {{ savePageLoading ? '正在保存' : '保存页面' }}
           </el-badge>
         </span>
-      </li>
-      <li @click="closeEditor">
-        <i class="el-icon-circle-close"></i>
-        <span>关闭编辑器</span>
       </li>
     </ul>
   </div>
