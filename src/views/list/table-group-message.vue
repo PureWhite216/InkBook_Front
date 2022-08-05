@@ -434,7 +434,7 @@ export default {
         }, {
           value: '2',
           label: '成员'
-        }, 
+        },
       ],
       value:'',
     }
@@ -491,7 +491,7 @@ export default {
               // this.$message.success(res.data.message)
             }
           } else {
-             //this.$message.error(res.data.message)
+             // this.$message.error(res.data.message)
           }
            this.loading = false
          })

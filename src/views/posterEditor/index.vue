@@ -47,6 +47,7 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
+import _merge from 'lodash/merge'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -71,6 +72,11 @@ export default {
         token: localStorage.getItem('Token'),
         axure_id: localStorage.getItem('axure_id')
       },
+      pageConfig: {
+        pageConfigId: '',
+        config: '',
+        items: ''
+      },
       initLoading: false
     }
   },
@@ -86,18 +92,7 @@ export default {
     ...mapGetters(['activeItemIds'])
   },
   beforeRouteLeave(to, from, next) {
-    if (this.isUnsavedState) {
-      const answer = window.confirm(
-        '当前页面配置未保存,退出将不会保存,是否继续退出？'
-      )
-      if (answer) {
-        next()
-      } else {
-        next(false)
-      }
-    } else {
       next()
-    }
   },
   beforeCreate() {
     if (!store.hasModule('poster')) {
@@ -149,17 +144,28 @@ export default {
     back() {
       router.push('/list/table-group-project')
     },
+    // getConfig () {
+    //   this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
+    //     .then(res => {
+    //       if (res.data.success) {
+    //         this.pageConfig.pageConfigId = res.data.data.config_id
+    //           this.pageConfig.config = JSON.parse(res.data.data.config)
+    //           this.pageConfig.items.JSON.parse(res.data.data.items)
+    //       }
+    //       })
+    //         console.log(this.pageConfig)
+    // },
     updatePage() {
       this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
         .then(res => {
           if (res.data.success) {
             const pageConfig = {
               pageConfigId: res.data.data.config_id,
-              config: res.data.data.config,
-              items: JSON.parse(res.data.data.items)
+              config: JSON.parse(res.data.data.config),
+              items: JSON.parse(res.data.data.items),
+              title: res.data.data.title
             }
-            console.log(pageConfig)
-            this.updatePageConfig(pageConfig)
+            this.$store.dispatch('poster/updatePageConfig', pageConfig)
           }
         })
     },
