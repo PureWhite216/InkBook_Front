@@ -280,6 +280,12 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item v-if="!scope.row.isFavorite" icon="el-icon-star-on" command="personalCenter">
+                        <el-button type="text" @click="likeAxure(scope.row)">收藏</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item v-if="scope.row.isFavorite" icon="el-icon-star-off" command="personalCenter">
+                        <el-button type="text" @click="unlikeAxure(scope.row)">取消收藏</el-button>
+                      </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                         <el-button type="text" @click="form_updateAxureInfo.axure_id = scope.row.axure_id, dialogUpdateAxureInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
@@ -354,6 +360,10 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      form_likeAxure: {
+        token: getters.getToken(state),
+        axure_id: null
+      },
       form_updateAxureInfo: {
         token: getters.getToken(state),
         axure_id: null,
@@ -491,6 +501,30 @@ export default {
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    likeAxure(item) {
+      this.form_likeAxure.axure_id = item.axure_id
+      item.isFavorite = true
+      this.$axios.post('/axure/addFavoriteAxure', qs.stringify(this.form_likeAxure))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
+    unlikeAxure(item) {
+      this.form_likeAxure.axure_id = item.axure_id
+      item.isFavorite = false
+      this.$axios.post('/axure/deleteFavoriteAxure', qs.stringify(this.form_likeAxure))
+         .then((res) => {
+           if (res.data.success) {
+             this.$message.success(res.data.message)
+           } else {
+             this.$message.error(res.data.message)
+           }
+         })
+    },
     updateAxureInfo() {
       this.$axios.post('/axure/updateInfo', qs.stringify(this.form_updateAxureInfo))
         .then((res) => {
@@ -506,11 +540,12 @@ export default {
     likeDoc(item) {
       this.form_likeDoc.doc_id = item.doc_id
       this.form_likeDoc.undo = false
+      item.is_favorite = true
       this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
          .then((res) => {
            if (res.data.success) {
              this.$message.success(res.data.message)
-             this.getDocList()
+            //  this.getDocList()
            } else {
              this.$message.error(res.data.message)
            }
@@ -519,11 +554,12 @@ export default {
     unlikeDoc(item) {
       this.form_likeDoc.doc_id = item.doc_id
       this.form_likeDoc.undo = true
+      item.is_favorite = false
       this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
          .then((res) => {
            if (res.data.success) {
              this.$message.success(res.data.message)
-             this.getDocList()
+            //  this.getDocList()
            } else {
              this.$message.error(res.data.message)
            }
@@ -587,7 +623,8 @@ export default {
                 config: null,
                 items: null,
                 last_edit: null,
-                create_user: null
+                create_user: null,
+                isFavorite: null
               }
               axures.axure_info = res.data.data[i].axure_info
               axures.axure_id = res.data.data[i].axure_id
@@ -598,6 +635,7 @@ export default {
               axures.items = res.data.data[i].items
               axures.last_edit = res.data.data[i].last_edit
               axures.create_user = res.data.data[i].create_user
+              axures.isFavorite = res.data.data[i].isFavorite === 1
               let flag = 0
               for (let i = 0; i < this.axureList.length; i++) {
                 if (this.axureList[i].axure_id === axures.axure_id) {
@@ -755,8 +793,8 @@ export default {
     },
     createUML() {
       // router.push('/drawio')
-      window.open('https://www.draw.io/index.html', '_blank');
-      //window.open = 'https://www.draw.io/index.html'
+      window.open('https://www.draw.io/index.html', '_blank')
+      // window.open = 'https://www.draw.io/index.html'
     },
     CreatePage() {
       this.$message.error('还没写接口哪！')
