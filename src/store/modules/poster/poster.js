@@ -466,6 +466,7 @@ const actions = {
                 pageTitle: pageConfig.title || ''
             }
         }
+      console.log(recoverData)
         dispatch('backup/recover', recoverData)
         commit(MTS.SET_UNSAVED_STATE, false)
     },
