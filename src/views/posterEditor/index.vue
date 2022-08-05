@@ -47,7 +47,6 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
-import _merge from 'lodash/merge'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -115,6 +114,7 @@ export default {
     this.initLoading = false
   },
   async mounted() {
+    await this.$store.dispatch('backup/recover', null)
     document.addEventListener('keydown', this.keydownHandle)
     this.body = document.body
     this.mainPanelRef = this.$refs.main.$refs.mainPanel
@@ -159,7 +159,8 @@ export default {
       this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
         .then(res => {
           if (res.data.success) {
-            const pageConfig = {
+            let pageConfig = {}
+            pageConfig = {
               pageConfigId: res.data.data.config_id,
               config: JSON.parse(res.data.data.config),
               items: JSON.parse(res.data.data.items),
