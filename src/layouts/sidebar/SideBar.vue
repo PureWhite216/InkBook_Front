@@ -24,14 +24,14 @@
       class="button-create"
       @click="createTeamStep = 0,form_createTeam.teamName = '',form_createTeam.teamInfo='', dialogCreateTeamVisible = true"
     >创建团队
-      <i class="el-icon-plus" style="margin-left: 59px"></i>
+      <i class="el-icon-plus" style="margin-left: 40px"></i>
     </el-button>
     <el-divider class="line" />
     <el-button
       class="button-create"
       @click="toGroup()"
     >加入的团队
-      <i class="el-icon-right" style="margin-left: 40px"></i>
+      <i class="el-icon-right" style="margin-left: 20px"></i>
     </el-button>
     <div class="text-grey">最近查看的团队</div>
     <el-menu
