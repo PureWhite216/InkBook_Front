@@ -181,7 +181,7 @@ export default {
       router.push('/list/table-recentvisit')
     },
     toCollect() {
-      this.$refs.elMenu2.activeIndex = null
+      // this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-favorite')
     },
     toRecover() {
