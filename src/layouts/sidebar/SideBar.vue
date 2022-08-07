@@ -41,28 +41,11 @@
       style="margin-top: 10px"
       class="el-menu-vertical-demo"
     >
-      <!-- <el-menu-item index="1" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队1</span>
-      </el-menu-item>
-      <el-menu-item index="2" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队2</span>
-      </el-menu-item>
-      <el-menu-item index="3" @click="recentGroup()">
-        <i class="el-icon-right"></i>
-        <span slot="title">团队3</span>
-      </el-menu-item> -->
       <el-menu-item @click="toGroupFile(item)">
         <i class="el-icon-right"></i>
         <span slot="title">{{ item.team_name }}</span>
       </el-menu-item>
     </el-menu>
-    <el-button
-      class="button-create"
-      @click="toRecover"
-    >回收站
-    </el-button>
     <div class="mobile-shadow"></div>
     <div>
       <el-dialog
@@ -181,22 +164,20 @@ export default {
               }
             })
     },
-    // recentGroup() {
-    //   this.$refs.elMenu1.activeIndex = null
-    // },
     toGroupFile(item) {
       localStorage.setItem('team_id', item.team_id)
       localStorage.setItem('team_name', item.team_name)
       localStorage.setItem('team_info', item.team_info)
+      this.$refs.elMenu1.activeIndex = null
       this.$router.push('/redirect' + '/list/table-group-message')
     },
     toGroup() {
       router.push('/list/table-group')
-      // this.$refs.elMenu1.activeIndex = null
-      // this.$refs.elMenu2.activeIndex = null
+      this.$refs.elMenu1.activeIndex = null
+      this.$refs.elMenu2.activeIndex = null
     },
     toRecent() {
-      // this.$refs.elMenu2.activeIndex = null
+      this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-recentvisit')
     },
     toCollect() {
