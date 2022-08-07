@@ -58,7 +58,7 @@ export default {
         .then((res) => {
           // console.log(5)
           if (res.data.success === true) {
-            this.personalInformation.avatar = res.data.data.avatar
+            this.personalInformation.avatar = res.data.data[0].avatar
           }
           this.loading = false
         })

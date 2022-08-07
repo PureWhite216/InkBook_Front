@@ -58,6 +58,12 @@
         <span slot="title">{{ item.team_name }}</span>
       </el-menu-item>
     </el-menu>
+    <el-button
+      class="button-create"
+      @click="createTeamStep = 0,form_createTeam.teamName = '',form_createTeam.teamInfo='', dialogCreateTeamVisible = true"
+    >创建团队
+      <i class="el-icon-plus" style="margin-left: 59px"></i>
+    </el-button>
     <div class="mobile-shadow"></div>
     <div>
       <el-dialog

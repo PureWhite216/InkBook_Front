@@ -295,11 +295,11 @@ export default {
         .then((res) => {
           // console.log(5)
           if (res.data.success === true) {
-            this.personalInformation.username = res.data.data.username
-            this.personalInformation.email = res.data.data.email
-            this.personalInformation.real_name = res.data.data.real_name
-            this.personalInformation.avatar = res.data.data.avatar
-            this.personalInformation.user_id = res.data.data.user_id
+            this.personalInformation.username = res.data.data[0].username
+            this.personalInformation.email = res.data.data[0].email
+            this.personalInformation.real_name = res.data.data[0].real_name
+            this.personalInformation.avatar = res.data.data[0].avatar
+            this.personalInformation.user_id = res.data.data[0].user_id
           } else {
             this.$message.error(res.data.message)
           }

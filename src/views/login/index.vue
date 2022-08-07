@@ -139,20 +139,20 @@ export default {
         .then((res) => {
           // data.unlook_message_count = res.data.unlook_message_count
           if (res.data.success === true) {
-            data.token = res.data.data.token
-            data.userId = res.data.data.user_id
-            console.log(this.formGet)
+            data.token = res.data.data[0].token
+            data.userId = res.data.data[0].user_id
             this.$axios.get('/user/showInfo', {
               params: {
-                token: res.data.data.token,
-                user_id: res.data.data.user_id
+                token: res.data.data[0].token,
+                user_id: res.data.data[0].user_id
               }
             })
             .then(res => {
               if (res.data.success === true) {
-                data.userName = res.data.data.username
-                data.email = res.data.data.email
-                data.real_name = res.data.data.real_name
+                data.userName = res.data.data[0].username
+                data.email = res.data.data[0].email
+                data.real_name = res.data.data[0].real_name
+                data.avatar = res.data.data[0].avatar
                 this.$store
                   .dispatch('user/saveUserInfo', data)
                   .then((_) => {
