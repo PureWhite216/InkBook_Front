@@ -162,10 +162,10 @@ export default {
           if (res.data.success) {
             let pageConfig = {}
             pageConfig = {
-              pageConfigId: res.data.data.config_id,
-              config: JSON.parse(res.data.data.config),
-              items: JSON.parse(res.data.data.items),
-              title: res.data.data.title
+              pageConfigId: res.data.data[0].config_id,
+              config: JSON.parse(res.data.data[0].config),
+              items: JSON.parse(res.data.data[0].items),
+              title: res.data.data[0].title
             }
             this.$store.dispatch('poster/updatePageConfig', pageConfig)
           }
