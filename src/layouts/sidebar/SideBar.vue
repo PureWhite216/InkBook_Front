@@ -60,9 +60,8 @@
     </el-menu>
     <el-button
       class="button-create"
-      @click="createTeamStep = 0,form_createTeam.teamName = '',form_createTeam.teamInfo='', dialogCreateTeamVisible = true"
-    >创建团队
-      <i class="el-icon-plus" style="margin-left: 59px"></i>
+      @click="toRecover"
+    >回收站
     </el-button>
     <div class="mobile-shadow"></div>
     <div>
@@ -182,9 +181,9 @@ export default {
               }
             })
     },
-    recentGroup() {
-      this.$refs.elMenu1.activeIndex = null
-    },
+    // recentGroup() {
+    //   this.$refs.elMenu1.activeIndex = null
+    // },
     toGroupFile(item) {
       localStorage.setItem('team_id', item.team_id)
       localStorage.setItem('team_name', item.team_name)
@@ -193,16 +192,19 @@ export default {
     },
     toGroup() {
       router.push('/list/table-group')
-      this.$refs.elMenu1.activeIndex = null
-      this.$refs.elMenu2.activeIndex = null
+      // this.$refs.elMenu1.activeIndex = null
+      // this.$refs.elMenu2.activeIndex = null
     },
     toRecent() {
-      this.$refs.elMenu2.activeIndex = null
+      // this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-recentvisit')
     },
     toCollect() {
       this.$refs.elMenu2.activeIndex = null
       router.push('/list/table-favorite')
+    },
+    toRecover() {
+      router.push('/list/table-recover')
     },
     createTeamNext() {
       if (this.createTeamStep < 3) this.createTeamStep++
