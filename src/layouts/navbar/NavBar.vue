@@ -13,16 +13,16 @@
       >
         <p>搜索文档</p>
         <el-input
-          v-model="form_getSearchWordList.word_name"
+          v-model="keyword"
           placeholder="输入文件名"
           style="width: 80%;margin: auto"
         />
         <div style="text-align: left; margin: 0">
-          <el-button size="mini" style="margin-top:10px" @click="getSearchWordList()">确定</el-button>
+          <el-button size="mini" style="margin-top:10px" @click="getSearchDocList()">确定</el-button>
         </div>
-        <el-table v-loading="loading" :data="searchWordList" height="400">
-          <el-table-column width="80" property="word_id" label="ID" align="center" />
-          <el-table-column width="140" property="name" label="名称" align="center" />
+        <el-table v-loading="loading" :data="searchDocList" height="400">
+          <el-table-column width="80" property="doc_id" label="ID" align="center" />
+          <el-table-column width="140" property="doc_name" label="名称" align="center" />
           <el-table-column width="200" label="操作" align="center">
             <template slot-scope="scope">
               <el-button
@@ -74,7 +74,8 @@ export default {
       state: store.state,
       search_visible: false,
       loading: false,
-      searchWordList: [],
+      searchDocList: [],
+      keyword: null,
       form_getSearchWordList: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -121,6 +122,53 @@ export default {
             this.$message.error(res.data.message)
           }
         })
+    },
+    getSearchDocList() {
+      // this.loading = true
+      this.searchDocList = []
+      this.$axios.get('/doc/searchDoc', {
+              params: {
+                token: getters.getToken(state),
+                keyword: this.keyword
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const docs = {
+                doc_name: null,
+                last_edit_time: null,
+                project_id: null,
+                doc_description: null,
+                creator_id: null,
+                doc_content: null,
+                creator_name: null,
+                doc_id: null,
+                is_favorite: null
+              }
+              docs.doc_name = res.data.data[i].doc_name
+              docs.last_edit_time = res.data.data[i].last_edit_time
+              docs.project_id = res.data.data[i].project_id
+              docs.doc_description = res.data.data[i].doc_description
+              docs.creator_id = res.data.data[i].creator_id
+              docs.doc_content = res.data.data[i].doc_content
+              docs.creator_name = res.data.data[i].creator_name
+              docs.doc_id = res.data.data[i].doc_id
+              docs.is_favorite = res.data.data[i].is_favorite
+              let flag = 0
+              for (let i = 0; i < this.searchDocList.length; i++) {
+                if (this.searchDocList[i].doc_id === docs.doc_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.searchDocList.push(docs) }
+              // this.$message.success(res.data.message)
+            }
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
     },
     getSearchWordList() {
       this.loading = true

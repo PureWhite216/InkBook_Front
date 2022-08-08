@@ -127,7 +127,7 @@
     </el-dialog>
     <el-dialog title="设置权限" :visible.sync="dialogPerm" style="width: 1000px; margin: auto;">
       <el-form :model="form_power">
-        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off" >
+        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -268,7 +268,7 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
-           <el-tab-pane>
+          <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
             <el-table
               ref="table"
@@ -435,7 +435,7 @@ export default {
               date: '2016-05-01',
               name: '王小虎',
               address: '上海市普陀区金沙江路 1519 弄'
-            },]
+            }]
         }, {
           id: 3,
           date: '2016-05-01',
