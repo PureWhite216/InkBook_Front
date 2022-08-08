@@ -192,7 +192,7 @@
                           <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
                         </el-dropdown-item>
                         <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                          <el-button type="text" @click="deleteProjectItem(scope.row)">删除项目</el-button>
+                          <el-button type="text" @click="deprecateProjectItem(scope.row)">弃置项目</el-button>
                         </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
@@ -266,40 +266,6 @@
                   </el-button>
                 </template>
               </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
-            <el-table
-              ref="table"
-              v-loading="loading"
-              :data="tableData"
-              :header-cell-style="tableConfig.headerCellStyle"
-              :size="tableConfig.size"
-              :cell-style="tableConfig.cellStyle"
-              lazy
-              row-key="id"
-              default-expand-all
-              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-            >
-              <el-table-column
-                align="center"
-                label="名称"
-                prop="date"
-                width="450px"
-              />
-              <el-table-column
-                align="center"
-                label="创建者"
-                prop="real_name"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="更新时间"
-                prop="email"
-                width="250px"
-              />
             </el-table>
           </el-tab-pane>
         </el-tabs>
@@ -432,6 +398,18 @@ export default {
         user_id: getters.getUserId(state),
         project_id: 0
       },
+      form_deprecateProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: 0,
+        deprecated: true
+      },
+      form_unDeprecateProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        project_id: 0,
+        deprecated: false
+      },
       form_updateProject: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -485,6 +463,7 @@ export default {
       dialogMethodVisible: false,
       memberList: [],
       projectList: [],
+      deprecatedList: [],
       deleteMemberList: [],
       userModel: {
         address: '',
@@ -516,6 +495,46 @@ export default {
     this.getProjectList()
   },
   methods: {
+    unDeprecateProject(item) {
+      this.form_unDeprecateProject.project_id = item.project_id
+      this.$axios.post('/project/deprecate', qs.stringify(this.form_unDeprecateProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getProjectList()
+        })
+    },
+    deprecateProjectItem(item) {
+      this.$confirm('此操作将使您弃置此项目使其进入回收站' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deprecateProject(item)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    deprecateProject(item) {
+      this.form_deprecateProject.project_id = item.project_id
+      this.$axios.post('/project/deprecate', qs.stringify(this.form_deprecateProject))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getProjectList()
+        })
+    },
     givePower() {
       // /*if (this.form_power.userPerm === '管理员') {
       //   this.form_power.userPerm = 1
@@ -538,6 +557,7 @@ export default {
     getProjectList() {
       this.loading = true
       this.projectList = []
+      this.deprecatedList = []
       this.$axios.post('/project/getProjectList', qs.stringify(this.form_getProjectList))
         .then((res) => {
           if (res.data.success) {
@@ -552,14 +572,7 @@ export default {
               projects.team_id = res.data.data[i].team_id
               projects.project_name = res.data.data[i].project_name
               projects.project_info = res.data.data[i].project_info
-              let flag = 0
-              for (let i = 0; i < this.projectList.length; i++) {
-                if (this.projectList[i].project_id === projects.project_id) {
-                  flag = 1
-                  break
-                }
-              }
-              if (!flag) { this.projectList.push(projects) }
+              if (!res.data.data[i].deprecated) { this.projectList.push(projects) } else { this.deprecatedList.push(projects) }
               // this.$message.success(res.data.message)
             }
           } else {
