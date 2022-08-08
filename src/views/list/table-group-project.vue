@@ -93,6 +93,7 @@
         </el-popover>
       </template>
     </TableHeader>
+
     <el-dialog title="创建文档" :visible.sync="dialogWordVisible">
       <el-form :model="form_word">
         <el-form-item label="文档名称" :label-width="formLabelWidth">
@@ -106,6 +107,20 @@
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
         <el-button @click="dialogWordVisible = false; createWord()">确 定</el-button>
       </div>
+      <el-row>
+        <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+          <el-card :body-style="{ padding: '0px' }">
+            <img src="../../assets/work_logo.png" class="image">
+            <div style="padding: 14px;">
+              <span>模板{{index}}</span>
+              <div class="bottom clearfix">
+                <time class="time">{{ currentDate }}</time>
+                <el-button type="text" class="button">操作按钮</el-button>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
     </el-dialog>
 
     <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
@@ -121,6 +136,7 @@
         <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
         <el-button @click="createAxure(), dialogPageVisible = false">确 定</el-button>
       </div>
+      
     </el-dialog>
 
     <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
@@ -190,12 +206,14 @@
                 label="名称"
                 prop="doc_name"
                 width="375px"
+                sortable
               />
               <el-table-column
                 align="center"
                 label="更新时间"
                 prop="last_edit_time"
                 width="250px"
+                sortable
               />
               <el-table-column
                 align="center"
@@ -995,5 +1013,9 @@ export default {
 .rightsidefont{
   font-size: 25px;
   margin: 10px;
+}
+.image{
+  width: 100px;
+  height: 100px;
 }
 </style>
