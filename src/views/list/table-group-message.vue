@@ -268,6 +268,40 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
+            <el-table
+              ref="table"
+              v-loading="loading"
+              :data="tableData"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
+              lazy
+              row-key="id"
+              default-expand-all
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+            >
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="date"
+                width="450px"
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="real_name"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="更新时间"
+                prop="email"
+                width="250px"
+              />
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </template>
     </TableBody>
@@ -326,6 +360,44 @@ export default {
   ],
   data() {
     return {
+      tableData: [{
+          id: 1,
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          id: 2,
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄',
+          children: [{
+              id: 31,
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+            },]
+        }, {
+          id: 3,
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄',
+          children: [{
+              id: 31,
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+              id: 32,
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+          }]
+        }, {
+          id: 4,
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
       visible_setPerm: true,
       loading: false,
       dialogRenameVisible: false,
