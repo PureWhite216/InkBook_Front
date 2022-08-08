@@ -99,9 +99,6 @@
         <el-form-item label="文档名称" :label-width="formLabelWidth">
           <el-input v-model="form_word.doc_name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="文档简介（可不填）" :label-width="formLabelWidth">
-          <el-input v-model="form_word.doc_description" autocomplete="off" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
