@@ -1,19 +1,19 @@
 import leftSide from './leftSide'
 import widget from './widget'
-import PluginA from './constructor'
+import PluginInput from './constructor'
 import widgetControl from './widgetControl'
 import bottomBar from './bottomBar'
 import extendSideBar from './extendSideBar'
 
 export default {
     leftSide: {
-        icon: 'el-icon-news',
-        name: 'button',
+        icon: 'el-icon-edit-outline',
+        name: 'input',
         component: leftSide
     },
     widget: {
         component: widget,
-        constructor: PluginA
+        constructor: PluginInput
     },
     controlPanel: {
         component: widgetControl

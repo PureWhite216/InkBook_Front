@@ -1,5 +1,7 @@
 <template>
-  <div class="plugin-a" ></div>
+  <div class="plugin-input">
+    #插件测试
+  </div>
 </template>
 
 <script>

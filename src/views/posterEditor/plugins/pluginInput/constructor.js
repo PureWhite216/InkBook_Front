@@ -4,19 +4,13 @@ import _merge from 'lodash/merge'
 export default class PluginA extends Widget {
     constructor(config) {
         config = _merge({
-            type: 'pluginA',
+            type: 'pluginInput',
             typeLabel: '插件测试',
-            componentName: 'plugin-pluginA',
-            icon: 'el-icon-news',
+            componentName: 'plugin-pluginInput',
+            icon: 'el-icon-edit-outline',
             replicable: false,
             wState: {
-                text: 'button',
-                style: {
-                  color: 'black',
-                  background: 'white',
-                  width: '80px',
-                  height: '32px'
-                }
+                buttonCount: 3
             }
         }, config)
         super(config)

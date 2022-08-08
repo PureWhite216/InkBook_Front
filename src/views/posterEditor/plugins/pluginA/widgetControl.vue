@@ -1,10 +1,16 @@
 <template>
   <div class="plugin-a">
-    <el-form>
-      <el-form-item label="按钮数量">
-        <el-input v-model="buttonCount" type="number" />
-      </el-form-item>
-    </el-form>
+    <setting-content>
+      <setting-item label="文本">
+        <el-input v-model="text" type="text" />
+      </setting-item>
+      <setting-item label="背景颜色">
+        <el-color-picker v-model="BackgroundColor" size="small" />
+      </setting-item>
+      <setting-item label="字体颜色">
+        <el-color-picker v-model="Color" size="small" />
+      </setting-item>
+    </setting-content>
   </div>
 </template>
 
@@ -13,16 +19,32 @@ import { controlMixin } from '../helpers'
 export default {
   mixins: [controlMixin],
   computed: {
-    buttonCount: {
+    text: {
       get() {
-        return this.wState.buttonCount
+        return this.wState.text
       },
       set(val) {
-        this.$pluginHelpers.updateWidgetState({
-          keyPath: 'buttonCount',
-          value: parseInt(val),
+        this.updateWidgetState({
+          keyPath: 'text',
+          value: val,
           widgetId: this.item.id
         })
+      }
+    },
+    BackgroundColor: {
+      get() {
+        return this.style.backgroundColor
+      },
+      set(val) {
+        this.updateStyle('backgroundColor', val)
+      }
+    },
+    Color: {
+      get() {
+        return this.style.color
+      },
+      set(val) {
+        this.updateStyle('color', val)
       }
     }
   }

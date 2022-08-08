@@ -12,7 +12,7 @@ const defaultWidgetConfig = () => {
     componentName: '', // 动态component的name
     icon: '', // 图标class
     wState: {}, // 组件内部状态数据，样式属性等信息
-    dragInfo: { w: 100, h: 100, x: 0, y: 0, rotateZ: 0 }, // 组件的位置、大小、旋转角度
+    dragInfo: { w: 80, h: 40, x: 0, y: 0, rotateZ: 0 }, // 组件的位置、大小、旋转角度
     rename: '', // typeLabel重命名
     lock: false, // 是否处于锁定状态
     visible: true, // 是否可见
