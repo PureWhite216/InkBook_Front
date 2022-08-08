@@ -125,9 +125,9 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="设置权限" :visible.sync="dialogPerm">
+    <el-dialog title="设置权限" :visible.sync="dialogPerm" style="width: 1000px; margin: auto;">
       <el-form :model="form_power">
-        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off">
+        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off" >
           <el-option
             v-for="item in options"
             :key="item.value"
