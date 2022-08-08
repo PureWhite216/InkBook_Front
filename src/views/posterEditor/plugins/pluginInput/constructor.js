@@ -7,7 +7,7 @@ export default class PluginA extends Widget {
             type: 'pluginInput',
             typeLabel: '插件测试',
             componentName: 'plugin-pluginInput',
-            icon: 'el-icon-input',
+            icon: 'el-icon-edit-outline',
             replicable: false,
             wState: {
                 buttonCount: 3

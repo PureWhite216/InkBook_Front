@@ -7,7 +7,7 @@ import extendSideBar from './extendSideBar'
 
 export default {
     leftSide: {
-        icon: 'el-icon-star-off',
+        icon: 'el-icon-news',
         name: 'button',
         component: leftSide
     },

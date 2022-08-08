@@ -8,7 +8,6 @@
         @click="add(item)"
       >Click</el-button>
     </ul>
-    <el-button size="mini" @click="add">插件测试</el-button>
   </div>
 </template>
 

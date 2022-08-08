@@ -7,7 +7,7 @@ export default class PluginA extends Widget {
             type: 'pluginA',
             typeLabel: '插件测试',
             componentName: 'plugin-pluginA',
-            icon: 'el-icon-star-off',
+            icon: 'el-icon-news',
             replicable: false,
             wState: {
                 text: 'button',
