@@ -21,8 +21,8 @@
           <el-button size="mini" style="margin-top:10px" @click="getSearchDocList()">确定</el-button>
         </div>
         <el-table v-loading="loading" :data="searchDocList" height="400">
-          <el-table-column width="80" property="doc_id" label="ID" align="center" />
-          <el-table-column width="140" property="doc_name" label="名称" align="center" />
+          <el-table-column width="80" property="doc_name" label="名称" align="center" />
+          <el-table-column width="140" property="project_name" label="所属项目" align="center" />
           <el-table-column width="200" label="操作" align="center">
             <template slot-scope="scope">
               <el-button
@@ -144,7 +144,8 @@ export default {
                 doc_content: null,
                 creator_name: null,
                 doc_id: null,
-                is_favorite: null
+                is_favorite: null,
+                project_name: null
               }
               docs.doc_name = res.data.data[i].doc_name
               docs.last_edit_time = res.data.data[i].last_edit_time
@@ -155,6 +156,7 @@ export default {
               docs.creator_name = res.data.data[i].creator_name
               docs.doc_id = res.data.data[i].doc_id
               docs.is_favorite = res.data.data[i].is_favorite
+              docs.project_name = res.data.data[i].project_name
               let flag = 0
               for (let i = 0; i < this.searchDocList.length; i++) {
                 if (this.searchDocList[i].doc_id === docs.doc_id) {
