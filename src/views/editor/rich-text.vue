@@ -48,30 +48,17 @@
             取消收藏</el-button>
         </div>
       </template>
-      <!-- <el-dialog title="分享二维码" :visible.sync="dialogVisible_share">
-        <div>
-          <image
-            :src="imgUrl"
-          />
-        </div>
-      </el-dialog> -->
       <RichTextEditor
         ref="richTextEditor"
         v-model="editor"
         :height="1000"
       />
     </el-card>
-    <div
-      v-if="htmlContent"
-      class="margin-top padding priview-content"
-      v-html="htmlContent"
-    >
-    </div>
-    <div
-      v-if="jsonContent"
-      class="margin-top padding priview-content"
-    >
-      {{ jsonContent }}
+    <div v-drag id="drag" class="drag-box">
+      <div class="boxhead">
+        <i class="el-icon-menu"></i>
+        <p>团队文档</p>
+      </div>
     </div>
   </div>
 </template>
@@ -86,6 +73,34 @@ import store from '@/layouts/store'
 export default {
   name: 'RichText',
   components: { RichTextEditor },
+  directives: {
+    drag: {
+      // 指令的定义
+      bind: function(el) {
+        const oDiv = el // 获取当前元素
+        oDiv.onmousedown = (e) => {
+          console.log('onmousedown')
+          // 算出鼠标相对元素的位置
+          const disX = e.clientX - oDiv.offsetLeft
+          const disY = e.clientY - oDiv.offsetTop
+
+          document.onmousemove = (e) => {
+            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+            const left = e.clientX - disX
+            const top = e.clientY - disY
+
+            oDiv.style.left = left + 'px'
+            oDiv.style.top = top + 'px'
+          }
+
+          document.onmouseup = (e) => {
+            document.onmousemove = null
+            document.onmouseup = null
+          }
+        }
+      }
+    }
+  },
   data() {
     return {
       is_favorite: localStorage.getItem('is_favorite'),
@@ -414,5 +429,90 @@ export default {
 .priview-content {
   background: #fff;
   color: #333;
+}
+
+.drag-box {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 240px;
+  height: 600px;
+  background: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, .15);
+}
+.boxhead {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 240px;
+  height: 40px;
+  background: #fffaf6;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, .1);
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #565656;
+}
+
+.layer-panel {
+  width: 220px;
+  height: 460px;
+  background-color: #1d2024;
+  position: fixed;
+  right: 252px;
+  top: 60px;
+  box-shadow: 0 0 6px rgba($color: #000000, $alpha: 0.1);
+  color: #fff;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  user-select: none;
+  z-index: 1001;
+  .header {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    line-height: 30px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    .title {
+      height: 30px;
+      flex: 1;
+      cursor: move;
+    }
+    i {
+      cursor: pointer;
+      width: 30px;
+      text-align: center;
+      padding: 10px 0;
+    }
+  }
+  .content {
+    width: 100%;
+    flex: 1;
+    /* overflow-y: scroll; */
+    background-color: #1d2024;
+    .draggable-container {
+      height: 100%;
+    }
+    .scroll-container {
+      height: 100%;
+      ::v-deep .el-scrollbar__wrap {
+        overflow-x: hidden;
+        height: 430px;
+      }
+    }
+  }
+  .panel-item.selected {
+    background-color: #404955;
+    color: #fff;
+    border-left-color: #358dd9;
+  }
 }
 </style>
