@@ -268,6 +268,100 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
+           <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
+            <el-table
+              ref="table"
+              v-loading="loading"
+              :data="tableData"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
+              lazy
+              row-key="id"
+              default-expand-all
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+            >
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="date"
+                width="450px"
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="real_name"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="更新时间"
+                prop="email"
+                width="250px"
+              />
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">回收站</span>
+            <el-table
+              ref="table"
+              v-loading="tableloading"
+              class="table-custom"
+              :data="deprecatedList"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
+              @row-dblclick="handleCurrentChange"
+            >
+              <el-table-column
+                width="45"
+              />
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="project_name"
+                width="300px"
+              />
+              <el-table-column
+                align="center"
+                label="简介"
+                prop="project_info"
+                width="400px"
+              />
+              <el-table-column
+                align="center"
+                label="操作"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    slot="reference"
+                    class="morebutton"
+                  >
+                    <el-dropdown trigger="click" @command="onCommad">
+                      <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+                        <span class="nick-name el-dropdown-link">
+                          <i class="el-icon-more"></i>
+                        </span>
+                      </div>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                          <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                          <el-button type="text" @click="unDeprecateProject(scope.row)">恢复项目</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                          <el-button type="text" @click="deleteProjectItem(scope.row)">删除项目</el-button>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </template>
     </TableBody>
