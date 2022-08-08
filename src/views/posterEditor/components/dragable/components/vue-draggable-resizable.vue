@@ -28,7 +28,7 @@
         }"
         @mousedown.stop.prevent="handleDown(handleKey, $event)"
         @touchstart.stop.prevent="handleDown(handleKey, $event)"
-      />
+      ></div>
     </template>
     <template v-if="rotatable">
       <div
@@ -40,10 +40,10 @@
         @mousedown.stop.prevent="handleDown('rot', $event)"
         @touchstart.stop.prevent="handleDown('rot', $event)"
       >
-        <i class="el-icon-refresh" />
+        <i class="el-icon-refresh"></i>
       </div>
     </template>
-    <slot />
+    <slot></slot>
   </div>
 </template>
 
