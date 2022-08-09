@@ -1,11 +1,11 @@
 <template>
   <div ref="main" class="poster-editor-main" @contextmenu.prevent="">
     <div ref="mainPanelScrollContent" class="main-panel-scroll-content">
-      <div class="main-panel-contaienr">
+      <div id="pdfDom" class="main-panel-contaienr">
         <main-panel ref="mainPanel" @openContextmenu="openContextmenu" />
       </div>
     </div>
-    <div class="mask" :style="maskStyle" />
+    <div class="mask" :style="maskStyle" ></div>
     <ruler-component />
     <bottom-bar />
     <!-- 功能栏 -->

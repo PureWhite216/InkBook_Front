@@ -72,12 +72,12 @@
       </el-tooltip>
       <el-tooltip
         effect="dark"
-        content="生成H5代码（Beta）"
+        content="导出PDF"
         placement="left"
         transition="el-zoom-in-center"
       >
         <div class="item" @click="exportH5">
-          <i class="icon-h5"></i>
+          <i class="el-icon-upload2"></i>
         </div>
       </el-tooltip>
       <!-- <el-tooltip
@@ -175,7 +175,7 @@ export default {
       redo: 'history/redo'
     }),
     exportH5() {
-      ExportService.exportH5()
+      this.getPdf('pdfDom', 'pdf-export')
     },
     exportPoster() {
       ExportService.exportPoster()
