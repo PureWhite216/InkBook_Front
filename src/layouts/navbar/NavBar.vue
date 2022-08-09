@@ -1,8 +1,99 @@
 <template>
   <div class="vaw-nav-bar-wrapper">
     <div style="flex: 1">
-      <el-input v-model="input" placeholder="Search" size="mini" style="width: 200px; margin-left: 20px" />
+      <el-popover
+        v-model="searchProject_visible"
+        placement="top"
+        width="450"
+        height="400"
+      >
+        <p align="center">项目</p>
+        <el-table v-loading="loading" :data="searchProjectList" height="400">
+          <el-table-column width="80" property="project_name" label="名称" align="center" />
+          <el-table-column width="140" property="project_info" label="简介" align="center" />
+          <el-table-column width="200" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="primary"
+                :underline="false"
+                text-align="left"
+                icon="el-icon-view"
+                @click="viewSearchWord(scope.row)"
+              >查看</el-button>
+              <el-button
+                size="mini"
+                type="warning"
+                :underline="false"
+                text-align="left"
+                icon="el-icon-star-on"
+                @click="Like(scope.row)"
+              >收藏</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- <el-button
+          slot="reference"
+          style="margin-inline:10px; color: white; background: #2c2c2c"
+          size="mini"
+          icon="el-icon-search"
+        >搜索
+        </el-button> -->
+        <el-input slot="reference" v-model="keyword_project" placeholder="搜索项目" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="searchProject_visible = true,getSearchProjectList()" />
+      </el-popover>
     </div>
+<!-- <<<<<<< HEAD -->
+    <div>
+      <el-popover
+        v-model="search_visible"
+        placement="top"
+        width="450"
+        height="400"
+      >
+        <p>搜索文档</p>
+        <el-input
+          v-model="keyword"
+          placeholder="输入文件名"
+          style="width: 80%;margin: auto"
+        />
+        <div style="text-align: left; margin: 0">
+          <el-button size="mini" style="margin-top:10px" @click="getSearchDocList()">确定</el-button>
+        </div>
+        <el-table v-loading="loading" :data="searchDocList" height="400">
+          <el-table-column width="80" property="doc_name" label="名称" align="center" />
+          <el-table-column width="140" property="project_name" label="所属项目" align="center" />
+          <el-table-column width="200" label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="primary"
+                :underline="false"
+                text-align="left"
+                icon="el-icon-view"
+                @click="viewSearchWord(scope.row)"
+              >查看</el-button>
+              <el-button
+                size="mini"
+                type="warning"
+                :underline="false"
+                text-align="left"
+                icon="el-icon-star-on"
+                @click="Like(scope.row)"
+              >收藏</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-button
+          slot="reference"
+          style="margin-inline:10px; color: white; background: #2c2c2c"
+          size="mini"
+          icon="el-icon-search"
+        >搜索
+        </el-button>
+        <!-- <el-input slot="reference" v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="search_visible = true,getSearchDocList()" /> -->
+      </el-popover>
+    </div>
+=======
 <!--    <div>-->
 <!--      <el-popover-->
 <!--        v-model="search_visible"-->
@@ -52,6 +143,7 @@
 <!--        </el-button>-->
 <!--      </el-popover>-->
 <!--    </div>-->
+<!-- >>>>>>> b44e00c8faee1082d524c57ae0f19f96ea1667fc -->
     <!--    <div class="right-wrapper">-->
     <!--      <ActionItems />-->
     <!--    </div>-->
@@ -71,10 +163,20 @@ export default {
   data() {
     return {
       state: store.state,
+      searchProject_visible: false,
       search_visible: false,
       loading: false,
       searchDocList: [],
+      searchProjectList: [],
+      deprecatedList: [],
       keyword: null,
+      keyword_project: null,
+      form_getSearchProjectList: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        team_id: localStorage.getItem('team_id'),
+        keyword: null
+      },
       form_getSearchWordList: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -96,6 +198,40 @@ export default {
     }
   },
   methods: {
+    getSearchProjectList() {
+      this.loading = true
+      this.searchProjectList = []
+      this.deprecatedList = []
+      this.$axios.get('/project/search', {
+              params: {
+                token: getters.getToken(state),
+                user_id: getters.getUserId(state),
+                team_id: localStorage.getItem('team_id'),
+                keyword: this.keyword_project
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const projects = {
+                project_id: 0,
+                team_id: 0,
+                project_name: '',
+                project_info: ''
+              }
+              projects.project_id = res.data.data[i].project_id
+              projects.team_id = res.data.data[i].team_id
+              projects.project_name = res.data.data[i].project_name
+              projects.project_info = res.data.data[i].project_info
+              if (!res.data.data[i].deprecated) { this.searchProjectList.push(projects) } else { this.deprecatedList.push(projects) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     viewSearchWord(item) {
       this.form_viewSearchWord.word_id = item.word_id
       this.$axios.post('/worddocx/user_look_search_word_content', qs.stringify(this.form_viewSearchWord))
@@ -123,7 +259,7 @@ export default {
         })
     },
     getSearchDocList() {
-      // this.loading = true
+      this.loading = true
       this.searchDocList = []
       this.$axios.get('/doc/searchDoc', {
               params: {
@@ -169,7 +305,8 @@ export default {
               } else {
                 this.$message.error(res.data.message)
               }
-            })
+        })
+        this.loading = false
     },
     getSearchWordList() {
       this.loading = true
