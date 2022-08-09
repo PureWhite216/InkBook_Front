@@ -282,12 +282,14 @@
                 label="名称"
                 prop="axure_name"
                 width="375px"
+                sortable
               />
               <el-table-column
                 align="center"
                 label="更新时间"
                 prop="last_edit"
                 width="250px"
+                sortable
               />
               <el-table-column
                 align="center"

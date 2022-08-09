@@ -10,13 +10,13 @@
       ref="elMenu1"
       class="el-menu-vertical-demo"
     >
-      <el-menu-item index="1" @click="toRecent" style="font-size: 16px">
-        <i class="el-icon-document" style="color: #3297ff"></i>
+      <el-menu-item index="1" style="font-size: 18px; font-family: 等线" @click="toRecent">
+        <i class="el-icon-document" style="color: #3297ff; font-size: 22px"></i>
         <span slot="title">最近浏览</span>
       </el-menu-item>
-      <el-menu-item index="2" @click="toCollect">
-        <i class="el-icon-star-off" style="color: #ffc226"></i>
-        <span slot="title" style="font-size: 16px">收藏</span>
+      <el-menu-item index="2" style="font-size: 18px; font-family: 等线" @click="toCollect">
+        <i class="el-icon-star-off" style="color: #ffc226; font-size: 22px"></i>
+        <span slot="title">收藏</span>
       </el-menu-item>
     </el-menu>
     <el-divider class="line" />
@@ -215,9 +215,9 @@ export default {
 .text-grey {
   margin-left: 20px;
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 14px;
   color: #6c6c6c;
-  font-family: 黑体;
+  font-family: 等线,serif;
 }
 .button-create {
   width: 210px;
@@ -226,7 +226,7 @@ export default {
   color: #000000;
   font-size: 20px;
   text-align: left;
-  font-family: 黑体;
+  font-family: 等线,serif;
 }
 .line {
   //width: 80px;

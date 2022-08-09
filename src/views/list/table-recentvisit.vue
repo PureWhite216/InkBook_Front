@@ -609,6 +609,7 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  font-family: 等线;
 }
 .temptablebody{
   height: 500px;

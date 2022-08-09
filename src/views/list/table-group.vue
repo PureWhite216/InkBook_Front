@@ -440,9 +440,11 @@ export default {
   border: 0;
 }
 .projecttitle {
-  font-size: 45px;
+  font-size: 40px;
+  font-weight: bold;
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
+  font-family: 等线;
 }
 </style>

@@ -55,12 +55,15 @@ export default {
         headerCellStyle: {
           backgroundColor: 'rgb(255, 255, 255)',
           'text-align': 'left',
-          'font-size': '16px',
-          color: '#484848'
+          'font-weight': 'bold',
+          'font-size': '18px',
+          'font-family': '等线',
+          color: '#151515'
         },
         cellStyle: {
           'text-align': 'left',
-          'font-size': '16px'
+          'font-size': '18px',
+          'font-family': '等线'
         },
         height: '100%'
       },
