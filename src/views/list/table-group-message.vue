@@ -302,6 +302,7 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
+              :default-expand-all="true"
               lazy
               row-key="dir_id"
               :expand-row-keys="expands"

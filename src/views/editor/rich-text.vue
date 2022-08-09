@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="8" style="text-align: center; margin-top: 12px">
         <div style="font-size: 16px; color: #ececec" contenteditable="true">
-          {{title}}
+          {{ title }}
         </div>
         <div>
           <!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
@@ -82,7 +82,12 @@
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
       </div>
-      <el-tree :data="data" :props="defaultProps" style="margin-top:50px;" @node-click="handleNodeClick" />
+      <el-tree
+        :data="data"
+        :props="{label: 'dir_name'}"
+        style="margin-top:50px;"
+        @node-click="handleNodeClick"
+      />
     </div>
   </div>
 </template>
@@ -197,6 +202,11 @@ export default {
         word_id: localStorage.getItem('word_id'),
         cooperation_id: 0
       },
+      form_getTeam: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id'))
+      },
       isShow: true,
       invite_visible: false,
       comment_visible: false,
@@ -208,50 +218,7 @@ export default {
       cooperatorList: [],
       commentList: [],
       loading: false,
-      data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-      commentData: [{
-        name: 'ABC',
-        time: '2022-05-11',
-        comment: 'Test'
-      }]
+      data: []
       // opt: {
       //   errorCorrectionLevel: 'H',
       //   type: 'image/jpeg',
@@ -261,6 +228,8 @@ export default {
     }
   },
   created() {
+    this.getDoc()
+    console.log(this.data)
     store.changeDevice('mobile')
     store.toggleCollapse(true)
     this.getCooperatorList()
@@ -281,6 +250,26 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    getDoc() {
+      this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
+        .then(res => {
+          if (res.data.success) {
+            this.$axios.get('/doc/walkDir', {
+              params: {
+                token: getters.getToken(state),
+                folder_id: res.data.data[0].root_id
+              }
+            })
+              .then(res => {
+                if (res.data.success) {
+                  this.data = res.data.data
+                } else {
+                  this.$message.error(res.data.message)
+                }
+              })
+          }
+        })
+    },
     handleNodeClick(data) {
         console.log(data)
     },
