@@ -55,6 +55,7 @@
         </div>
       </template>
       <RichTextEditor
+        id="pdfDom"
         ref="richTextEditor"
         v-model="editor"
         :height="1000"
@@ -402,7 +403,7 @@ export default {
         )
     },
     exportPDF() {
-      this.$refs.richTextEditor.export()
+      this.getPdf('pdfDom', this.title)
     },
     Save() {
       this.form_save.doc_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
