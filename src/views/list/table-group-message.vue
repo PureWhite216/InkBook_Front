@@ -592,6 +592,7 @@ export default {
       },
       team_name: localStorage.getItem('team_name'),
       prj_root_id: localStorage.getItem('prj_root_id'),
+      root_id: localStorage.getItem('root_id'),
       dialogInviteVisible: false,
       dialogCreateProjectVisible: false,
       dialogUpdateProjectVisible: false,
