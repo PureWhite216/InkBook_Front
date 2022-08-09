@@ -684,6 +684,7 @@ export default {
          })
     },
     toDocEditor(val) {
+      localStorage.setItem('flag', 'out')
       localStorage.setItem('doc_id', val.doc_id)
       localStorage.setItem('doc_name', val.doc_name)
       localStorage.setItem('is_favorite', val.is_favorite)
@@ -696,11 +697,11 @@ export default {
       .then(res => {
         if (res.data.success) {
           localStorage.setItem('doc_content', res.data.data[0].doc_content)
+          this.$router.push('/editor/rich-text')
         } else {
           this.$message.error(res.data.message)
         }
       })
-      this.$router.push('/editor/rich-text')
     },
     deleteDoc() {
       this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
