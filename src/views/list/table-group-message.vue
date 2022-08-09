@@ -167,7 +167,7 @@
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">项目</span>
+            <span slot="label" class="fontClass">项目</span>
             <el-table
               ref="table"
               v-loading="tableloading"
@@ -227,7 +227,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">成员</span>
+            <span slot="label" class="fontClass">成员</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -294,7 +294,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
+            <span slot="label" class="fontClass">文档中心</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -355,7 +355,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">回收站</span>
+            <span slot="label" class="fontClass">回收站</span>
             <el-table
               ref="table"
               v-loading="tableloading"
@@ -1088,6 +1088,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fontClass {
+  font-family: 等线;
+  font-weight: bold;
+  font-size: 22px;
+}
 .morebutton {
   padding: 5px;
   border: 0;
@@ -1097,6 +1102,7 @@ export default {
   font-size: 16px;
   font-weight: bold;
   border-width: 3px;
+  font-family: 等线;
   color: black;
   height: 45px;
 }
@@ -1112,11 +1118,13 @@ export default {
   width: 1000px;
 }
 .teamtitle {
-  font-size: 50px;
+  font-size: 45px;
+  font-weight: bold;
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
   float: right;
+  font-family: 等线;
 }
 .temptablebody{
   height: 500px;
