@@ -176,7 +176,7 @@ export default {
       const aLink = document.createElement('a')
       aLink.style.display = 'none'
       aLink.href = downloadUrl
-      aLink.download = '图片名称.png'
+      aLink.download = 'ImageExport.png'
       // 触发点击-然后移除
       document.body.appendChild(aLink)
       aLink.click()
