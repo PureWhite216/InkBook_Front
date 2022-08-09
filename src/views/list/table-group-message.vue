@@ -167,7 +167,7 @@
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
           <el-tab-pane>
-            <span slot="label" class="fontClass">项目</span>
+            <span slot="label" class="fontClass"><i class="el-icon-files"></i>项目</span>
             <el-table
               ref="table"
               v-loading="tableloading"
@@ -227,7 +227,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass">成员</span>
+            <span slot="label" class="fontClass"><i class="el-icon-user"></i>成员</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -294,7 +294,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass">文档中心</span>
+            <span slot="label" class="fontClass"><i class="el-icon-folder-opened"></i>文档中心</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -355,7 +355,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass">回收站</span>
+            <span slot="label" class="fontClass"><i class="el-icon-delete"></i>回收站</span>
             <el-table
               ref="table"
               v-loading="tableloading"
@@ -1094,7 +1094,7 @@ export default {
 .fontClass {
   font-family: 等线;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 20px;
 }
 .morebutton {
   padding: 5px;
@@ -1121,7 +1121,7 @@ export default {
   width: 1000px;
 }
 .teamtitle {
-  font-size: 45px;
+  font-size: 46px;
   font-weight: bold;
   margin-left: 10px;
   margin-top: 10px;
