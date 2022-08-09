@@ -281,6 +281,7 @@ export default {
       .then(res => {
         if (res.data.success) {
           localStorage.setItem('prj_root_id', res.data.data[0].prj_root_id)
+          localStorage.setItem('root_id', res.data.data[0].root_id)
           console.log(res.data.data[0].prj_root_id)
         }
       })
