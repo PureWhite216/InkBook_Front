@@ -1,6 +1,8 @@
 <template>
   <div class="plugin-a">
-    <el-button :style="wState.style">{{ wState.text }}</el-button>
+    <div :style="wState.size">
+      <i :class="wState.class" :style="wState.style"></i>
+    </div>
     <portal v-if="isActive" :to="$data.$controlTarget">
       <widget-control :item="item" />
     </portal>
@@ -8,12 +10,12 @@
 </template>
 
 <script>
-import PluginA from './constructor'
+import PluginIcon from './constructor'
 import widgetControl from './widgetControl'
 import { pluginWrap } from '../helpers'
 export default {
   components: { widgetControl: pluginWrap(widgetControl) },
-  mixins: [PluginA.widgetMixin()],
+  mixins: [PluginIcon.widgetMixin()],
   props: {
     item: {
       type: Object,
@@ -37,8 +39,8 @@ export default {
   },
   created() {
     this.updateDragInfo({
-      w: 80,
-      h: 36,
+      w: 30,
+      h: 30,
       x: 0,
       y: 200
     })

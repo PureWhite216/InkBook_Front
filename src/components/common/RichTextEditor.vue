@@ -7,9 +7,9 @@
 </template>
 
 <script>
+
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
-// import { ImageDrop } from 'quill-image-drop-module'
 import ImageResize from 'quill-image-resize-module'
 
 // Quill.register('modules/imageDrop', ImageDrop)
@@ -84,4 +84,6 @@ export default {
     }
   }
 }
+
 </script>
+

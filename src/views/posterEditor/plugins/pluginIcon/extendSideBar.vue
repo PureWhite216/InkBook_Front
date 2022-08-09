@@ -1,7 +1,5 @@
 <template>
-  <div class="plugin-input">
-    #输入框
-  </div>
+  <div class="plugin-a" ></div>
 </template>
 
 <script>

@@ -14,6 +14,7 @@ import Cookies from 'js-cookie'
 import VueAddition from '@/addition'
 import PortalVue from 'portal-vue'
 import router from './router'
+import htmlToPdf from '@/utils/htmlToPdf'
 
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://101.42.171.88:8090/'
@@ -21,6 +22,7 @@ axios.defaults.withCredentials = true
 
 Vue.use(VueAddition)
 Vue.use(PortalVue)
+Vue.use(htmlToPdf)
 Vue.use(LayoutStore, {
   state: {
     isFixedNavBar: true,

@@ -1,19 +1,19 @@
 import leftSide from './leftSide'
 import widget from './widget'
-import PluginInput from './constructor'
+import PluginIcon from './constructor'
 import widgetControl from './widgetControl'
 import bottomBar from './bottomBar'
 import extendSideBar from './extendSideBar'
 
 export default {
     leftSide: {
-        icon: 'el-icon-edit-outline',
-        name: 'input',
+        icon: 'el-icon-news',
+        name: 'button',
         component: leftSide
     },
     widget: {
         component: widget,
-        constructor: PluginInput
+        constructor: PluginIcon
     },
     controlPanel: {
         component: widgetControl
@@ -23,7 +23,7 @@ export default {
     },
     extendSideBar: {
         icon: 'el-icon-star-off',
-        name: '输入框',
+        name: '插件测试',
         component: extendSideBar
     }
 }

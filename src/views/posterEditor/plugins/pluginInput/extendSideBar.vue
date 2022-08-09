@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-input" />
+  <div class="plugin-input"></div>
 </template>
 
 <script>

@@ -33,6 +33,12 @@
             <i class="el-icon-plus"></i>
             保存</el-button>
           <el-button
+            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
+            @click="exportPDF"
+          >
+            <i class="el-icon-upload"></i>
+            导出</el-button>
+          <el-button
             v-if="!is_favorite"
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="likeDoc"
@@ -49,17 +55,18 @@
         </div>
       </template>
       <RichTextEditor
+        id="pdfDom"
         ref="richTextEditor"
         v-model="editor"
         :height="1000"
       />
     </el-card>
-    <div v-drag id="drag" class="drag-box">
+    <div id="drag" v-drag class="drag-box">
       <div class="boxhead">
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
       </div>
-      <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" style="margin-top:50px;"></el-tree>
+      <el-tree :data="data" :props="defaultProps" style="margin-top:50px;" @node-click="handleNodeClick" />
     </div>
   </div>
 </template>
@@ -70,7 +77,7 @@ import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import qs from 'qs'
 import store from '@/layouts/store'
-// import QRCode from 'qrcode'
+
 export default {
   name: 'RichText',
   components: { RichTextEditor },
@@ -238,6 +245,8 @@ export default {
     }
   },
   created() {
+    store.changeDevice('mobile')
+    store.toggleCollapse(true)
     this.getCooperatorList()
     this.getCommentList()
     if (localStorage.getItem('shareFlag') === 'true' && localStorage.getItem('addCooper') === 'false') {
@@ -257,7 +266,7 @@ export default {
   },
   methods: {
     handleNodeClick(data) {
-        console.log(data);
+        console.log(data)
     },
     likeDoc() {
       this.form_likeDoc.doc_id = localStorage.getItem('doc_id')
@@ -392,6 +401,9 @@ export default {
             }
           }
         )
+    },
+    exportPDF() {
+      this.getPdf('pdfDom', this.title)
     },
     Save() {
       this.form_save.doc_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)

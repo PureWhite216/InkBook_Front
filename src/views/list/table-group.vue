@@ -24,7 +24,7 @@
           <el-input v-model="form_update.teamName" autocomplete="off" />
         </el-form-item>
         <el-form-item label="团队新简介(可不填)" :label-width="formLabelWidth">
-          <el-input v-model="form_update.teamInfo" autocomplete="off"/>
+          <el-input v-model="form_update.teamInfo" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -399,7 +399,7 @@ export default {
                if (!flag) { this.groupList.push(teams) }
              }
            } else {
-             //this.$message.error(res.data.message)
+             // this.$message.error(res.data.message)
            }
            this.tableLoading = false
          })
