@@ -105,11 +105,11 @@
         <el-button @click="dialogWordVisible = false; createWord()">确 定</el-button>
       </div>
       <el-row>
-        <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+        <el-col v-for="(o, index) in 2" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
           <el-card :body-style="{ padding: '0px' }">
-            <img src="../../assets/work_logo.png" class="image">
+            <img src="../../assets/work_logo.png" class="image" />
             <div style="padding: 14px;">
-              <span>模板{{index}}</span>
+              <span>模板{{ index }}</span>
               <div class="bottom clearfix">
                 <time class="time">{{ currentDate }}</time>
                 <el-button type="text" class="button">操作按钮</el-button>
@@ -133,7 +133,7 @@
         <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
         <el-button @click="createAxure(), dialogPageVisible = false">确 定</el-button>
       </div>
-      
+
     </el-dialog>
 
     <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
@@ -679,7 +679,7 @@ export default {
       })
       .then(res => {
         if (res.data.success) {
-          localStorage.setItem('doc_content', res.data.data.doc_content)
+          localStorage.setItem('doc_content', res.data.data[0].doc_content)
         } else {
           this.$message.error(res.data.message)
         }

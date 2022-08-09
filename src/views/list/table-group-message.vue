@@ -191,6 +191,9 @@
                         <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                           <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
                         </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                          <el-button type="text" @click="copyProject(scope.row)">创建项目副本</el-button>
+                        </el-dropdown-item>
                         <el-dropdown-item icon="el-icon-switch-button" command="logout">
                           <el-button type="text" @click="deprecateProjectItem(scope.row)">弃置项目</el-button>
                         </el-dropdown-item>
@@ -492,6 +495,12 @@ export default {
         user_id: getters.getUserId(state),
         project_id: 0
       },
+      form_copyProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        team_id: localStorage.getItem('team_id'),
+        project_id: 0
+      },
       form_deprecateProject: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -589,6 +598,18 @@ export default {
     this.getProjectList()
   },
   methods: {
+    copyProject(item) {
+      this.form_copyProject.project_id = item.project_id
+      this.$axios.post('/project/copy', qs.stringify(this.form_copyProject))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+          this.getProjectList()
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
     unDeprecateProject(item) {
       this.form_unDeprecateProject.project_id = item.project_id
       this.$axios.post('/project/deprecate', qs.stringify(this.form_unDeprecateProject))
