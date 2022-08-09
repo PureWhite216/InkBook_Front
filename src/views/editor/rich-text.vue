@@ -403,7 +403,7 @@ export default {
         )
     },
     exportPDF() {
-      this.getPdf('pdfDom', this.title)
+      this.getPdf('pdfDom', 'pdf-export')
     },
     Save() {
       this.form_save.doc_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
