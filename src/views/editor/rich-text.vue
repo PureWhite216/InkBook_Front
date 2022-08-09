@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="8" style="text-align: center; margin-top: 12px">
         <div style="font-size: 16px; color: #ececec" contenteditable="true">
-          {{title}}
+          {{ title }}
         </div>
         <div>
           <!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
@@ -82,7 +82,35 @@
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
       </div>
-      <el-tree :data="data" :props="defaultProps" style="margin-top:50px;" @node-click="handleNodeClick" />
+      <!-- <el-tree
+        :data="data"
+        :props="{label: 'dir_name'}"
+        style="margin-top:50px;"
+        @node-click="handleNodeClick"
+      /> -->
+      <el-table
+        ref="table"
+        :data="data"
+        :default-expand-all="true"
+        lazy
+        row-key="dir_id"
+        :expand-row-keys="expands"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        @row-dblclick="toDocEditor"
+      >
+        <el-table-column
+          align="left"
+          label="团队文档"
+        >
+          <template slot-scope="scope">
+            <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
+            <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+            <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
+            <i class="el-icon-document-add" style="margin-left: 10px" @click="likeDoc"></i>
+            <i class="el-icon-folder-add" style="margin-left: 5px" @click="likeDoc"></i>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -197,6 +225,11 @@ export default {
         word_id: localStorage.getItem('word_id'),
         cooperation_id: 0
       },
+      form_getTeam: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id'))
+      },
       isShow: true,
       invite_visible: false,
       comment_visible: false,
@@ -208,50 +241,7 @@ export default {
       cooperatorList: [],
       commentList: [],
       loading: false,
-      data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-      commentData: [{
-        name: 'ABC',
-        time: '2022-05-11',
-        comment: 'Test'
-      }]
+      data: []
       // opt: {
       //   errorCorrectionLevel: 'H',
       //   type: 'image/jpeg',
@@ -261,6 +251,8 @@ export default {
     }
   },
   created() {
+    this.getDocTree()
+    console.log(this.data)
     store.changeDevice('mobile')
     store.toggleCollapse(true)
     this.getCooperatorList()
@@ -281,6 +273,26 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    getDocTree() {
+      this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
+        .then(res => {
+          if (res.data.success) {
+            this.$axios.get('/doc/walkDir', {
+              params: {
+                token: getters.getToken(state),
+                folder_id: res.data.data[0].root_id
+              }
+            })
+              .then(res => {
+                if (res.data.success) {
+                  this.data = res.data.data
+                } else {
+                  this.$message.error(res.data.message)
+                }
+              })
+          }
+        })
+    },
     handleNodeClick(data) {
         console.log(data)
     },

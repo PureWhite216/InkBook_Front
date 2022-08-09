@@ -141,7 +141,7 @@
               <span>模板{{ index }}</span>
               <div class="bottom clearfix">
                 <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">操作按钮</el-button>
+                <el-button type="text" class="button">预览</el-button>
               </div>
             </div>
           </el-card>

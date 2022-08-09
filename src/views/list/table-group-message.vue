@@ -302,6 +302,7 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
+              :default-expand-all="true"
               lazy
               row-key="dir_id"
               :expand-row-keys="expands"
@@ -628,7 +629,7 @@ export default {
     localStorage.setItem('flag', 'user')
     this.getMemberList()
     this.getProjectList()
-    this.getDoc()
+    this.getDocTree()
   },
   methods: {
     CreateDoc() {
@@ -639,7 +640,7 @@ export default {
         } else {
           this.$message.error(res.data.message)
         }
-        this.getDoc()
+        this.getDocTree()
       })
     },
     CreateDir() {
@@ -650,10 +651,10 @@ export default {
           } else {
             this.$message.error(res.data.message)
           }
-          this.getDoc()
+          this.getDocTree()
         })
     },
-    getDoc() {
+    getDocTree() {
       this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
       .then(res => {
         if (res.data.success) {
