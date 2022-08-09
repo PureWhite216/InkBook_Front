@@ -340,10 +340,10 @@
                       <i class="el-icon-more"></i>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                      <el-dropdown-item icon="el-icon-document-add" command="logout">
                         <el-button type="text" style="color: green" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
                       </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                      <el-dropdown-item icon="el-icon-folder-add" command="logout">
                         <el-button type="text" style="color: green" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
