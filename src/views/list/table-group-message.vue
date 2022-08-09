@@ -125,6 +125,28 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="创建团队文件" :visible.sync="dialogCreateDoc">
+      <el-form :model="form_createDoc">
+        <el-form-item label="文档名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createDoc.doc_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCreateDoc = false; form_createDoc.doc_name = '' ">取 消</el-button>
+        <el-button @click="CreateDoc(), dialogCreateDoc = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="创建文档目录" :visible.sync="dialogCreateDir">
+      <el-form :model="form_createDir">
+        <el-form-item label="目录名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createDir.dict_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCreateDir = false; form_createDir.dict_name = '' ">取 消</el-button>
+        <el-button @click="CreateDir(), dialogCreateDir = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="设置权限" :visible.sync="dialogPerm" style="width: 1000px; margin: auto;">
       <el-form :model="form_power">
         <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off">
@@ -273,7 +295,6 @@
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
-            <el-button style="float:right" @click="mkdir">新建文件夹</el-button>
             <el-table
               ref="table"
               v-loading="loading"
@@ -300,10 +321,30 @@
               />
               <el-table-column
                 align="center"
-                label="更新时间"
-                prop="dir_updateTime"
-                width="250px"
-              />
+                label="操作"
+                width="260"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    slot="reference"
+                    class="morebutton"
+                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
+                  ><el-dropdown trigger="click">
+                    <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+                      <i class="el-icon-more"></i>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                        <el-button type="text" style="color: green" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                        <el-button type="text" style="color: green" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  </el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
@@ -430,6 +471,19 @@ export default {
       loading: false,
       dialogRenameVisible: false,
       dialogPerm: false,
+      dialogCreateDoc: false,
+      dialogCreateDir: false,
+      form_createDir: {
+        token: getters.getToken(state),
+        dict_name: '',
+        dest_folder_id: ''
+      },
+      form_createDoc: {
+        token: getters.getToken(state),
+        doc_name: '',
+        team_id: localStorage.getItem('team_id'),
+        dest_folder_id: ''
+      },
       form_member: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -530,6 +584,7 @@ export default {
         perm: null
       },
       team_name: localStorage.getItem('team_name'),
+      prj_root_id: localStorage.getItem('prj_root_id'),
       dialogInviteVisible: false,
       dialogCreateProjectVisible: false,
       dialogUpdateProjectVisible: false,
@@ -569,8 +624,27 @@ export default {
     this.getDoc()
   },
   methods: {
-    mkdir() {
-      this.$message.error('没接口')
+    CreateDoc() {
+      this.$axios.post('/doc/newDoc', qs.stringify(this.form_createDoc))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+        this.getDoc()
+      })
+    },
+    CreateDir() {
+      this.$axios.post('/doc/mkdir', qs.stringify(this.form_createDir))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getDoc()
+        })
     },
     getDoc() {
       this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))

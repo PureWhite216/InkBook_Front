@@ -170,6 +170,11 @@ export default {
         user_id: getters.getUserId(state),
         teamId: 0
       },
+      form_getTeam: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: 0
+      },
       form_quitTeam: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -272,6 +277,14 @@ export default {
       localStorage.setItem('team_id', item.id.toString())
       localStorage.setItem('team_name', item.name)
       localStorage.setItem('team_info', item.info)
+      this.form_getTeam.teamId = item.id
+      this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('prj_root_id', res.data.data[0].prj_root_id)
+          console.log(res.data.data[0].prj_root_id)
+        }
+      })
       store.toGroupMessage && store.toGroupMessage()
     },
     addTeam() {
