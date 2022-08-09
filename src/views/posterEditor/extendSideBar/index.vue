@@ -60,36 +60,25 @@
         </el-popover>
       </el-tooltip>
       <el-tooltip
-        v-if="useBackup"
         effect="dark"
-        content="数据备份 ctrl+s"
+        content="导出PDF"
         placement="left"
         transition="el-zoom-in-center"
       >
-        <div class="item" @click="openSettingCenter('dataBackup')">
-          <i class="el-icon-document-copy"></i>
+        <div class="item" @click="exportPdf">
+          <i class="el-icon-upload2"></i>
         </div>
       </el-tooltip>
       <el-tooltip
         effect="dark"
-        content="生成H5代码（Beta）"
+        content="导出图片"
         placement="left"
         transition="el-zoom-in-center"
       >
-        <div class="item" @click="exportH5">
-          <i class="icon-h5"></i>
+        <div class="item" @click="createImg">
+          <i class="icon-poster"></i>
         </div>
       </el-tooltip>
-      <!-- <el-tooltip
-        effect="dark"
-        content="生成海报"
-        placement="left"
-        transition="el-zoom-in-center"
-      >
-        <div class="item" @click="exportPoster">
-          <i class="icon-poster" />
-        </div>
-      </el-tooltip> -->
       <el-tooltip
         effect="dark"
         content="快捷键参考"
@@ -98,28 +87,6 @@
       >
         <div class="item" @click="openSettingCenter('shortcut')">
           <i class="el-icon-thumb"></i>
-        </div>
-      </el-tooltip>
-      <el-tooltip
-        effect="dark"
-        content="编辑器设置"
-        placement="left"
-        transition="el-zoom-in-center"
-      >
-        <div class="item" @click="openSettingCenter">
-          <i class="el-icon-set-up"></i>
-        </div>
-      </el-tooltip>
-      <el-tooltip
-        v-for="item in plugins"
-        :key="item.name"
-        effect="dark"
-        :content="item.name"
-        placement="left"
-        transition="el-zoom-in-center"
-      >
-        <div class="item">
-          <i :class="item.icon"></i>
         </div>
       </el-tooltip>
     </div>
@@ -142,6 +109,8 @@ import settingCenter from './settingCenter'
 import Vue from 'vue'
 import ExportService from 'poster/service/exportService'
 import { pluginMap, pluginWrap } from '../plugins'
+import html2canvas from 'html2canvas'
+import store from '@/store'
 
 const pluginComponents = {}
 const plugins = []
@@ -159,6 +128,13 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'posterItems',
+      'canvasSize',
+      'background',
+      'assistWidgets',
+      'pageTitle'
+    ]),
     ...mapState({
       layerPanelOpened: 'layerPanelOpened',
       couldRedo: state => state.history.nextStack.length > 0,
@@ -174,8 +150,37 @@ export default {
       undo: 'history/undo',
       redo: 'history/redo'
     }),
-    exportH5() {
-      ExportService.exportH5()
+    exportPdf() {
+      this.getPdf('pdfDom', 'pdf-export')
+    },
+    createImg() {
+      const domName = 'mainPanel'
+      const imageDom = document.getElementById(domName)
+      const canvasSize = store.state.poster.canvasSize
+      window.pageYoffset = 0 // 滚动置顶
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      html2canvas(imageDom, {
+        windowWidth: canvasSize.width,
+        windowHeight: canvasSize.height,
+        // width: canvasSize.width, // canvas画板的宽度 一般都是要保存的那个dom的宽度
+        // height: canvasSize.height, // canvas画板的高度  同上
+        useCORS: true,
+        scale: 1
+      }).then((canvas) => {
+        const base64Url = canvas.toDataURL('image/png', 1)
+        this.fileDownload(base64Url)
+      })
+    },
+    fileDownload(downloadUrl) {
+      const aLink = document.createElement('a')
+      aLink.style.display = 'none'
+      aLink.href = downloadUrl
+      aLink.download = 'ImageExport.png'
+      // 触发点击-然后移除
+      document.body.appendChild(aLink)
+      aLink.click()
+      document.body.removeChild(aLink)
     },
     exportPoster() {
       ExportService.exportPoster()
