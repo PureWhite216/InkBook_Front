@@ -807,8 +807,8 @@ export default {
             })
     },
     createUML() {
-      // router.push('/drawio')
-      window.open('https://www.draw.io/index.html', '_blank')
+      router.push('/drawio')
+      // window.open('https://www.draw.io/index.html', '_blank')
       // window.open = 'https://www.draw.io/index.html'
     },
     CreatePage() {
