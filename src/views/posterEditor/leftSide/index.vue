@@ -10,7 +10,7 @@
           placement="right"
           transition="el-zoom-in-center"
         >
-          <i :class="item.icon" />
+          <i :class="item.icon" ></i>
         </el-tooltip>
       </li>
     </ul>

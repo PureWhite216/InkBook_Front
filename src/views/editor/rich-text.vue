@@ -198,6 +198,8 @@ export default {
     }
   },
   created() {
+    store.changeDevice('mobile')
+    store.toggleCollapse(true)
     this.getCooperatorList()
     this.getCommentList()
     if (localStorage.getItem('shareFlag') === 'true' && localStorage.getItem('addCooper') === 'false') {

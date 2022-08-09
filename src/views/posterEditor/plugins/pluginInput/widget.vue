@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-input">
-    <el-input v-model="input" placeholder="请输入内容"/>
+    <el-input v-model="input" :style="wState.style" placeholder="请输入内容"/>
     <portal v-if="isActive" :to="$data.$controlTarget">
       <widget-control :item="item" />
     </portal>
@@ -14,10 +14,36 @@ import { pluginWrap } from '../helpers'
 export default {
   components: { widgetControl: pluginWrap(widgetControl) },
   mixins: [PluginInput.widgetMixin()],
+  props: {
+    item: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   data() {
     return {
       input: ''
     }
+  },
+  computed: {
+    wState() {
+      return this.item.wState
+    }
+  },
+  watch: {
+    isEditing(newVal) {
+      this.$emit('draggableChange', !newVal)
+    }
+  },
+  created() {
+    this.updateDragInfo({
+      w: 160,
+      h: 36,
+      x: 0,
+      y: 200
+    })
   },
   methods: {
     executeContextCommand(command) {
@@ -26,8 +52,8 @@ export default {
     getMenuList() {
       return [
         {
-          label: '插件测试',
-          command: 'test'
+          label: '输入框',
+          command: 'input'
         }
       ]
     }
