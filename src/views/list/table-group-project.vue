@@ -419,7 +419,8 @@ export default {
       },
       form_deleteDoc: {
         token: getters.getToken(state),
-        doc_id: null
+        doc_id: null,
+        recycle: false
       },
       form_updateDocInfo: {
         token: getters.getToken(state),
