@@ -316,7 +316,7 @@
               >
                 <template slot-scope="scope">
                   <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
-                  <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+                  <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
                   <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
                 </template>
               </el-table-column>
