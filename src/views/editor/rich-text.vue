@@ -1,5 +1,22 @@
 <template>
   <div class="main-container">
+    <el-row style="background: #2f2f2f; min-height: 40px">
+      <el-col :span="8">
+        <el-button class="backbutton" style="margin-left: 20px; margin-top: 3px" @click="back">
+          <i class="el-icon-back" style="font-size: x-large"></i>
+        </el-button>
+      </el-col>
+      <el-col :span="8" style="text-align: center; margin-top: 12px">
+        <div style="font-size: 16px; color: #ececec" contenteditable="true">
+          {{title}}
+        </div>
+        <div>
+          <!--          <el-button style="padding: 5px; background: #2f2f2f; border: 0">-->
+          <!--            <i class="el-icon-more" style="font-size: large; color: #ececec"></i>-->
+          <!--          </el-button>-->
+        </div>
+      </el-col>
+    </el-row>
     <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
         <el-link :underline="false">文章标题</el-link>
@@ -19,13 +36,6 @@
         <div class="flex">
           <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
-          <el-button
-            style="margin-inline:10px; background: #ec5b1d; color: white; border: 0"
-            @click="back()"
-          >
-            <i class="el-icon-back"></i>
-            退出编辑
-          </el-button>
           <el-button
             style="margin-inline:10px; background: #49aaef; color: white; border: 0"
             @click="Save"
@@ -460,6 +470,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .title {
+  color: #2c2c2c;
+  background-color: #2c2c2c;
+}
+.backbutton {
+  color: white;
+  background: #2c2c2c;
+  height: 30px;
+  border: 0;
+  margin-top: 5px;
+  padding: 5px;
+}
+.backbutton:hover {
+  color: white;
+  background: #000000;
+  height: 35px;
+}
+.backbutton:focus {
+  color: white;
+  background: #000000;
+  height: 35px;
+}
+
 .title-input {
   ::v-deep .el-input__inner {
     border: none !important;
