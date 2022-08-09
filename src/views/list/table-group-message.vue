@@ -41,7 +41,7 @@
             class="button-style"
             style="border-color: #57b1ff"
             @click="form_createProject.project_name = '', form_createProject.project_info = '', dialogCreateProjectVisible = true"
-          >创建新项目
+          >新项目
             <i class="el-icon-plus"></i>
           </el-button>
         </el-popover>
@@ -55,9 +55,9 @@
             slot="reference"
             class="button-style"
           ><el-dropdown trigger="click" @command="onCommad">
-            <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
-              <i class="el-icon-setting"></i>
+            <div class="action-wrapper" style="font-size: 18px ;font-weight: bold; font-family: 等线">
               设置
+              <i class="el-icon-setting"></i>
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
@@ -1101,11 +1101,11 @@ export default {
 }
 .button-style {
   margin: 10px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  border-width: 3px;
+  border-width: 2px;
   font-family: 等线;
-  color: black;
+  color: #464646;
   height: 45px;
 }
 .back-button{
