@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="main-container" style="font-family: 等线">
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">

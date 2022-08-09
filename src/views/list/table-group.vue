@@ -18,7 +18,7 @@
         <el-button @click="addTeam">确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改团队信息" :visible.sync="dialogUpdateTeam">
+    <el-dialog style="font-family: 等线" title="修改团队信息" :visible.sync="dialogUpdateTeam">
       <el-form :model="form_update">
         <el-form-item label="团队新名称" :label-width="formLabelWidth">
           <el-input v-model="form_update.teamName" autocomplete="off" />

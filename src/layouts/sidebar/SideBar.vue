@@ -1,6 +1,7 @@
 <template>
   <div
     class="vaw-side-bar-wrapper"
+    style="font-family: 等线"
     :class="[!state.isCollapse ? 'open-status' : 'close-status']"
   >
     <transition name="logo">
@@ -51,8 +52,9 @@
       <el-dialog
         title="创建团队"
         :visible.sync="dialogCreateTeamVisible"
-        width="45%"
+        width="35%"
         append-to-body="“true”"
+        style="font-family: 等线"
         :before-close="handleClose"
       >
         <el-steps :active="createTeamStep" finish-status="success">
@@ -62,7 +64,7 @@
         </el-steps>
         <div v-if="createTeamStep === 0">
           <el-input v-model="form_createTeam.teamName" size="medium" placeholder="请输入团队名" />
-          <el-button style="margin-top: 12px;" @click="createTeamNext">下一步</el-button>
+          <el-button style="margin-top: 12px; margin-left: auto" @click="createTeamNext">下一步</el-button>
         </div>
 
         <div v-if="createTeamStep === 1">

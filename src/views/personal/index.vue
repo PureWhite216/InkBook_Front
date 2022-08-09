@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="main-container" style="font-family: 等线">
     <div class="content-wrapper margin-top">
       <el-card
         :body-style="{padding: 0}"
