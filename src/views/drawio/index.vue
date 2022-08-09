@@ -16,8 +16,8 @@
       <iframe
         id="drawio"
         title="drawio"
-        width="1920"
-        height="960"
+        width="1500"
+        height="710"
         src="static/drawio/helloworld.html"
       >
       </iframe>
