@@ -17,6 +17,28 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog title="创建团队文件" :visible.sync="dialogCreateDoc">
+      <el-form :model="form_createDoc">
+        <el-form-item label="文档名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createDoc.doc_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCreateDoc = false; form_createDoc.doc_name = '' ">取 消</el-button>
+        <el-button @click="CreateDoc(), dialogCreateDoc = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="创建文档目录" :visible.sync="dialogCreateDir">
+      <el-form :model="form_createDir">
+        <el-form-item label="目录名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createDir.dict_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCreateDir = false; form_createDir.dict_name = '' ">取 消</el-button>
+        <el-button @click="CreateDir(), dialogCreateDir = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
         <el-link :underline="false">文章标题</el-link>
@@ -104,10 +126,10 @@
         >
           <template slot-scope="scope">
             <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
-            <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+            <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
             <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
-            <i class="el-icon-document-add" style="margin-left: 10px" @click="likeDoc"></i>
-            <i class="el-icon-folder-add" style="margin-left: 5px" @click="likeDoc"></i>
+            <i v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id" class="el-icon-document-add" style="margin-left: 10px" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true"></i>
+            <i v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id" class="el-icon-folder-add" style="margin-left: 5px" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true"></i>
           </template>
         </el-table-column>
       </el-table>
@@ -162,7 +184,21 @@ export default {
         undo: null
       },
       imgUrl: '',
+      dialogCreateDoc: false,
+      dialogCreateDir: false,
+      prj_root_id: localStorage.getItem('prj_root_id'),
       dialogVisible_share: false,
+      form_createDoc: {
+        token: getters.getToken(state),
+        doc_name: '',
+        team_id: localStorage.getItem('team_id'),
+        dest_folder_id: ''
+      },
+      form_createDir: {
+        token: getters.getToken(state),
+        dict_name: '',
+        dest_folder_id: ''
+      },
       form: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -252,11 +288,8 @@ export default {
   },
   created() {
     this.getDocTree()
-    console.log(this.data)
     store.changeDevice('mobile')
     store.toggleCollapse(true)
-    this.getCooperatorList()
-    this.getCommentList()
     if (localStorage.getItem('shareFlag') === 'true' && localStorage.getItem('addCooper') === 'false') {
       this.isShow = false
     }
@@ -273,6 +306,49 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    CreateDir() {
+      this.$axios.post('/doc/mkdir', qs.stringify(this.form_createDir))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getDocTree()
+        })
+    },
+    CreateDoc() {
+      this.$axios.post('/doc/newDoc', qs.stringify(this.form_createDoc))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+          this.getDocTree()
+        })
+    },
+    toDocEditor(val) {
+      if (val.type === 'documentation') {
+        localStorage.setItem('flag', 'in')
+        localStorage.setItem('doc_id', val.doc_id)
+        localStorage.setItem('doc_name', val.doc_name)
+        this.$axios.get('/doc/getDocInfo', {
+          params: {
+            token: getters.getToken(state),
+            doc_id: localStorage.getItem('doc_id')
+          }
+        })
+          .then(res => {
+            if (res.data.success) {
+              localStorage.setItem('in_doc_content', res.data.data[0].doc_content)
+               this.$router.push('/redirect/editor/rich-text')
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+      }
+    },
     getDocTree() {
       this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
         .then(res => {

@@ -316,7 +316,7 @@
               >
                 <template slot-scope="scope">
                   <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
-                  <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+                  <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
                   <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
                 </template>
               </el-table-column>
@@ -688,6 +688,7 @@ export default {
     },
     toDocEditor(val) {
       if (val.type === 'documentation') {
+        localStorage.setItem('flag', 'out')
         localStorage.setItem('doc_id', val.doc_id)
         localStorage.setItem('doc_name', val.doc_name)
         this.$axios.get('/doc/getDocInfo', {
@@ -699,11 +700,11 @@ export default {
           .then(res => {
             if (res.data.success) {
               localStorage.setItem('doc_content', res.data.data[0].doc_content)
+              this.$router.push('/editor/rich-text')
             } else {
               this.$message.error(res.data.message)
             }
           })
-        this.$router.push('/editor/rich-text')
       }
     },
     unDeprecateProject(item) {
@@ -843,6 +844,7 @@ export default {
             this.$message.error(res.data.message)
           }
           this.getProjectList()
+          this.getDocTree()
         })
     },
     Rename() {
