@@ -1,7 +1,7 @@
 <template>
   <div class="vaw-nav-bar-wrapper">
     <div style="flex: 1">
-      <el-input v-model="input" placeholder="请输入内容" size="mini" style="width: 200px; margin-left: 20px" />
+      <el-input v-model="input" placeholder="Search" size="mini" style="width: 200px; margin-left: 20px" />
     </div>
     <div>
       <el-popover

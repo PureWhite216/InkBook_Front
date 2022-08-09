@@ -35,7 +35,7 @@
       <el-input
         ref="searchContent"
         v-model="searchContent"
-        placeholder="请输入内容"
+        placeholder="Search"
         clearable
         @change="onChange"
       />

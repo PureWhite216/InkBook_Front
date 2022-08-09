@@ -10,13 +10,13 @@
       ref="elMenu1"
       class="el-menu-vertical-demo"
     >
-      <el-menu-item index="1" @click="toRecent">
+      <el-menu-item index="1" @click="toRecent" style="font-size: 16px">
         <i class="el-icon-document" style="color: #3297ff"></i>
         <span slot="title">最近浏览</span>
       </el-menu-item>
       <el-menu-item index="2" @click="toCollect">
         <i class="el-icon-star-off" style="color: #ffc226"></i>
-        <span slot="title">收藏</span>
+        <span slot="title" style="font-size: 16px">收藏</span>
       </el-menu-item>
     </el-menu>
     <el-divider class="line" />
@@ -30,8 +30,8 @@
     <el-button
       class="button-create"
       @click="toGroup()"
-    >加入的团队
-      <i class="el-icon-right" style="margin-left: 20px"></i>
+    >切换团队
+      <i class="el-icon-right" style="margin-left: 40px"></i>
     </el-button>
     <div class="text-grey">最近查看的团队</div>
     <el-menu

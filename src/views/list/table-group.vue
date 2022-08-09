@@ -3,7 +3,7 @@
     <TableHeader :can-collapsed="false">
       <template slot="left">
         <p id="projectName" class="projecttitle">
-          加入的团队
+          团队列表
         </p>
       </template>
     </TableHeader>
@@ -14,8 +14,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false; form2.team_name = '' ">取 消</el-button>
-        <el-button @click="addTeam">确 定</el-button>
+        <el-button @click="dialogFormVisible = false; form2.team_name = '' ">取消</el-button>
+        <el-button @click="addTeam">确定</el-button>
       </div>
     </el-dialog>
     <el-dialog title="修改团队信息" :visible.sync="dialogUpdateTeam">
@@ -64,7 +64,6 @@
           />
           <el-table-column
             align="center"
-            label="操作"
             width="260"
           >
             <template slot-scope="scope">

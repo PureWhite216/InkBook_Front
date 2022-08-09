@@ -5,7 +5,7 @@
       :key="index"
       v-model="input"
       :style="item.style"
-      placeholder="请输入内容"
+      placeholder="Search"
       @click="add()"
     />
     <el-button

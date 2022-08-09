@@ -1,11 +1,5 @@
 <template>
   <div class="logo-wrapper">
-<!--    logo图片-->
-<!--    <img-->
-<!--      v-if="showLogo"-->
-<!--      class="logo-img"-->
-<!--      :src="require('../../assets/work_logo.png')"-->
-<!--    />-->
     <transition
       v-if="showTitle"
       name="el-fade-in-linear"
@@ -58,8 +52,9 @@ export default {
   .logo-title {
     color: white;
     margin-left: 5px;
-    font-weight: bold;
-    font-size: 24px;
+    font-weight: normal;
+    font-size: 26px;
+    font-family: Choplin,sans-serif
   }
 }
 </style>
