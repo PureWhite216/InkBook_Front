@@ -118,13 +118,14 @@
         row-key="dir_id"
         :expand-row-keys="expands"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        @row-dblclick="toDocEditor"
       >
         <el-table-column
           align="left"
           label="团队文档"
         >
           <template slot-scope="scope">
-            <i v-if="scope.row.type === 'documentation'" class="el-icon-document" @click="toDocEditor(scope.row)"></i>
+            <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
             <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
             <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
             <i v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id" class="el-icon-document-add" style="margin-left: 10px" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true"></i>
@@ -287,11 +288,8 @@ export default {
   },
   created() {
     this.getDocTree()
-    console.log(this.data)
     store.changeDevice('mobile')
     store.toggleCollapse(true)
-    this.getCooperatorList()
-    this.getCommentList()
     if (localStorage.getItem('shareFlag') === 'true' && localStorage.getItem('addCooper') === 'false') {
       this.isShow = false
     }
@@ -332,6 +330,7 @@ export default {
     },
     toDocEditor(val) {
       if (val.type === 'documentation') {
+        localStorage.setItem('flag', 'in')
         localStorage.setItem('doc_id', val.doc_id)
         localStorage.setItem('doc_name', val.doc_name)
         this.$axios.get('/doc/getDocInfo', {
@@ -342,12 +341,12 @@ export default {
         })
           .then(res => {
             if (res.data.success) {
-              localStorage.setItem('doc_content', res.data.data[0].doc_content)
+              localStorage.setItem('in_doc_content', res.data.data[0].doc_content)
+               this.$router.push('/redirect/editor/rich-text')
             } else {
               this.$message.error(res.data.message)
             }
           })
-        this.$router.push('/editor/rich-text')
       }
     },
     getDocTree() {
