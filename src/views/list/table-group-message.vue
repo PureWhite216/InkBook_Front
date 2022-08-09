@@ -273,7 +273,7 @@
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
-            <el-button @click="" style="float:right">新建文件夹</el-button>
+            <el-button style="float:right" @click="mkdir">新建文件夹</el-button>
             <el-table
               ref="table"
               v-loading="loading"
@@ -282,26 +282,26 @@
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
               lazy
-              row-key="id"
+              row-key="dir_id"
               :expand-row-keys="expands"
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
             >
               <el-table-column
                 align="center"
                 label="名称"
-                prop="date"
+                prop="dir_name"
                 width="450px"
               />
               <el-table-column
                 align="center"
-                label="创建者"
-                prop="real_name"
+                label="创建时间"
+                prop="dir_createTime"
                 width="200px"
               />
               <el-table-column
                 align="center"
                 label="更新时间"
-                prop="email"
+                prop="dir_updateTime"
                 width="250px"
               />
             </el-table>
@@ -424,45 +424,8 @@ export default {
   ],
   data() {
     return {
-      expands:['2'],
-      tableData: [{
-          id: 1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          id: 2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          children: [{
-              id: 21,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }]
-        }, {
-          id: 3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          children: [{
-              id: 31,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-              id: 32,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-          }]
-        }, {
-          id: 4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+      expands: ['2'],
+      tableData: [],
       visible_setPerm: true,
       loading: false,
       dialogRenameVisible: false,
@@ -521,6 +484,11 @@ export default {
         project_id: 0,
         project_name: '',
         project_info: ''
+      },
+      form_getTeam: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        teamId: Number(localStorage.getItem('team_id'))
       },
       visible: false,
       form_invite: {
@@ -598,8 +566,32 @@ export default {
   created() {
     this.getMemberList()
     this.getProjectList()
+    this.getDoc()
   },
   methods: {
+    mkdir() {
+      this.$message.error('没接口')
+    },
+    getDoc() {
+      this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
+      .then(res => {
+        if (res.data.success) {
+          this.$axios.get('/doc/walkDir', {
+            params: {
+              token: getters.getToken(state),
+              folder_id: res.data.data[0].root_id
+            }
+          })
+          .then(res => {
+            if (res.data.success) {
+              this.tableData = res.data.data
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+        }
+      })
+    },
     copyProject(item) {
       this.form_copyProject.project_id = item.project_id
       this.$axios.post('/project/copy', qs.stringify(this.form_copyProject))
