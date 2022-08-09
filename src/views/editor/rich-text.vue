@@ -62,6 +62,12 @@
           >
             <i class="el-icon-star-off"></i>
             取消收藏</el-button>
+          <el-button
+            style="margin-inline:10px; background: green; color: white; border: 0"
+            @click="exportPDF"
+          >
+            <i class="el-icon-share"></i>
+            分享</el-button>
         </div>
       </template>
       <RichTextEditor
