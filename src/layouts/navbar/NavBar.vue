@@ -42,6 +42,7 @@
         <el-input slot="reference" v-model="keyword_project" placeholder="搜索项目" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="searchProject_visible = true,getSearchProjectList()" />
       </el-popover>
     </div>
+<!-- <<<<<<< HEAD -->
     <div>
       <el-popover
         v-model="search_visible"
@@ -92,6 +93,57 @@
         <!-- <el-input slot="reference" v-model="keyword" placeholder="Search" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="search_visible = true,getSearchDocList()" /> -->
       </el-popover>
     </div>
+=======
+<!--    <div>-->
+<!--      <el-popover-->
+<!--        v-model="search_visible"-->
+<!--        placement="top"-->
+<!--        width="450"-->
+<!--        height="400"-->
+<!--      >-->
+<!--        <p>搜索文档</p>-->
+<!--        <el-input-->
+<!--          v-model="keyword"-->
+<!--          placeholder="输入文件名"-->
+<!--          style="width: 80%;margin: auto"-->
+<!--        />-->
+<!--        <div style="text-align: left; margin: 0">-->
+<!--          <el-button size="mini" style="margin-top:10px" @click="getSearchDocList()">确定</el-button>-->
+<!--        </div>-->
+<!--        <el-table v-loading="loading" :data="searchDocList" height="400">-->
+<!--          <el-table-column width="80" property="doc_name" label="名称" align="center" />-->
+<!--          <el-table-column width="140" property="project_name" label="所属项目" align="center" />-->
+<!--          <el-table-column width="200" label="操作" align="center">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-button-->
+<!--                size="mini"-->
+<!--                type="primary"-->
+<!--                :underline="false"-->
+<!--                text-align="left"-->
+<!--                icon="el-icon-view"-->
+<!--                @click="viewSearchWord(scope.row)"-->
+<!--              >查看</el-button>-->
+<!--              <el-button-->
+<!--                size="mini"-->
+<!--                type="warning"-->
+<!--                :underline="false"-->
+<!--                text-align="left"-->
+<!--                icon="el-icon-star-on"-->
+<!--                @click="Like(scope.row)"-->
+<!--              >收藏</el-button>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
+<!--        <el-button-->
+<!--          slot="reference"-->
+<!--          style="margin-inline:10px; color: white; background: #2c2c2c"-->
+<!--          size="mini"-->
+<!--          icon="el-icon-search"-->
+<!--        >搜索-->
+<!--        </el-button>-->
+<!--      </el-popover>-->
+<!--    </div>-->
+<!-- >>>>>>> b44e00c8faee1082d524c57ae0f19f96ea1667fc -->
     <!--    <div class="right-wrapper">-->
     <!--      <ActionItems />-->
     <!--    </div>-->

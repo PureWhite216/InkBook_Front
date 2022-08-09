@@ -71,7 +71,7 @@ export default {
   background-color: #1d2024;
   position: fixed;
   right: 252px;
-  top: 60px;
+  top: 100px;
   box-shadow: 0 0 6px rgba($color: #000000, $alpha: 0.1);
   color: #fff;
   border-radius: 4px;

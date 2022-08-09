@@ -197,7 +197,7 @@
       <template>
         <el-tabs :tab-position="top" style="height: 200px;" class="messagecss">
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档</span>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c"><i class="el-icon-folder-opened"></i>文档</span>
             <el-table
               ref="table"
               v-loading="tableloading"
@@ -263,7 +263,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">原型</span>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c"><i class="el-icon-monitor"></i>原型</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -966,6 +966,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fontClass {
+  font-family: 等线;
+  font-weight: bold;
+  font-size: 20px;
+}
 .morebutton {
   padding: 5px;
   border: 0;
@@ -994,11 +999,13 @@ export default {
   height: 35px;
 }
 .projecttitle {
-  font-size: 45px;
+  font-size: 46px;
+  font-weight: bold;
   margin-left: 10px;
   margin-top: 10px;
   margin-bottom: 20px;
-  float:left;
+  float: left;
+  font-family: 等线;
 }
 .teamtitle {
   margin-top: 30px;

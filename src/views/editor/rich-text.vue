@@ -86,7 +86,7 @@
             导出</el-button>
           <el-button
             style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
-            @click="exportPDF"
+            @click="getHtmlContent"
           >
             <i class="el-icon-share"></i>
             分享</el-button>
@@ -553,6 +553,7 @@ export default {
     },
     getHtmlContent() {
       this.htmlContent = this.$refs.richTextEditor.getHtmlContent()
+      console.log(this.htmlContent)
     },
     getJsonContent() {
       console.log(localStorage.getItem('flag'))
@@ -616,7 +617,7 @@ export default {
 .drag-box {
   position: absolute;
   top: 100px;
-  left: 100px;
+  left: 40px;
   width: 240px;
   height: 600px;
   background: #ffffff;
