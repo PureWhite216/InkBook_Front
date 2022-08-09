@@ -82,12 +82,35 @@
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
       </div>
-      <el-tree
+      <!-- <el-tree
         :data="data"
         :props="{label: 'dir_name'}"
         style="margin-top:50px;"
         @node-click="handleNodeClick"
-      />
+      /> -->
+      <el-table
+        ref="table"
+        :data="data"
+        :default-expand-all="true"
+        lazy
+        row-key="dir_id"
+        :expand-row-keys="expands"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        @row-dblclick="toDocEditor"
+      >
+        <el-table-column
+          align="left"
+          label="团队文档"
+        >
+          <template slot-scope="scope">
+            <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
+            <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+            <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
+            <i class="el-icon-document-add" style="margin-left: 10px" @click="likeDoc"></i>
+            <i class="el-icon-folder-add" style="margin-left: 5px" @click="likeDoc"></i>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -228,7 +251,7 @@ export default {
     }
   },
   created() {
-    this.getDoc()
+    this.getDocTree()
     console.log(this.data)
     store.changeDevice('mobile')
     store.toggleCollapse(true)
@@ -250,7 +273,7 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
-    getDoc() {
+    getDocTree() {
       this.$axios.post('/team/getTeam', qs.stringify(this.form_getTeam))
         .then(res => {
           if (res.data.success) {
