@@ -302,11 +302,11 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
-              @row-dblclick="toDocEditor"
               lazy
               row-key="dir_id"
               :expand-row-keys="expands"
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              @row-dblclick="toDocEditor"
             >
               <el-table-column
                 align="center"
@@ -327,9 +327,9 @@
               >
                 <template slot-scope="scope">
                   <el-button
+                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
                     slot="reference"
                     class="morebutton"
-                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
                   ><el-dropdown trigger="click">
                     <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
                       <i class="el-icon-more"></i>
@@ -620,6 +620,7 @@ export default {
     }
   },
   created() {
+    localStorage.setItem('flag', 'user')
     this.getMemberList()
     this.getProjectList()
     this.getDoc()
@@ -680,23 +681,24 @@ export default {
       })
     },
     toDocEditor(val) {
-      localStorage.setItem('doc_id', val.doc_id)
-      localStorage.setItem('doc_name', val.doc_name)
-      localStorage.setItem('is_favorite', val.is_favorite)
-      this.$axios.get('/doc/getDocInfo', {
-        params: {
-          token: getters.getToken(state),
-          doc_id: localStorage.getItem('doc_id')
-        }
-      })
-      .then(res => {
-        if (res.data.success) {
-          localStorage.setItem('doc_content', res.data.data[0].doc_content)
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
-      this.$router.push('/editor/rich-text')
+      if (val.type === 'documentation') {
+        localStorage.setItem('doc_id', val.doc_id)
+        localStorage.setItem('doc_name', val.doc_name)
+        this.$axios.get('/doc/getDocInfo', {
+          params: {
+            token: getters.getToken(state),
+            doc_id: localStorage.getItem('doc_id')
+          }
+        })
+          .then(res => {
+            if (res.data.success) {
+              localStorage.setItem('doc_content', res.data.data[0].doc_content)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+        this.$router.push('/editor/rich-text')
+      }
     },
     unDeprecateProject(item) {
       this.form_unDeprecateProject.project_id = item.project_id
