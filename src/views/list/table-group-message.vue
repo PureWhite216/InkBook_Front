@@ -311,9 +311,14 @@
               <el-table-column
                 align="center"
                 label="名称"
-                prop="dir_name"
-                width="450px"
-              />
+                width="450"
+              >
+                <template slot-scope="scope">
+                  <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
+                  <i v-if="scope.row.type != 'documentation'" class="el-icon-folder"></i>
+                  <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 label="创建时间"
