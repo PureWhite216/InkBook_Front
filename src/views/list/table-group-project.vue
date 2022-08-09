@@ -244,10 +244,10 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-if="!scope.row.is_favorite" icon="el-icon-star-on" command="personalCenter">
+                      <el-dropdown-item v-if="!scope.row.is_favorite" icon="el-icon-star-off" command="personalCenter">
                         <el-button type="text" @click="likeDoc(scope.row)">收藏</el-button>
                       </el-dropdown-item>
-                      <el-dropdown-item v-if="scope.row.is_favorite" icon="el-icon-star-off" command="personalCenter">
+                      <el-dropdown-item v-if="scope.row.is_favorite" icon="el-icon-star-on" command="personalCenter">
                         <el-button type="text" @click="unlikeDoc(scope.row)">取消收藏</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
@@ -308,10 +308,10 @@
                       </span>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-if="!scope.row.isFavorite" icon="el-icon-star-on" command="personalCenter">
+                      <el-dropdown-item v-if="!scope.row.isFavorite" icon="el-icon-star-off" command="personalCenter">
                         <el-button type="text" @click="likeAxure(scope.row)">收藏</el-button>
                       </el-dropdown-item>
-                      <el-dropdown-item v-if="scope.row.isFavorite" icon="el-icon-star-off" command="personalCenter">
+                      <el-dropdown-item v-if="scope.row.isFavorite" icon="el-icon-star-on" command="personalCenter">
                         <el-button type="text" @click="unlikeAxure(scope.row)">取消收藏</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
