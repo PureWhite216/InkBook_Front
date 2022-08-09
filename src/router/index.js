@@ -33,6 +33,12 @@ export const routes = [
     hidden: true
   },
   {
+    path: '/editor/rich-text',
+    name: '/editor/rich-text',
+    component: () => import('@/views/editor/rich-text'),
+    hidden: true
+  },
+  {
     path: '/drawio',
     name: 'drawio',
     component: () => import('@/views/drawio'),
@@ -80,54 +86,6 @@ export const routes = [
         component: () => import('@/views/personal'),
         meta: {
           title: '个人中心'
-        }
-      }
-    ]
-  },
-  {
-    path: '/editor',
-    name: 'editor',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'rich-text',
-        name: 'richText',
-        component: () => import('@/views/editor/rich-text'),
-        meta: {
-          title: '文档编辑'
-        }
-      }
-    ]
-  },
-  {
-    path: '/editor',
-    name: 'editor',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'rich-text-group',
-        name: 'richTextGroup',
-        component: () => import('@/views/editor/rich-text-group'),
-        meta: {
-          title: '团队文档编辑'
-        }
-      }
-    ]
-  },
-  {
-    path: '/editor',
-    name: 'editor',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'rich-text-readonly',
-        name: 'richTextReadOnly',
-        component: () => import('@/views/editor/rich-text-readonly'),
-        meta: {
-          title: '只读文档'
         }
       }
     ]
