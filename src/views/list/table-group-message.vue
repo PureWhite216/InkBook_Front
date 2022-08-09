@@ -195,7 +195,6 @@
               />
               <el-table-column
                 align="center"
-                label="操作"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -221,6 +220,66 @@
                         </el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass"><i class="el-icon-folder-opened"></i>文档中心</span>
+            <el-table
+              ref="table"
+              v-loading="loading"
+              :data="tableData"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
+              :default-expand-all="true"
+              lazy
+              row-key="dir_id"
+              :expand-row-keys="expands"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              @row-dblclick="toDocEditor"
+            >
+              <el-table-column
+                align="center"
+                label="名称"
+                width="450"
+              >
+                <template slot-scope="scope">
+                  <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
+                  <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
+                  <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="创建时间"
+                prop="dir_createTime"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                width="260"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
+                    slot="reference"
+                    class="morebutton"
+                  ><el-dropdown trigger="click">
+                    <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
+                      <i class="el-icon-more"></i>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-document-add" command="logout">
+                        <el-button type="text" style="color: green" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-folder-add" command="logout">
+                        <el-button type="text" style="color: green" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                   </el-button>
                 </template>
               </el-table-column>
@@ -293,67 +352,6 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass"><i class="el-icon-folder-opened"></i>文档中心</span>
-            <el-table
-              ref="table"
-              v-loading="loading"
-              :data="tableData"
-              :header-cell-style="tableConfig.headerCellStyle"
-              :size="tableConfig.size"
-              :cell-style="tableConfig.cellStyle"
-              :default-expand-all="true"
-              lazy
-              row-key="dir_id"
-              :expand-row-keys="expands"
-              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-              @row-dblclick="toDocEditor"
-            >
-              <el-table-column
-                align="center"
-                label="名称"
-                width="450"
-              >
-                <template slot-scope="scope">
-                  <i v-if="scope.row.type === 'documentation'" class="el-icon-document"></i>
-                  <i v-if="scope.row.type !== 'documentation'" class="el-icon-folder"></i>
-                  <span style="margin-left: 10px">{{ scope.row.dir_name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="创建时间"
-                prop="dir_createTime"
-                width="200px"
-              />
-              <el-table-column
-                align="center"
-                label="操作"
-                width="260"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
-                    slot="reference"
-                    class="morebutton"
-                  ><el-dropdown trigger="click">
-                    <div class="action-wrapper" style="font-size: 16px ;font-weight: bold">
-                      <i class="el-icon-more"></i>
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-document-add" command="logout">
-                        <el-button type="text" style="color: green" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-folder-add" command="logout">
-                        <el-button type="text" style="color: green" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-tab-pane>
-          <el-tab-pane>
             <span slot="label" class="fontClass"><i class="el-icon-delete"></i>回收站</span>
             <el-table
               ref="table"
@@ -382,7 +380,6 @@
               />
               <el-table-column
                 align="center"
-                label="操作"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -1129,7 +1126,7 @@ export default {
   font-family: 等线;
 }
 .temptablebody{
-  height: 500px;
+  height: 600px;
   width: 75%;
   float: left;
 }
