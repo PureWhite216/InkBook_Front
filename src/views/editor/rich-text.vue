@@ -341,7 +341,7 @@ export default {
         })
           .then(res => {
             if (res.data.success) {
-              localStorage.setItem('in_doc_content', res.data.data[0].doc_content)
+              localStorage.setItem('in_word_content', res.data.data[0].doc_content)
                this.$router.push('/redirect/editor/rich-text')
             } else {
               this.$message.error(res.data.message)
