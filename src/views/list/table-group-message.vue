@@ -270,6 +270,7 @@
           </el-tab-pane>
            <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
+            <el-button @click="" style="float:right">新建文件夹</el-button>
             <el-table
               ref="table"
               v-loading="loading"
@@ -279,7 +280,7 @@
               :cell-style="tableConfig.cellStyle"
               lazy
               row-key="id"
-              default-expand-all
+              :expand-row-keys="expands"
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
             >
               <el-table-column
@@ -420,6 +421,7 @@ export default {
   ],
   data() {
     return {
+      expands:['2'],
       tableData: [{
           id: 1,
           date: '2016-05-02',
@@ -431,7 +433,7 @@ export default {
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄',
           children: [{
-              id: 31,
+              id: 21,
               date: '2016-05-01',
               name: '王小虎',
               address: '上海市普陀区金沙江路 1519 弄'
