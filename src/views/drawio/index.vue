@@ -18,7 +18,7 @@
         title="drawio"
         width="1920"
         height="960"
-        src="static/drawio-integration/helloworld.html"
+        src="static/drawio/helloworld.html"
       >
       </iframe>
     </div>
