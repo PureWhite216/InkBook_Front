@@ -43,12 +43,6 @@
             <i class="el-icon-plus"></i>
             保存</el-button>
           <el-button
-            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
-            @click="exportPDF"
-          >
-            <i class="el-icon-upload"></i>
-            导出</el-button>
-          <el-button
             v-if="!is_favorite"
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="likeDoc"
@@ -63,7 +57,13 @@
             <i class="el-icon-star-off"></i>
             取消收藏</el-button>
           <el-button
-            style="margin-inline:10px; background: green; color: white; border: 0"
+            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
+            @click="exportPDF"
+          >
+            <i class="el-icon-upload"></i>
+            导出</el-button>
+          <el-button
+            style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
             @click="exportPDF"
           >
             <i class="el-icon-share"></i>
