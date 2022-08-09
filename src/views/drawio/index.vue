@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-row style="background: #2f2f2f; min-height: 40px">
+  <div style="height: 100%">
+    <el-row style="background: #2f2f2f; height: 4%">
       <el-col :span="8">
         <el-button class="backbutton" style="margin-left: 20px; margin-top: 2px" @click="back">
           <i class="el-icon-back" style="font-size: x-large"></i>
@@ -12,12 +12,12 @@
         </div>
       </el-col>
     </el-row>
-    <div id="iframe-container">
+    <div id="iframe-container" style="height: 100%">
       <iframe
         id="drawio"
         title="drawio"
-        width="1500"
-        height="710"
+        width="100%"
+        height="96%"
         src="static/drawio/helloworld.html"
       >
       </iframe>

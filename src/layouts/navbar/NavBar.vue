@@ -1,8 +1,7 @@
 <template>
   <div class="vaw-nav-bar-wrapper">
-<!--    <Humburger />-->
-<!--    <Breadcrumb v-if="state.device !== 'mobile'" />-->
     <div style="flex: 1">
+      <el-input v-model="input" placeholder="请输入内容" size="mini" style="width: 200px; margin-left: 20px" />
     </div>
     <div>
       <el-popover
@@ -53,9 +52,9 @@
         </el-button>
       </el-popover>
     </div>
-<!--    <div class="right-wrapper">-->
-<!--      <ActionItems />-->
-<!--    </div>-->
+    <!--    <div class="right-wrapper">-->
+    <!--      <ActionItems />-->
+    <!--    </div>-->
     <div class="avatar-wrapper">
       <VAWAvatar />
     </div>
