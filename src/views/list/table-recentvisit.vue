@@ -299,7 +299,7 @@ export default {
       })
       .then(res => {
         if (res.data.success) {
-          localStorage.setItem('doc_content', res.data.data.doc_content)
+          localStorage.setItem('doc_content', res.data.data[0].doc_content)
         } else {
           this.$message.error(res.data.message)
         }

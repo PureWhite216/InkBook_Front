@@ -127,7 +127,7 @@
     </el-dialog>
     <el-dialog title="设置权限" :visible.sync="dialogPerm" style="width: 1000px; margin: auto;">
       <el-form :model="form_power">
-        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off" >
+        <el-select v-model="form_power.userPerm" placeholder="请选择" autocomplete="off">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -190,6 +190,9 @@
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
                           <el-button type="text" @click="form_updateProject.project_id = scope.row.project_id, form_updateProject.project_name = scope.row.project_name, form_updateProject.project_info = scope.row.project_info,dialogUpdateProjectVisible = true">修改项目信息</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-edit-outline" command="logout">
+                          <el-button type="text" @click="copyProject(scope.row)">创建项目副本</el-button>
                         </el-dropdown-item>
                         <el-dropdown-item icon="el-icon-switch-button" command="logout">
                           <el-button type="text" @click="deprecateProjectItem(scope.row)">弃置项目</el-button>
@@ -268,7 +271,7 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
-           <el-tab-pane>
+          <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">文档中心</span>
             <el-table
               ref="table"
@@ -435,7 +438,7 @@ export default {
               date: '2016-05-01',
               name: '王小虎',
               address: '上海市普陀区金沙江路 1519 弄'
-            },]
+            }]
         }, {
           id: 3,
           date: '2016-05-01',
@@ -490,6 +493,12 @@ export default {
       form_deleteProject: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
+        project_id: 0
+      },
+      form_copyProject: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        team_id: localStorage.getItem('team_id'),
         project_id: 0
       },
       form_deprecateProject: {
@@ -589,6 +598,18 @@ export default {
     this.getProjectList()
   },
   methods: {
+    copyProject(item) {
+      this.form_copyProject.project_id = item.project_id
+      this.$axios.post('/project/copy', qs.stringify(this.form_copyProject))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+          this.getProjectList()
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
     unDeprecateProject(item) {
       this.form_unDeprecateProject.project_id = item.project_id
       this.$axios.post('/project/deprecate', qs.stringify(this.form_unDeprecateProject))

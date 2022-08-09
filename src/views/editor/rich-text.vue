@@ -59,6 +59,7 @@
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
       </div>
+      <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" style="margin-top:50px;"></el-tree>
     </div>
   </div>
 </template>
@@ -184,6 +185,45 @@ export default {
       cooperatorList: [],
       commentList: [],
       loading: false,
+      data: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
       commentData: [{
         name: 'ABC',
         time: '2022-05-11',
@@ -218,6 +258,9 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    handleNodeClick(data) {
+        console.log(data);
+    },
     likeDoc() {
       this.form_likeDoc.doc_id = localStorage.getItem('doc_id')
       this.form_likeDoc.undo = false
