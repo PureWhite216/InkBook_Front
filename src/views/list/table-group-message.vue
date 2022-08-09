@@ -302,6 +302,7 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
+              @row-dblclick="toDocEditor"
               lazy
               row-key="dir_id"
               :expand-row-keys="expands"
@@ -677,6 +678,25 @@ export default {
           this.$message.error(res.data.message)
         }
       })
+    },
+    toDocEditor(val) {
+      localStorage.setItem('doc_id', val.doc_id)
+      localStorage.setItem('doc_name', val.doc_name)
+      localStorage.setItem('is_favorite', val.is_favorite)
+      this.$axios.get('/doc/getDocInfo', {
+        params: {
+          token: getters.getToken(state),
+          doc_id: localStorage.getItem('doc_id')
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          localStorage.setItem('doc_content', res.data.data[0].doc_content)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+      this.$router.push('/editor/rich-text')
     },
     unDeprecateProject(item) {
       this.form_unDeprecateProject.project_id = item.project_id
