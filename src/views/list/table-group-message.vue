@@ -265,13 +265,12 @@
               />
               <el-table-column
                 align="center"
-                label="操作"
                 width="100"
               >
                 <template slot-scope="scope">
                   <el-button
                     slot="reference"
-                    class="spcbutton-style"
+                    class="morebutton"
                   >
                     <el-dropdown trigger="click" @command="onCommad">
                       <div class="action-wrapper">

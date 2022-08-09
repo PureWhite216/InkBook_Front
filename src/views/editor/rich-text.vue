@@ -617,7 +617,7 @@ export default {
 .drag-box {
   position: absolute;
   top: 100px;
-  left: 100px;
+  left: 40px;
   width: 240px;
   height: 600px;
   background: #ffffff;
