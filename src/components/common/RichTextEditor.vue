@@ -7,10 +7,13 @@
 </template>
 
 <script>
+
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 // import { ImageDrop } from 'quill-image-drop-module'
 import ImageResize from 'quill-image-resize-module'
+import { saveAs } from 'file-saver'
+import { pdfExporter } from 'quill-to-pdf'
 
 // Quill.register('modules/imageDrop', ImageDrop)
 Quill.register('modules/imageResize', ImageResize)
@@ -31,6 +34,12 @@ export default {
     this.init()
   },
   methods: {
+    async export() {
+      const delta = this.quill.getContents() // gets the Quill delta
+      const pdfAsBlob = await pdfExporter.generatePdf(delta) // converts to PDF
+      console.log('export')
+      saveAs(pdfAsBlob, 'pdf-export.pdf') // downloads from the browser
+    },
     init() {
       const options = {
         modules: {
@@ -84,4 +93,6 @@ export default {
     }
   }
 }
+
 </script>
+
