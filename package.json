@@ -39,6 +39,7 @@
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "portal-vue": "^2.1.7",
+    "poster": "^0.0.9",
     "print-js": "^1.6.0",
     "qrcode": "^1.5.0",
     "qs": "^6.9.4",

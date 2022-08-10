@@ -33,7 +33,7 @@
         <layer-panel v-show="layerPanelOpened" />
       </transition>
     </div>
-    <div id="drag" v-drag class="drag-box">
+    <div id="drag" v-drag:#drag class="drag-box">
       <el-table
         ref="table"
         v-loading="loading"
@@ -65,6 +65,7 @@ import router from '@/router'
 import qs from 'qs'
 import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
+import { drag } from 'poster/poster.directives'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -83,34 +84,7 @@ export default {
     extendSideBar,
     layerPanel
   },
-  directives: {
-    drag: {
-      // 指令的定义
-      bind: function(el) {
-        const oDiv = el // 获取当前元素
-        oDiv.onmousedown = (e) => {
-          console.log('onmousedown')
-          // 算出鼠标相对元素的位置
-          const disX = e.clientX - oDiv.offsetLeft
-          const disY = e.clientY - oDiv.offsetTop
-
-          document.onmousemove = (e) => {
-            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-            const left = e.clientX - disX
-            const top = e.clientY - disY
-
-            oDiv.style.left = left + 'px'
-            oDiv.style.top = top + 'px'
-          }
-
-          document.onmouseup = (e) => {
-            document.onmousemove = null
-            document.onmouseup = null
-          }
-        }
-      }
-    }
-  },
+  directives: { drag },
   data() {
     return {
       form_update: {
