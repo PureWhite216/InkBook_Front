@@ -102,17 +102,22 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
-        <el-button @click="dialogWordVisible = false; createWord()">确 定</el-button>
+        <el-button @click="dialogWordVisible = false; createWord()">无模板创建</el-button>
       </div>
       <el-row>
-        <el-col v-for="(o, index) in 2" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
+        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
           <el-card :body-style="{ padding: '0px' }">
-            <img src="../../assets/work_logo.png" class="image" />
+            <img v-if="index === 0" src="../../assets/id_4.jpg" class="image" />
+            <img v-if="index === 1" src="../../assets/id_5.jpg" class="image" />
+            <img v-if="index === 2" src="../../assets/id_6.jpg" class="image" />
+            <img v-if="index === 3" src="../../assets/id_7.jpg" class="image" />
             <div style="padding: 14px;">
-              <span>模板{{ index }}</span>
+              <span v-if="index === 0">会议纪要</span>
+              <span v-if="index === 1">项目工作汇报</span>
+              <span v-if="index === 2">个人学习计划</span>
+              <span v-if="index === 3">年度工作总结</span>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">操作按钮</el-button>
+                <el-button type="text" class="button" @click="dialogWordVisible = false; form_word.template_id = index; createWord()">创建</el-button>
               </div>
             </div>
           </el-card>
@@ -454,7 +459,8 @@ export default {
         token: getters.getToken(state),
         project_id: localStorage.getItem('project_id'),
         doc_name: '',
-        doc_description: ''
+        doc_description: '',
+        template_id: ''
       },
       form_page: {
         token: getters.getToken(state),
@@ -931,6 +937,10 @@ export default {
       this.$router.replace('/list/table-group-message')
     },
     createWord() {
+      if (this.form_word.template_id === 0) { this.form_word.template_id = 4 }
+      if (this.form_word.template_id === 1) { this.form_word.template_id = 5 }
+      if (this.form_word.template_id === 2) { this.form_word.template_id = 6 }
+      if (this.form_word.template_id === 3) { this.form_word.template_id = 7 }
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))
          .then((res) => {
            if (res.data.success) {
@@ -1037,7 +1047,7 @@ export default {
   margin: 10px;
 }
 .image{
-  width: 100px;
-  height: 100px;
+  width: 300px;
+  height: 300px;
 }
 </style>
