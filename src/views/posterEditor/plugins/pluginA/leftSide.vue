@@ -17,39 +17,57 @@ export default {
     return {
       buttonList: [
         {
-          text: '按钮',
           style: {
-            color: 'white',
-            background: '#22abf5',
-            width: '80px',
-            height: '36px'
+            color: '#ffffff',
+            background: '#22abf5'
           }
         },
         {
-          text: '按钮',
           style: {
-            color: 'white',
-            background: '#f52249',
-            width: '80px',
-            height: '36px'
+            color: '#ffffff',
+            background: '#f52249'
           }
         },
         {
-          text: '按钮',
           style: {
-            color: 'white',
-            background: '#f54922',
-            width: '80px',
-            height: '36px'
+            color: '#ffffff',
+            background: '#f54922'
           }
         },
         {
-          text: '按钮',
           style: {
             color: 'black',
             background: '#ffffff',
-            width: '80px',
-            height: '36px'
+            border: 1
+          }
+        },
+        {
+          style: {
+            color: '#ffffff',
+            background: '#22abf5',
+            borderRadius: '20px'
+          }
+        },
+        {
+          style: {
+            color: '#ffffff',
+            background: '#f52249',
+            borderRadius: '20px'
+          }
+        },
+        {
+          style: {
+            color: '#ffffff',
+            background: '#f54922',
+            borderRadius: '20px'
+          }
+        },
+        {
+          style: {
+            color: 'black',
+            background: '#ffffff',
+            border: 1,
+            borderRadius: '20px'
           }
         }
       ]

@@ -11,8 +11,7 @@ export default class PluginInput extends Widget {
             replicable: false,
             wState: {
               style: {
-                width: '160px',
-                height: '32px'
+                width: '400px'
               }
             }
         }, config)

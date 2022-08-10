@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-a">
+  <div class="plugin-icon">
     <div :style="wState.size">
       <i :class="wState.class" :style="wState.style"></i>
     </div>
@@ -61,7 +61,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.plugin-a {
+.plugin-icon {
   width: 100%;
   height: 100%;
   color: #000;

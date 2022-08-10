@@ -10,12 +10,15 @@ export default class PluginA extends Widget {
             icon: 'el-icon-news',
             replicable: false,
             wState: {
-                text: 'button',
+                text: 'Click',
                 style: {
-                  color: 'black',
-                  background: 'white',
+                  color: '#000000',
+                  background: '#ffffff',
                   width: '80px',
-                  height: '32px'
+                  height: '32px',
+                  border: 0,
+                  borderColor: '#000000',
+                  borderRadius: '5px'
                 }
             }
         }, config)

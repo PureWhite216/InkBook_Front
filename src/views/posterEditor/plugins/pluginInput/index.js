@@ -8,7 +8,7 @@ import extendSideBar from './extendSideBar'
 export default {
     leftSide: {
         icon: 'el-icon-edit-outline',
-        name: 'input',
+        name: '输入框',
         component: leftSide
     },
     widget: {

@@ -1,13 +1,10 @@
 <template>
   <div class="plugin-icon">
     <setting-content>
-      <setting-item label="文本">
-        <el-input v-model="text" type="text" />
+      <setting-item label="大小">
+        <el-input v-model="FontSize" type="text" />
       </setting-item>
-      <setting-item label="背景颜色">
-        <el-color-picker v-model="BackgroundColor" size="small" />
-      </setting-item>
-      <setting-item label="字体颜色">
+      <setting-item label="颜色">
         <el-color-picker v-model="Color" size="small" />
       </setting-item>
     </setting-content>
@@ -19,24 +16,16 @@ import { controlMixin } from '../helpers'
 export default {
   mixins: [controlMixin],
   computed: {
-    text: {
+    FontSize: {
       get() {
-        return this.wState.text
+        return this.wState.size.fontSize
       },
       set(val) {
         this.updateWidgetState({
-          keyPath: 'text',
+          keyPath: 'size.fontSize',
           value: val,
           widgetId: this.item.id
         })
-      }
-    },
-    BackgroundColor: {
-      get() {
-        return this.style.backgroundColor
-      },
-      set(val) {
-        this.updateStyle('backgroundColor', val)
       }
     },
     Color: {
@@ -52,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.plugin-a {
+.plugin-icon {
   box-sizing: border-box;
   padding: 10px;
 }
