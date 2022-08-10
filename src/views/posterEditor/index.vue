@@ -66,6 +66,8 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
+import { getters } from '@/store/modules/user.js'
+import { state } from '@/store/modules/user.js'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -264,8 +266,8 @@ export default {
       killAutoSaveTask: 'backup/killAutoSaveTask',
       backupInvoker: 'backup/invoker'
     }),
-    save() {   
-      /*     
+    save() {
+      /*
       const requestData = {
             items: [
                 {
