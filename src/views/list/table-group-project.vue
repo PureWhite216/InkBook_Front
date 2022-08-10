@@ -216,13 +216,18 @@
               @row-dblclick="toDocEditor"
             >
               <el-table-column
-                width="20"
-              />
+                align="center"
+                width="30"
+              >
+                <template slot-scope="scope">
+                  <i v-if="scope.row.is_favorite" class="el-icon-star-on"></i>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 label="名称"
                 prop="doc_name"
-                width="375px"
+                width="365px"
                 sortable
               />
               <el-table-column
@@ -282,13 +287,18 @@
               @row-dblclick="toAxureEditor"
             >
               <el-table-column
-                width="20"
-              />
+                align="center"
+                width="30"
+              >
+                <template slot-scope="scope">
+                  <i v-if="scope.row.isFavorite" class="el-icon-star-on"></i>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 label="名称"
                 prop="axure_name"
-                width="375px"
+                width="365px"
                 sortable
               />
               <el-table-column

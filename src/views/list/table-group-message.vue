@@ -1357,7 +1357,7 @@ export default {
         .el-input__inner{
           height: 50px!important;
           border:2px solid #a49e9e !important;
-          background-color: rgba(236, 238, 103, 0.12) !important;
+          background-color: rgba(236, 238, 103, 0.09) !important;
         }
         .el-input__inner:focus{
           border:2px solid #717171!important;
