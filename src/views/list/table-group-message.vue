@@ -786,7 +786,55 @@ export default {
         this.loading = false
     },
     getSearchAxureList() {
-
+      this.loading = true
+      this.searchAxureList = []
+      this.$axios.get('/axure/searchAxure', {
+              params: {
+                token: getters.getToken(state),
+                keyword: this.keyword_search,
+                team_id: localStorage.getItem('team_id')
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null,
+                last_edit: null,
+                create_user: null,
+                isFavorite: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
+              axures.isFavorite = res.data.data[i].isFavorite === 1
+              let flag = 0
+              for (let i = 0; i < this.searchAxureList.length; i++) {
+                if (this.searchAxureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.searchAxureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
     },
     CreateDoc() {
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_createDoc))
