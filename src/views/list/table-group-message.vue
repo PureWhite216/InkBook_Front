@@ -273,10 +273,10 @@
                     </div>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-document-add" command="logout">
-                        <el-button type="text" style="color: green" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
+                        <el-button type="text" style="color: blue" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-folder-add" command="logout">
-                        <el-button type="text" style="color: green" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
+                        <el-button type="text" style="color: blue" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -588,7 +588,7 @@ export default {
       },
       team_name: localStorage.getItem('team_name'),
       prj_root_id: localStorage.getItem('prj_root_id'),
-      root_id: localStorage.getItem('root_id'),
+      root_id: Number(localStorage.getItem('root_id')),
       dialogInviteVisible: false,
       dialogCreateProjectVisible: false,
       dialogUpdateProjectVisible: false,
@@ -623,7 +623,7 @@ export default {
     }
   },
   created() {
-    localStorage.setItem('flag', 'user')
+    console.log(typeof this.root_id)
     this.getMemberList()
     this.getProjectList()
     this.getDocTree()
