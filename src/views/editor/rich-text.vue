@@ -41,7 +41,7 @@
     </el-dialog>
     <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
-        <el-link :underline="false">文章标题</el-link>
+        <p style="color: black; font-family: 等线; font-size: 20px; font-weight: bold">Title</p>
       </template>
       <el-input
         v-model="title"
@@ -56,7 +56,6 @@
     >
       <template #header>
         <div class="flex">
-          <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
           <!--          <el-button-->
           <!--            style="margin-inline:10px; background: #49aaef; color: white; border: 0"-->
@@ -111,7 +110,7 @@
         :height="1000"
       />
     </el-card>
-    <div id="drag" v-drag class="drag-box">
+    <div id="drag" v-drag:#drag class="drag-box">
       <div class="boxhead">
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
@@ -155,38 +154,12 @@ import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import qs from 'qs'
 import store from '@/layouts/store'
+import { drag } from 'poster/poster.directives'
 
 export default {
   name: 'RichText',
   components: { RichTextEditor },
-  directives: {
-    drag: {
-      // 指令的定义
-      bind: function(el) {
-        const oDiv = el // 获取当前元素
-        oDiv.onmousedown = (e) => {
-          console.log('onmousedown')
-          // 算出鼠标相对元素的位置
-          const disX = e.clientX - oDiv.offsetLeft
-          const disY = e.clientY - oDiv.offsetTop
-
-          document.onmousemove = (e) => {
-            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-            const left = e.clientX - disX
-            const top = e.clientY - disY
-
-            oDiv.style.left = left + 'px'
-            oDiv.style.top = top + 'px'
-          }
-
-          document.onmouseup = (e) => {
-            document.onmousemove = null
-            document.onmouseup = null
-          }
-        }
-      }
-    }
-  },
+  directives: { drag },
   data() {
     return {
       url_preview: null,
