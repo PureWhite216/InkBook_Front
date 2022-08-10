@@ -96,6 +96,8 @@ function websocketonmessage (e) {
         store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
     } else if (res.op == "copy") {
         store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
+    } else if (res.op == "replace") {
+        store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
     }
 }
 // 关闭连接时调用
@@ -362,9 +364,18 @@ const actions = {
         commit(MTS.REMOVE_ITEM, item)
     },
     replacePosterItems({ commit, dispatch }, items) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "replace",
+            "item": JSON.stringify(items)
+        }))
         dispatch('history/push')
         commit(MTS.REPLACE_POSTER_ITEMS, items)
         commit(MTS.REPLACE_ACTIVE_ITEMS, [])
+    },
+    synReplacePosterItems({ commit, dispatch }, items) {
+        commit(MTS.REPLACE_POSTER_ITEMS, items)
     },
     addActiveItem({ commit, getters, dispatch }, item) {
         if (getters.activeItemIds.includes(item.id)) {
