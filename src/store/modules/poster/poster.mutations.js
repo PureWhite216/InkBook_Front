@@ -15,12 +15,13 @@ export const SET_BACKGROUND_CONFIG = 'SET_BACKGROUND_CONFIG'
 
 // 组件
 export const ADD_ITEM = 'ADD_ITEM'
-export const ADD_SYN_ITEM = 'ADD_SYN_ITEM'
+export const SYN_ADD_ITEM = 'SYN_ADD_ITEM'
 export const REMOVE_ITEM = 'REMOVE_ITEM'
 export const REPLACE_POSTER_ITEMS = 'REPLACE_POSTER_ITEMS'
 export const SET_WIDGET_CONFIG = 'SET_WIDGET_CONFIG'
 export const COPY_WIDGET = 'COPY_WIDGET'
 export const PASTE_WIDGET = 'PASTE_WIDGET'
+export const SYN_PASTE_WIDGET = 'SYN_PASTE_WIDGET'
 
 // active状态的组件
 export const ADD_ACTIVE_ITEM = 'ADD_ACTIVE_ITEM'

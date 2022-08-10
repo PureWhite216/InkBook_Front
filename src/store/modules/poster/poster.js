@@ -51,6 +51,8 @@ function getState() {
 
 const state = getState()
 
+var cv_item = null
+
 var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
@@ -92,6 +94,8 @@ function websocketonmessage (e) {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
     } else if (res.op == "update") {
         store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
+    } else if (res.op == "copy") {
+        store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
     }
 }
 // 关闭连接时调用
@@ -157,7 +161,7 @@ const mutations = {
         }
     },
     // 添加同步组件
-    [MTS.ADD_SYN_ITEM](state, item) {
+    [MTS.SYN_ADD_ITEM](state, item) {
         state.posterItems.push(item)
     },
     // 删除组件
@@ -223,12 +227,21 @@ const mutations = {
                 return i
             })
         state.copiedWidgets = finalItems.length > 0 ? finalItems : null
+        cv_item = state.copiedWidgets
     },
     // 粘贴组件
     [MTS.PASTE_WIDGET](state) {
         const copiedWidgets = state.copiedWidgets
         if (copiedWidgets && copiedWidgets.length > 0) {
             copiedWidgets.forEach(item => {
+                state.posterItems.push(new CopiedWidget(item))
+            })
+        }
+    },
+    // 粘贴组件
+    [MTS.SYN_PASTE_WIDGET](state, items) {
+        if (items && items.length > 0) {
+            items.forEach(item => {
                 state.posterItems.push(new CopiedWidget(item))
             })
         }
@@ -336,7 +349,7 @@ const actions = {
             }
         }
         dispatch('history/push')
-        commit(MTS.ADD_SYN_ITEM, item)
+        commit(MTS.SYN_ADD_ITEM, item)
     },
     removeItem({ commit, getters, dispatch }, item) {
         if (item.lock) {
@@ -552,8 +565,18 @@ const actions = {
         commit(MTS.COPY_WIDGET, item)
     },
     pasteWidget({ commit, dispatch }) {
+        console.log(JSON.stringify(cv_item))
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "copy",
+            "item": JSON.stringify(cv_item)
+        }))
         dispatch('history/push')
         commit(MTS.PASTE_WIDGET)
+    },
+    synPasteWidget({ commit, dispatch }, item) {
+        commit(MTS.SYN_PASTE_WIDGET, item)
     },
     addReferenceLine({ commit, dispatch }, item) {
         dispatch('history/push')
