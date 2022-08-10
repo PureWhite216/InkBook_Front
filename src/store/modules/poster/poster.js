@@ -104,6 +104,8 @@ function websocketonmessage (e) {
         store.dispatch('poster/synActivityPageConfig')
     } else if (res.op == "syn") {
         store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
+    } else if (res.op == "origin") {
+        store.dispatch('poster/initPageConfig')
     }
 }
 // 关闭连接时调用
@@ -766,6 +768,27 @@ const actions = {
           }
         )
         return form_saveAxure
+    },
+    /**
+     * 当只有一位编辑者时，从数据库获得数据
+     */
+    initPageConfig ({ dispatch, state, commit }) {
+        axios.post('/axure/getAxureInfo', qs.stringify({
+            token: localStorage.getItem('Token'),
+            axure_id: localStorage.getItem('axure_id')
+          }))
+        .then(res => {
+          if (res.data.success) {
+            let pageConfig = {}
+            pageConfig = {
+              pageConfigId: res.data.data[0].config_id,
+              config: JSON.parse(res.data.data[0].config),
+              items: JSON.parse(res.data.data[0].items),
+              title: res.data.data[0].title
+            }
+            dispatch('updatePageConfig', pageConfig)
+          }
+        })
     },
     /**
      * 同步当前的活动页配置
