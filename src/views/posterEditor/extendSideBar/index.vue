@@ -176,7 +176,8 @@ export default {
       const aLink = document.createElement('a')
       aLink.style.display = 'none'
       aLink.href = downloadUrl
-      aLink.download = 'ImageExport.png'
+      // aLink.download = 'export.png'
+      aLink.download = localStorage.getItem('axure_id') + '.png'
       // 触发点击-然后移除
       document.body.appendChild(aLink)
       aLink.click()
