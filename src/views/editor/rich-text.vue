@@ -58,6 +58,12 @@
         <div class="flex">
           <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
+          <!--          <el-button-->
+          <!--            style="margin-inline:10px; background: #49aaef; color: white; border: 0"-->
+          <!--            @click="uploadModel"-->
+          <!--          >-->
+          <!--            <i class="el-icon-plus"></i>-->
+          <!--            上传模板</el-button>-->
           <el-button
             style="margin-inline:10px; background: #49aaef; color: white; border: 0"
             @click="Save"
@@ -218,6 +224,11 @@ export default {
         doc_id: localStorage.getItem('doc_id'),
         doc_content: ''
       },
+      form_Model: {
+        token: getters.getToken(state),
+        name: '模板',
+        content: ''
+      },
       form3: {
         token: getters.getToken(state),
         user_id: getters.getUserId(state),
@@ -287,6 +298,7 @@ export default {
     }
   },
   created() {
+    this.getModel()
     this.getDocTree()
     store.changeDevice('mobile')
     store.toggleCollapse(true)
@@ -306,6 +318,18 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    getModel() {
+      this.$axios.get('/doc/getTemplateList', {
+        params: {
+          token: getters.getToken(state)
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data)
+        }
+      })
+    },
     CreateDir() {
       this.$axios.post('/doc/mkdir', qs.stringify(this.form_createDir))
         .then(res => {
@@ -508,6 +532,18 @@ export default {
     },
     exportPDF() {
       this.getPdf('pdfDom', this.title)
+    },
+    uploadModel() {
+      this.form_Model.content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
+      this.$axios.post('/doc/editTemplate', qs.stringify(this.form_Model))
+        .then((res) => {
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          }
+        )
     },
     Save() {
       this.form_save.doc_content = this.$refs.richTextEditor.getJsonContent().slice(7, -1)
