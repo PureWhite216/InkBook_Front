@@ -198,9 +198,10 @@ export default {
     },
     exportFile (file) {
       const fd = new FormData()
+      console.log('file', file)
       fd.append('file', file.file)
       fd.append('token', getters.getToken(state))
-      this.$axios('/axure/uploadFile', {
+      this.$axios('/axure/uploadAxure', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data'
