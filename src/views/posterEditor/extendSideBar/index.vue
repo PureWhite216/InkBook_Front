@@ -81,6 +81,16 @@
       </el-tooltip>
       <el-tooltip
         effect="dark"
+        content="生成预览"
+        placement="left"
+        transition="el-zoom-in-center"
+      >
+        <div class="item" @click="getImage">
+          <i class="el-icon-monitor"></i>
+        </div>
+      </el-tooltip>
+      <el-tooltip
+        effect="dark"
         content="快捷键参考"
         placement="left"
         transition="el-zoom-in-center"
@@ -111,8 +121,8 @@ import ExportService from 'poster/service/exportService'
 import { pluginMap, pluginWrap } from '../plugins'
 import html2canvas from 'html2canvas'
 import store from '@/store'
-import {getters, state} from "@/store/modules/user";
-import qs from "qs";
+import { getters, state } from '@/store/modules/user'
+import qs from 'qs'
 
 const pluginComponents = {}
 const plugins = []
