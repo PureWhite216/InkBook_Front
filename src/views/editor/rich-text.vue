@@ -39,16 +39,6 @@
         <el-button @click="CreateDir(), dialogCreateDir = false">确 定</el-button>
       </div>
     </el-dialog>
-    <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
-      <template #header>
-        <p style="color: black; font-family: 等线; font-size: 20px; font-weight: bold">Title</p>
-      </template>
-      <el-input
-        v-model="title"
-        class="title-input"
-        placeholder="请输入文章标题"
-      />
-    </el-card>
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
