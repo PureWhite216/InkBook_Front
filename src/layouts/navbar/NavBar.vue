@@ -7,7 +7,7 @@
         width="450"
         height="400"
       >
-        <p align="center">项目</p>
+        <el-select value=""/>
         <el-table v-loading="loading" :data="searchProjectList" height="400">
           <el-table-column width="80" property="project_name" label="名称" align="center" />
           <el-table-column width="140" property="project_info" label="简介" align="center" />
@@ -39,7 +39,7 @@
           icon="el-icon-search"
         >搜索
         </el-button> -->
-        <el-input slot="reference" v-model="keyword_project" placeholder="搜索项目" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="searchProject_visible = true,getSearchProjectList()" />
+        <el-input slot="reference" v-model="keyword_project" placeholder="搜索" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="searchProject_visible = true,getSearchProjectList()" />
       </el-popover>
     </div>
 <!-- <<<<<<< HEAD -->
