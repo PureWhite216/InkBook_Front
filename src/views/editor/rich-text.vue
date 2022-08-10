@@ -39,16 +39,6 @@
         <el-button @click="CreateDir(), dialogCreateDir = false">确 定</el-button>
       </div>
     </el-dialog>
-    <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
-      <template #header>
-        <p style="color: black; font-family: 等线; font-size: 20px; font-weight: bold">Title</p>
-      </template>
-      <el-input
-        v-model="title"
-        class="title-input"
-        placeholder="请输入文章标题"
-      />
-    </el-card>
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
@@ -74,14 +64,14 @@
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="likeDoc"
           >
-            <i class="el-icon-star-on"></i>
+            <i class="el-icon-star-off"></i>
             收藏</el-button>
           <el-button
             v-if="is_favorite"
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="unlikeDoc"
           >
-            <i class="el-icon-star-off"></i>
+            <i class="el-icon-star-on"></i>
             取消收藏</el-button>
           <el-button
             style="margin-inline:10px; background: #16dcea; color: white; border: 0"

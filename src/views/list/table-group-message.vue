@@ -417,7 +417,7 @@
       <template>
         <el-popover
           v-model="visible_search"
-          placement="top"
+          placement="bottom"
           width="250"
           height="400"
         >
@@ -660,7 +660,7 @@ export default {
           label: '原型'
         }
       ],
-      value_search: null,
+      value_search: 0,
       value: ''
     }
   },
