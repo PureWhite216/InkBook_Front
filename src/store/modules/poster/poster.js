@@ -44,7 +44,7 @@ function getState() {
     return state
 }
 
-const state = getState()
+export const state = getState()
 
 const getters = {
     posterItemIds(state, getters) {
@@ -468,7 +468,7 @@ const actions = {
                 pageTitle: pageConfig.title || ''
             }
         }
-      console.log(recoverData)
+      // console.log(recoverData)
         dispatch('backup/recover', recoverData)
         commit(MTS.SET_UNSAVED_STATE, false)
     },
@@ -508,10 +508,10 @@ const actions = {
         items: JSON.stringify(requestData['items']),
         config: requestData['config']
       }
-      console.log(form_saveAxure)
-     return axios.post('/axure/update', qs.stringify(form_saveAxure))
+      // console.log(form_saveAxure)
+     axios.post('/axure/update', qs.stringify(form_saveAxure))
         .then(res => {
-            Message.success('保存成功')
+            // Message.success('保存成功')
             return res
           },
           () => {
@@ -519,6 +519,7 @@ const actions = {
             return Promise.reject()
           }
         )
+        return form_saveAxure
     }
 }
 
