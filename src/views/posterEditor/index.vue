@@ -66,8 +66,6 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
-import { getters } from '@/store/modules/user.js'
-import { state } from '@/store/modules/user.js'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -146,6 +144,14 @@ export default {
     ]),
     ...mapGetters(['activeItemIds'])
   },
+  watch: {
+    pageConfig: {
+      handle (newName, oldName) {
+        console.log("改改改")
+      },
+      deep: true
+    }
+  },
   beforeRouteLeave(to, from, next) {
       next()
   },
@@ -175,10 +181,18 @@ export default {
     document.addEventListener('keydown', this.keydownHandle)
     this.body = document.body
     this.mainPanelRef = this.$refs.main.$refs.mainPanel
+    //初始化websocket
+    // this.initWebSocket()
+    // this.$nextTick(() => {
+    //   setInterval(this.save, 1000)
+    // })
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keydownHandle)
     this.killAutoSaveTask()
+  },
+  destroyed: function () { // 离开页面生命周期函数
+    // this.websocketclose();
   },
   methods: {
     getAxureList() {
@@ -250,6 +264,44 @@ export default {
       killAutoSaveTask: 'backup/killAutoSaveTask',
       backupInvoker: 'backup/invoker'
     }),
+    save() {   
+      /*     
+      const requestData = {
+            items: [
+                {
+                    type: poster.state.background.type,
+                    content: '',
+                    config: JSON.stringify(poster.state.background)
+                },
+                ...poster.state.posterItems.map((item, index) => {
+                    return {
+                        type: item.type,
+                        content: '',
+                        config: JSON.stringify({
+                            ...item,
+                            _sort: index + 1
+                        })
+                    }
+                })
+            ]
+        }
+        */
+      console.log("test>>>")
+      // console.log(JSON.stringify(requestData))
+      // console.log(poster.getters.posterItems)
+      console.log("<<<test")
+      const res = this.$store.dispatch('poster/saveActivityPageConfig', null)
+      res.then(r => {
+        this.websock.send(JSON.stringify({
+          type: "axure",
+          id: localStorage.getItem('axure_id'),
+          config: r.config,
+          items: r.items,
+          name: '',
+          content: ''
+      }))
+      })
+    },
     back() {
       router.push('/list/table-group-project')
     },
@@ -341,6 +393,61 @@ export default {
         default:
           break
       }
+    }/*,
+    initWebSocket: function () { // 建立连接
+        // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
+        // var url = " ws://101.42.171.88:8090/ws"
+        var url = " ws://localhost:8090/ws"
+        this.websock = new WebSocket(url);
+        this.websock.onopen = this.websocketonopen;
+        // this.websock.send = this.websocketsend;
+        this.websock.onerror = this.websocketonerror;
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketclose;
+      },
+    // 连接成功后调用
+    websocketonopen: function () {
+      this.websock.send(JSON.stringify({
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state),
+        type: "axure",
+        id: localStorage.getItem('axure_id')
+      }))
+      console.log("WebSocket连接成功");
+    },
+    // 发生错误时调用
+    websocketonerror: function () {
+      console.log("WebSocket连接发生错误");
+    },
+    // 给后端发消息时调用
+    websocketsend: function () {
+      console.log("WebSocket连接发生错误");
+    },
+    // 接收后端消息
+    // vue 客户端根据返回的cmd类型处理不同的业务响应
+    websocketonmessage: function (e) {
+      let pageConfig = {}
+      const res = JSON.parse(e.data)
+      // console.log(res.items)
+      pageConfig = {
+        pageConfigId: 0,
+        config: JSON.parse(res.config),
+        items: JSON.parse(res.items)
+      }
+      this.$store.dispatch('poster/updatePageConfig', pageConfig)
+    },
+    // 关闭连接时调用
+    websocketclose: function (e) {
+      console.log("connection closed (" + e.code + ")");
+    }*/,
+    sendMsg() {
+      // this.websock.send(JSON.stringify({
+      //   type: "axure",
+      //   id: localStorage.getItem('axure_id'),
+      //   config: this.pageConfig.config,
+      //   items: this.pageConfig.items,
+      //   config_id: this.pageConfig.pageConfigId
+      // }))
     }
   }
 }
