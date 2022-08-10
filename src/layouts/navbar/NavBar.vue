@@ -232,7 +232,7 @@ export default {
           label: '原型'
         }
       ],
-      value_search: null
+      value_search: 0
     }
   },
   methods: {
