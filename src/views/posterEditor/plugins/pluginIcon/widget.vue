@@ -39,8 +39,8 @@ export default {
   },
   created() {
     this.updateDragInfo({
-      w: 30,
-      h: 30,
+      w: 24,
+      h: 24,
       x: 0,
       y: 200
     })
