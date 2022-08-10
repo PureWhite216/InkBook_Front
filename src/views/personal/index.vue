@@ -198,16 +198,16 @@ export default {
       })
       .then(res => {
         if (res.data.success) {
-            this.$axios.post('/user/modifyUserInfo', qs.stringify({ token: getters.getToken(state), avatar: res.data.data.url }))
+            this.$axios.post('/user/modifyUserInfo', qs.stringify({ token: getters.getToken(state), avatar: res.data.data[0].url }))
           .then(res => {
             if (res.data.success) {
                this.$message.success(res.data.message)
+              location.reload()
             } else {
               this.$message.error(res.data.message)
             }
             this.getPersonalInformation()
             getters.changeAvatar(state, this.personalInformation.avatar)
-            location.reload()
           })
         }
       })
