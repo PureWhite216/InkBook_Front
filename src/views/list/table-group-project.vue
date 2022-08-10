@@ -141,10 +141,12 @@
       </div>
 
       <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
-        <el-col v-for="(o, index) in 4" :key="o" :span="12">
+        <el-col v-for="(o, index) in 3" :key="o" :span="12">
           <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
             <div style="padding: 14px;">
               <span v-if="index === 0">登录模板</span>
+              <span v-if="index === 1">论坛app</span>
+              <span v-if="index === 2">web开发主页</span>
               <div class="bottom clearfix">
                 <el-button type="text" class="button" @click="flag=index+1, toPreview()">预览</el-button>
                 <el-button type="text" class="button" @click="form_createAxure.axure_template_id = index + 1, createAxure(), dialogPageVisible = false">创建</el-button>
@@ -543,7 +545,13 @@ export default {
   methods: {
     toPreview() {
       if (this.flag === 1) {
-        window.open('http://101.42.171.88:8090/file/1/2022-08-10_17:50:41.606_dcc3626135d50ed9d2c3c52a7a8678c.jpg')
+        window.open('http://101.42.171.88:8090/file/1/2022-08-10_20:43:39.003_34c2a9f2c8ebc5ce91f89093847b0ca.jpg')
+      }
+      if (this.flag === 2) {
+        window.open('http://101.42.171.88:8090/file/1/2022-08-10_23:46:05.107_1031674e6fd66b54c5961c8ea82b92b.jpg')
+      }
+      if (this.flag === 3) {
+        window.open('http://101.42.171.88:8090/file/1/2022-08-10_23:49:31.864_d7c3de135e0d2ac17f0524952057757.jpg')
       }
     },
     getModel() {
@@ -625,7 +633,7 @@ export default {
     deleteAxure(item) {
       this.$confirm('此操作将使您删除此原型' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        cancelButtonText: '取消 ',
         type: 'warning'
       }).then(() => {
       this.form_deleteAxure.axure_id = item.axure_id
