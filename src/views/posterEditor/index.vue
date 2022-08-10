@@ -234,6 +234,7 @@ export default {
     this.initLoading = false
   },
   async mounted() {
+    await this.reloaded()
     await this.$store.dispatch('backup/recover', null)
     document.addEventListener('keydown', this.keydownHandle)
     this.body = document.body
@@ -413,6 +414,12 @@ export default {
     },
     back() {
       router.push('/list/table-group-project')
+    },
+    reloaded() {
+      if (location.href.indexOf("#reloaded") == -1) {
+        location.href = location.href + "#reloaded"
+        window.location.reload()
+      }
     },
     // getConfig () {
     //   this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
