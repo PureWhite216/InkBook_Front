@@ -458,7 +458,7 @@ export default {
 }
 .drag-box {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 2.8%;
   width: 195px;
   height: 400px;
