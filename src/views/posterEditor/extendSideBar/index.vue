@@ -81,6 +81,16 @@
       </el-tooltip>
       <el-tooltip
         effect="dark"
+        content="生成预览"
+        placement="left"
+        transition="el-zoom-in-center"
+      >
+        <div class="item" @click="getImage">
+          <i class="el-icon-monitor"></i>
+        </div>
+      </el-tooltip>
+      <el-tooltip
+        effect="dark"
         content="快捷键参考"
         placement="left"
         transition="el-zoom-in-center"
@@ -111,6 +121,8 @@ import ExportService from 'poster/service/exportService'
 import { pluginMap, pluginWrap } from '../plugins'
 import html2canvas from 'html2canvas'
 import store from '@/store'
+import { getters, state } from '@/store/modules/user'
+import qs from 'qs'
 
 const pluginComponents = {}
 const plugins = []
@@ -153,6 +165,50 @@ export default {
     exportPdf() {
       this.getPdf('pdfDom', 'pdf-export')
     },
+    base64ToFile(urlData, fileName) {
+      const arr = urlData.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const bytes = atob(arr[1]) // 解码base64
+      let n = bytes.length
+      const ia = new Uint8Array(n)
+      while (n--) {
+        ia[n] = bytes.charCodeAt(n)
+      }
+      return new File([ia], fileName, { type: mime })
+    },
+    getImage() {
+      const domName = 'mainPanel'
+      const imageDom = document.getElementById(domName)
+      const canvasSize = store.state.poster.canvasSize
+      window.pageYoffset = 0 // 滚动置顶
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      html2canvas(imageDom, {
+        windowWidth: canvasSize.width,
+        windowHeight: canvasSize.height,
+        // width: canvasSize.width, // canvas画板的宽度 一般都是要保存的那个dom的宽度
+        // height: canvasSize.height, // canvas画板的高度  同上
+        useCORS: true,
+        scale: 1
+      }).then((canvas) => {
+        const base64Url = canvas.toDataURL('image/png', 1)
+        const file = this.base64ToFile(base64Url, localStorage.getItem('axure_id') + '.png')
+        this.exportFile(file)
+      })
+    },
+    exportFile (file) {
+      const fd = new FormData()
+      console.log('file', file)
+      fd.append('file', file.file)
+      fd.append('token', getters.getToken(state))
+      this.$axios('/axure/uploadAxure', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: fd
+      })
+    },
     createImg() {
       const domName = 'mainPanel'
       const imageDom = document.getElementById(domName)
@@ -176,7 +232,8 @@ export default {
       const aLink = document.createElement('a')
       aLink.style.display = 'none'
       aLink.href = downloadUrl
-      aLink.download = 'ImageExport.png'
+      // aLink.download = 'export.png'
+      aLink.download = localStorage.getItem('axure_id') + '.png'
       // 触发点击-然后移除
       document.body.appendChild(aLink)
       aLink.click()
