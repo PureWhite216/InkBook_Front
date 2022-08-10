@@ -116,6 +116,9 @@
                 label="所属团队"
                 prop="team_name"
                 width="200px"
+                :filter-multiple="true"
+                :filters="options"
+                :filter-method="filterHandler"
               />
               <el-table-column
                 align="center"
