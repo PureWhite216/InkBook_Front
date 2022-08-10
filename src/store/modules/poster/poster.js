@@ -98,6 +98,8 @@ function websocketonmessage (e) {
         store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
     } else if (res.op == "replace") {
         store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
+    } else if (res.op == "bg") {
+        store.dispatch('poster/synAddBackground', JSON.parse(res.item))
     }
 }
 // 关闭连接时调用
@@ -147,6 +149,9 @@ const mutations = {
         if (item instanceof BackgroundWidget) {
             state.background = item
         }
+    },
+    [MTS.SYN_ADD_BACKGROUND](state, item) {
+        state.background = item
     },
     [MTS.REMOVE_BACKGROUND](state) {
         state.background = new BackgroundWidget()
@@ -296,10 +301,19 @@ const actions = {
         state.canvasSize = data
     },
     addBackground({ state, commit, dispatch }, item) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "bg",
+            "item": JSON.stringify(item)
+        }))
         if (state.background) {
             dispatch('history/push')
         }
         commit(MTS.ADD_BACKGROUND, item)
+    },
+    synAddBackground({ state, commit, dispatch }, item) {
+        commit(MTS.SYN_ADD_BACKGROUND, item)
     },
     removeBackground({ commit, dispatch }) {
         dispatch('history/push')
