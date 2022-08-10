@@ -51,12 +51,14 @@ function getState() {
 
 const state = getState()
 
-var url = " ws://localhost:8090/ws"
+var cv_item = null
+
+var url = " ws://101.42.171.88:8090/ws"
+// var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
 function initWebSocket () { // 建立连接
     // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-    // var url = " ws://101.42.171.88:8090/ws"
     websock.onopen = websocketonopen;
     // this.websock.send = this.websocketsend;
     websock.onerror = websocketonerror
@@ -87,16 +89,34 @@ var isInit = false
 // vue 客户端根据返回的cmd类型处理不同的业务响应
 function websocketonmessage (e) {
     const res = JSON.parse(e.data)
-    console.log(res)
+    // console.log(res)
     if (res.op == 'add') {
         store.dispatch('poster/synAddItem', JSON.parse(res.item))
-    }
-    else if (res.op == "drag") {
+    } else if (res.op == "drag") {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
+    } else if (res.op == "update") {
+        store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
+    } else if (res.op == "copy") {
+        store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
+    } else if (res.op == "replace") {
+        store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
+    } else if (res.op == "bg") {
+        store.dispatch('poster/synAddBackground', JSON.parse(res.item))
+    } else if (res.op == "send_syn") {
+        store.dispatch('poster/synActivityPageConfig')
+    } else if (res.op == "syn") {
+        if (!isInit){
+            store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
+            isInit = true
+        }
+    } else if (res.op == "origin") {
+        store.dispatch('poster/initPageConfig')
+        isInit = true
     }
 }
 // 关闭连接时调用
 function websocketclose (e) {
+    alert('您已离线，请刷新页面或重新登陆！')
     console.log('connection closed (' + e.code + ')')
 }
 
@@ -348,7 +368,7 @@ const actions = {
     },
     // 同步添加组件
     synAddItem({ commit, dispatch, state }, item) {
-        console.log('I am synAdd.')
+        // console.log('I am synAdd.')
         const widgetCountLimit = parseInt(item._widgetCountLimit)
         if (widgetCountLimit) {
             const currentCount = (state.posterItems.filter(i => i.type === item.type)).length
@@ -427,12 +447,11 @@ const actions = {
         const preDragInfo = widgetItem.dragInfo
         const activeItems = state.activeItems
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "drag",
-            "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'drag',
+            'item': JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
         }))
-
         dragInfo = Object.assign({}, preDragInfo, dragInfo)
         if (updateSelfOnly) {
             widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
@@ -461,7 +480,7 @@ const actions = {
     },
     // 同步更新组件位置、大小等
     synUpdateDragInfo({ state }, { dragInfo, widgetId, updateSelfOnly, activeItems }) {
-        console.log('I am synDrag.')
+        // console.log('I am synDrag.')
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (!widgetItem) {
             return
@@ -583,7 +602,7 @@ const actions = {
         commit(MTS.COPY_WIDGET, item)
     },
     pasteWidget({ commit, dispatch }) {
-        console.log(JSON.stringify(cv_item))
+        // console.log(JSON.stringify(cv_item))
         websock.send(JSON.stringify({
             "type": "axure",
             "id": localStorage.getItem('axure_id'),
@@ -622,7 +641,7 @@ const actions = {
      * 参数pageConfig是从后台获取到的页面配置信息
      */
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
-      console.log(pageConfig)
+      // console.log(pageConfig)
         let recoverData = {}
         if (!pageConfig || !isPlainObject(pageConfig)) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
