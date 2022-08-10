@@ -3,7 +3,7 @@
     <div style="flex: 1">
       <el-popover
         v-model="visible_search"
-        placement="top"
+        placement="bottom"
         width="250"
         height="400"
       >
