@@ -264,7 +264,7 @@
               >
                 <template slot-scope="scope">
                   <el-button
-                    v-if="scope.row.type === 'dir' && scope.row.dir_id !== prj_root_id && scope.row.dir_parent_id !== prj_root_id"
+                    v-if="scope.row.dir_id != prj_root_id && scope.row.dir_parent_id != prj_root_id"
                     slot="reference"
                     class="morebutton"
                   ><el-dropdown trigger="click">
@@ -272,12 +272,22 @@
                       <i class="el-icon-more"></i>
                     </div>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-document-add" command="logout">
-                        <el-button type="text" style="color: blue" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
-                      </el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-folder-add" command="logout">
-                        <el-button type="text" style="color: blue" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
-                      </el-dropdown-item>
+                      <div v-if="scope.row.type === 'dir'">
+                        <el-dropdown-item icon="el-icon-document-add" command="logout">
+                          <el-button type="text" style="color: blue" @click="form_createDoc.dest_folder_id = scope.row.dir_id, dialogCreateDoc = true">创建团队文件</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-folder-add" command="logout">
+                          <el-button type="text" style="color: blue" @click="form_createDir.dest_folder_id = scope.row.dir_id, dialogCreateDir = true">创建文件夹</el-button>
+                        </el-dropdown-item>
+                        <el-dropdown-item v-if="scope.row.dir_id != root_id" icon="el-icon-folder-delete" command="logout">
+                          <el-button type="text" style="color: blue" @click="deleteDir(scope.row)">删除文件夹</el-button>
+                        </el-dropdown-item>
+                      </div>
+                      <div v-if="scope.row.type != 'dir'">
+                        <el-dropdown-item v-if="scope.row.dir_id != root_id" icon="el-icon-document-delete" command="logout">
+                          <el-button type="text" style="color: blue" @click="deleteDoc(scope.row)">删除文档</el-button>
+                        </el-dropdown-item>
+                      </div>
                     </el-dropdown-menu>
                   </el-dropdown>
                   </el-button>
@@ -504,6 +514,15 @@ export default {
         dict_name: '',
         dest_folder_id: ''
       },
+      form_deleteDir: {
+        token: getters.getToken(state),
+        folder_id: null
+      },
+      form_deleteDoc: {
+        token: getters.getToken(state),
+        doc_id: null,
+        recycle: false
+      },
       form_createDoc: {
         token: getters.getToken(state),
         doc_name: '',
@@ -610,7 +629,7 @@ export default {
         perm: null
       },
       team_name: localStorage.getItem('team_name'),
-      prj_root_id: localStorage.getItem('prj_root_id'),
+      prj_root_id: Number(localStorage.getItem('prj_root_id')),
       root_id: Number(localStorage.getItem('root_id')),
       dialogInviteVisible: false,
       dialogCreateProjectVisible: false,
@@ -671,6 +690,52 @@ export default {
     this.getDocTree()
   },
   methods: {
+    deleteDoc(item) {
+      this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.form_deleteDoc.doc_id = item.doc_id
+        this.$axios.post('/doc/deleteDoc', qs.stringify(this.form_deleteDoc))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+        this.getDocTree()
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    deleteDir(item) {
+      this.$confirm('此操作将使您删除此目录' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.form_deleteDir.folder_id = item.dir_id
+        this.$axios.post('/doc/delDir', qs.stringify(this.form_deleteDir))
+      .then(res => {
+        if (res.data.success) {
+          this.$message.success(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+        this.getDocTree()
+      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     toEditor(val) {
       if (this.value_search === 0) {
         this.toProject(val)
