@@ -100,6 +100,10 @@ function websocketonmessage (e) {
         store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
     } else if (res.op == "bg") {
         store.dispatch('poster/synAddBackground', JSON.parse(res.item))
+    } else if (res.op == "send_syn") {
+        store.dispatch('poster/synActivityPageConfig')
+    } else if (res.op == "syn") {
+        store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
     }
 }
 // 关闭连接时调用
@@ -439,7 +443,12 @@ const actions = {
             "op": "drag",
             "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
         }))
-
+        console.log(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "drag",
+            "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
+        }))
         dragInfo = Object.assign({}, preDragInfo, dragInfo)
         if (updateSelfOnly) {
             widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
@@ -668,6 +677,48 @@ const actions = {
         commit(MTS.SET_UNSAVED_STATE, false)
     },
     /**
+     * 同步当前页面配置
+     * 参数pageConfig是从后台获取到的页面配置信息
+     */
+    synUpdatePageConfig({ dispatch, state, commit }, pageConfig) {
+        let recoverData = {}
+        if (!pageConfig || !isPlainObject(pageConfig)) {
+            commit(MTS.SET_PAGE_CONFIG_ID, '')
+            recoverData = {
+                background: new BackgroundWidget(),
+                posterItems: [],
+                referenceLine: getState().referenceLine
+            }
+        } else {
+            commit(MTS.SET_PAGE_CONFIG_ID, pageConfig.pageConfigId)
+            const baseConfig = pageConfig.config
+            const posterItems = pageConfig.items
+            let background
+            try {
+                const backgroundItem = posterItems.splice(
+                    posterItems.findIndex(i => i.type === 'background'), 1
+                )[0]
+                if (backgroundItem) {
+                    background = JSON.parse(backgroundItem.config)
+                }
+            } catch (e) {
+                console.error(e)
+                background = new BackgroundWidget()
+            }
+            const defaultState = getState()
+            recoverData = {
+                background,
+                posterItems: posterItems.map(item => JSON.parse(item.config)),
+                referenceLine: baseConfig.referenceLine || defaultState.referenceLine,
+                canvasSize: baseConfig.canvasSize || defaultState.canvasSize,
+                pageTitle: pageConfig.title || ''
+            }
+        }
+      // console.log(recoverData)
+       dispatch('backup/recover', recoverData)
+       commit(MTS.SET_UNSAVED_STATE, false)
+    },
+    /**
      * 保存/新增当前的活动页配置
      */
     saveActivityPageConfig({ state, commit, rootGetters }) {
@@ -706,7 +757,7 @@ const actions = {
       // console.log(form_saveAxure)
      axios.post('/axure/update', qs.stringify(form_saveAxure))
         .then(res => {
-            // Message.success('保存成功')
+            Message.success('保存成功')
             return res
           },
           () => {
@@ -715,6 +766,45 @@ const actions = {
           }
         )
         return form_saveAxure
+    },
+    /**
+     * 同步当前的活动页配置
+     */
+    synActivityPageConfig({ state, commit, rootGetters }) {
+        const requestData = {
+            title: state.pageTitle,
+            // baseConfig
+            config: JSON.stringify({
+                referenceLine: state.referenceLine,
+                canvasSize: state.canvasSize
+            }),
+            items: [
+                {
+                    type: state.background.type,
+                    content: '',
+                    config: JSON.stringify(state.background)
+                },
+                ...state.posterItems.map((item, index) => {
+                    return {
+                        type: item.type,
+                        content: '',
+                        config: JSON.stringify({
+                            ...item,
+                            _sort: index + 1
+                        })
+                    }
+                })
+            ]
+        }
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "syn",
+            "item": JSON.stringify(requestData)
+        }))
+    },
+    nothing({ dispatch, state, commit }) {
+
     }
 }
 
