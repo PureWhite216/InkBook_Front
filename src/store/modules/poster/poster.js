@@ -53,12 +53,12 @@ const state = getState()
 
 var cv_item = null
 
-var url = " ws://localhost:8090/ws"
+var url = " ws://101.42.171.88:8090/ws"
+// var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
 function initWebSocket () { // 建立连接
     // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-    // var url = " ws://101.42.171.88:8090/ws"
     websock.onopen = websocketonopen;
     // this.websock.send = this.websocketsend;
     websock.onerror = websocketonerror;

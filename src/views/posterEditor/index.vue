@@ -277,12 +277,12 @@ export default {
           e.preventDefault()
           this.setReferenceLineVisible(!this.referenceLineOpened)
           break
-        case keyCode === UNDO_KEY && ctrl && shift:
-          this.redo()
-          break
-        case keyCode === UNDO_KEY && ctrl:
-          this.undo()
-          break
+        // case keyCode === UNDO_KEY && ctrl && shift:
+        //   this.redo()
+        //   break
+        // case keyCode === UNDO_KEY && ctrl:
+        //   this.undo()
+        //   break
         case keyCode === BACKUP_KEY && ctrl:
           e.preventDefault()
           this.backupInvoker()
