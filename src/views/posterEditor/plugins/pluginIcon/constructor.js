@@ -15,7 +15,7 @@ export default class PluginIcon extends Widget {
                   fontSize: '24px'
                 },
                 style: {
-                  color: 'black'
+                  color: '#000000'
                 }
             }
         }, config)
