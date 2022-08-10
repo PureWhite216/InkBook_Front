@@ -139,9 +139,10 @@
         <el-button @click="dialogPageVisible = false; form_createAxure.axure_name = '' ">取消</el-button>
         <el-button @click="createAxure(), form_createAxure.axure_name = '',dialogPageVisible = false">空模板创建</el-button>
       </div>
-      <el-row>
-        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }">
+
+      <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
+        <el-col v-for="(o, index) in 4" :key="o" :span="12">
+          <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
             <div style="padding: 14px;">
               <span v-if="index === 0">登录模板</span>
               <div class="bottom clearfix">
