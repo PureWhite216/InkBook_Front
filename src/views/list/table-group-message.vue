@@ -415,6 +415,27 @@
     </TableBody>
     <TableBody ref="tableBody" class="rightside">
       <template>
+        <el-popover
+          v-model="visible_search"
+          placement="top"
+          width="250"
+          height="400"
+        >
+          <el-select v-model="value_search" placeholder="请选择" @change="getSearchList">
+            <el-option
+              v-for="item in options_search"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-table v-loading="loading" :data="searchList" height="400" @row-dblclick="toEditor">
+            <el-table-column v-if="value_search === 0" property="project_name" label="名称" align="left" />
+            <el-table-column v-if="value_search === 1" property="doc_name" label="名称" align="left" />
+            <el-table-column v-if="value_search === 2" property="axure_name" label="名称" align="left" />
+          </el-table>
+          <el-input slot="reference" v-model="keyword_search" placeholder="搜索" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="visible_search = true,getSearchList()" />
+        </el-popover>
         <div class="rightsidefont">
           About
         </div>
@@ -469,8 +490,10 @@ export default {
   data() {
     return {
       expands: ['2'],
+      keyword_search: null,
       tableData: [],
       visible_setPerm: true,
+      visible_search: false,
       loading: false,
       dialogRenameVisible: false,
       dialogPerm: false,
@@ -597,6 +620,10 @@ export default {
       projectList: [],
       deprecatedList: [],
       deleteMemberList: [],
+      searchList: [],
+      searchProjectList: [],
+      searchDocList: [],
+      searchAxureList: [],
       userModel: {
         address: '',
         avatar: '',
@@ -619,6 +646,21 @@ export default {
           label: '成员'
         }
       ],
+      options_search: [
+        {
+          value: 0,
+          label: '项目'
+        },
+        {
+          value: 1,
+          label: '文档'
+        },
+        {
+          value: 2,
+          label: '原型'
+        }
+      ],
+      value_search: null,
       value: ''
     }
   },
@@ -629,6 +671,171 @@ export default {
     this.getDocTree()
   },
   methods: {
+    toEditor(val) {
+      if (this.value_search === 0) {
+        this.toProject(val)
+      } else if (this.value_search === 1) {
+        this.toDocEditor(val)
+      } else if (this.value_search === 2) {
+        this.toAxureEditor(val)
+      }
+    },
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      localStorage.setItem('Token', getters.getToken(state))
+      this.$router.push('/posterEditor')
+    },
+    getSearchList() {
+      if (this.value_search === 0) {
+        this.getSearchProjectList()
+        this.searchList = this.searchProjectList
+      } else if (this.value_search === 1) {
+        this.getSearchDocList()
+        this.searchList = this.searchDocList
+      } else if (this.value_search === 2) {
+        this.getSearchAxureList()
+        this.searchList = this.searchAxureList
+      }
+    },
+    getSearchProjectList() {
+      this.loading = true
+      this.searchProjectList = []
+      this.$axios.get('/project/search', {
+              params: {
+                token: getters.getToken(state),
+                user_id: getters.getUserId(state),
+                team_id: localStorage.getItem('team_id'),
+                keyword: this.keyword_search
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const projects = {
+                project_id: 0,
+                team_id: 0,
+                project_name: '',
+                project_info: ''
+              }
+              projects.project_id = res.data.data[i].project_id
+              projects.team_id = res.data.data[i].team_id
+              projects.project_name = res.data.data[i].project_name
+              projects.project_info = res.data.data[i].project_info
+              if (!res.data.data[i].deprecated) { this.searchProjectList.push(projects) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
+    getSearchDocList() {
+      this.loading = true
+      this.searchDocList = []
+      this.$axios.get('/doc/searchDoc', {
+              params: {
+                token: getters.getToken(state),
+                keyword: this.keyword_search,
+                team_id: localStorage.getItem('team_id')
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const docs = {
+                doc_name: null,
+                last_edit_time: null,
+                project_id: null,
+                doc_description: null,
+                creator_id: null,
+                doc_content: null,
+                creator_name: null,
+                doc_id: null,
+                is_favorite: null,
+                project_name: null,
+                type: null
+              }
+              docs.doc_name = res.data.data[i].doc_name
+              docs.last_edit_time = res.data.data[i].last_edit_time
+              docs.project_id = res.data.data[i].project_id
+              docs.doc_description = res.data.data[i].doc_description
+              docs.creator_id = res.data.data[i].creator_id
+              docs.doc_content = res.data.data[i].doc_content
+              docs.creator_name = res.data.data[i].creator_name
+              docs.doc_id = res.data.data[i].doc_id
+              docs.is_favorite = res.data.data[i].is_favorite
+              docs.project_name = res.data.data[i].project_name
+              docs.type = res.data.data[i].type
+              let flag = 0
+              for (let i = 0; i < this.searchDocList.length; i++) {
+                if (this.searchDocList[i].doc_id === docs.doc_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.searchDocList.push(docs) }
+              // this.$message.success(res.data.message)
+            }
+              } else {
+                this.$message.error(res.data.message)
+              }
+        })
+        this.loading = false
+    },
+    getSearchAxureList() {
+      this.loading = true
+      this.searchAxureList = []
+      this.$axios.get('/axure/searchAxure', {
+              params: {
+                token: getters.getToken(state),
+                keyword: this.keyword_search,
+                team_id: localStorage.getItem('team_id')
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null,
+                last_edit: null,
+                create_user: null,
+                isFavorite: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
+              axures.isFavorite = res.data.data[i].isFavorite === 1
+              let flag = 0
+              for (let i = 0; i < this.searchAxureList.length; i++) {
+                if (this.searchAxureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.searchAxureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     CreateDoc() {
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_createDoc))
       .then(res => {

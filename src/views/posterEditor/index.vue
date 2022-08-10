@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="main-container" style="font-family: 等线">
     <el-row style="background: #2f2f2f; min-height: 40px">
       <el-col :span="8">
         <el-button class="backbutton" style="margin-left: 20px; margin-top: 3px" @click="back">
@@ -17,6 +17,47 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
+      <el-form :model="form_createAxure">
+        <el-form-item label="原型名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="原型简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_createAxure.axure_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPageVisible = false; form_createAxure.axure_name = '' ">取消</el-button>
+        <el-button @click="createAxure(), form_createAxure.axure_name = '',dialogPageVisible = false">空模板创建</el-button>
+      </div>
+      <el-row>
+        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
+          <el-card :body-style="{ padding: '0px' }">
+            <div style="padding: 14px;">
+              <span v-if="index === 0">登录模板</span>
+              <div class="bottom clearfix">
+                <el-button type="text" class="button" @click="flag=index+1, toPreview()">预览</el-button>
+                <el-button type="text" class="button" @click="form_createAxure.axure_template_id = index + 1, createAxure(), dialogPageVisible = false">创建</el-button>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <el-dialog title="修改原型信息" :visible.sync="dialogUpdateAxureInfoVisible">
+      <el-form :model="form_updateAxureInfo">
+        <el-form-item label="原型新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateAxureInfo.axure_name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="原型新简介（可不填）" :label-width="formLabelWidth">
+          <el-input v-model="form_updateAxureInfo.axure_info" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateAxureInfoVisible = false, form_updateAxureInfo.axure_name = '',form_updateAxureInfo.axure_info = ''">取 消</el-button>
+        <el-button @click="updateAxureInfo(), dialogUpdateAxureInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <div class="poster-editor" :class="{ 'init-loading': initLoading }">
       <div class="base">
         <!-- 左侧添加组件栏 -->
@@ -33,23 +74,46 @@
         <layer-panel v-show="layerPanelOpened" />
       </transition>
     </div>
-    <div id="drag" v-drag class="drag-box">
-      <div class="boxhead">
-        <i class="el-icon-menu"></i>
-        <p>项目原型</p>
+    <div id="drag" v-drag:#drag class="drag-box">
+      <div>
+        <el-button icon="el-icon-circle-plus-outline" circle style="float:right" @click="dialogPageVisible = true" />
       </div>
       <el-table
         ref="table"
         v-loading="loading"
         :data="axureList"
-        style="margin-top:50px"
+        style="margin-top:0px"
+        header-cell-style="color: #000000"
         @row-dblclick="toAxureEditor"
       >
         <el-table-column
           align="left"
-          label="原型列表"
+          label="页面列表"
           prop="axure_name"
         />
+        <el-table-column
+          align="center"
+          label="操作"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-dropdown trigger="click" @command="onCommad">
+              <div class="action-wrapper">
+                <span class="nick-name el-dropdown-link">
+                  <i class="el-icon-more"></i>
+                </span>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                  <el-button type="text" @click="form_updateAxureInfo.axure_id = scope.row.axure_id, dialogUpdateAxureInfoVisible = true">重命名</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                  <el-button type="text" @click="deleteAxure(scope.row)">删除原型</el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -66,6 +130,9 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
+import { getters } from '@/store/modules/user.js'
+import { state } from '@/store/modules/user.js'
+import { drag } from 'poster/poster.directives'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -84,36 +151,10 @@ export default {
     extendSideBar,
     layerPanel
   },
-  directives: {
-    drag: {
-      // 指令的定义
-      bind: function(el) {
-        const oDiv = el // 获取当前元素
-        oDiv.onmousedown = (e) => {
-          console.log('onmousedown')
-          // 算出鼠标相对元素的位置
-          const disX = e.clientX - oDiv.offsetLeft
-          const disY = e.clientY - oDiv.offsetTop
-
-          document.onmousemove = (e) => {
-            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-            const left = e.clientX - disX
-            const top = e.clientY - disY
-
-            oDiv.style.left = left + 'px'
-            oDiv.style.top = top + 'px'
-          }
-
-          document.onmouseup = (e) => {
-            document.onmousemove = null
-            document.onmouseup = null
-          }
-        }
-      }
-    }
-  },
+  directives: { drag },
   data() {
     return {
+      flag: '',
       form_update: {
         token: localStorage.getItem('Token'),
         axure_id: localStorage.getItem('axure_id')
@@ -124,7 +165,26 @@ export default {
         config: '',
         items: ''
       },
+      form_createAxure: {
+        token: getters.getToken(state),
+        axure_name: null,
+        axure_info: null,
+        project_id: localStorage.getItem('project_id'),
+        axure_template_id: 0
+      },
+      form_updateAxureInfo: {
+        token: getters.getToken(state),
+        axure_id: null,
+        axure_name: null,
+        axure_info: null
+      },
+      form_deleteAxure: {
+        token: getters.getToken(state),
+        axure_id: null
+      },
       initLoading: false,
+      dialogPageVisible: false,
+      dialogUpdateAxureInfoVisible: false,
       axureList: [],
       loading: false,
       form_getAxureList: {
@@ -147,7 +207,7 @@ export default {
   watch: {
     pageConfig: {
       handle (newName, oldName) {
-        console.log("改改改")
+        console.log('改改改')
       },
       deep: true
     }
@@ -182,7 +242,7 @@ export default {
     document.addEventListener('keydown', this.keydownHandle)
     this.body = document.body
     this.mainPanelRef = this.$refs.main.$refs.mainPanel
-    //初始化websocket
+    // 初始化websocket
     // this.initWebSocket()
     // this.$nextTick(() => {
     //   setInterval(this.save, 1000)
@@ -196,6 +256,34 @@ export default {
     // this.websocketclose();
   },
   methods: {
+    toPreview() {
+      if (this.flag === 1) {
+        window.open('http://101.42.171.88:8090/file/1/2022-08-10_17:50:41.606_dcc3626135d50ed9d2c3c52a7a8678c.jpg')
+      }
+    },
+    createAxure() {
+      this.$axios.post('/axure/create', qs.stringify(this.form_createAxure))
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getAxureList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    updateAxureInfo() {
+      this.$axios.post('/axure/updateInfo', qs.stringify(this.form_updateAxureInfo))
+        .then((res) => {
+          // console.log(5)
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getAxureList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     getAxureList() {
       this.loading = true
       this.axureList = []
@@ -241,6 +329,30 @@ export default {
            this.loading = false
          })
     },
+    deleteAxure(item) {
+      this.$confirm('此操作将使您删除此原型' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.form_deleteAxure.axure_id = item.axure_id
+        this.$axios.post('/axure/delete', qs.stringify(this.form_deleteAxure))
+          .then((res) => {
+            // console.log(5)
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+              this.getAxureList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     toAxureEditor(val) {
       localStorage.setItem('axure_id', val.axure_id)
       localStorage.setItem('axure_name', val.axure_name)
@@ -265,8 +377,8 @@ export default {
       killAutoSaveTask: 'backup/killAutoSaveTask',
       backupInvoker: 'backup/invoker'
     }),
-    save() {   
-      /*     
+    save() {
+      /*
       const requestData = {
             items: [
                 {
@@ -287,14 +399,14 @@ export default {
             ]
         }
         */
-      console.log("test>>>")
+      console.log('test>>>')
       // console.log(JSON.stringify(requestData))
       // console.log(poster.getters.posterItems)
-      console.log("<<<test")
+      console.log('<<<test')
       const res = this.$store.dispatch('poster/saveActivityPageConfig', null)
       res.then(r => {
         this.websock.send(JSON.stringify({
-          type: "axure",
+          type: 'axure',
           id: localStorage.getItem('axure_id'),
           config: r.config,
           items: r.items,
@@ -315,6 +427,7 @@ export default {
     //           this.pageConfig.items.JSON.parse(res.data.data.items)
     //       }
     //       })
+    //
     //         console.log(this.pageConfig)
     // },
     nothing() {
@@ -397,8 +510,7 @@ export default {
         default:
           break
       }
-    }/*,
-    initWebSocket: function () { // 建立连接
+    }, /*,    initWebSocket: function () { // 建立连接
         // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
         // var url = " ws://101.42.171.88:8090/ws"
         var url = " ws://localhost:8090/ws"
@@ -443,7 +555,7 @@ export default {
     // 关闭连接时调用
     websocketclose: function (e) {
       console.log("connection closed (" + e.code + ")");
-    }*/,
+    }*/
     sendMsg() {
       // this.websock.send(JSON.stringify({
       //   type: "axure",
@@ -464,11 +576,11 @@ export default {
 }
 .drag-box {
   position: absolute;
-  top: 100px;
-  left: 40px;
-  width: 240px;
-  height: 600px;
-  background: #ffffff;
+  top: 45%;
+  left: 2.8%;
+  width: 195px;
+  height: 400px;
+  background: #ececec;
   border-radius: 5px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, .15);
 }

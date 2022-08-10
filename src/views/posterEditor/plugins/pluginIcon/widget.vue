@@ -1,5 +1,5 @@
 <template>
-  <div class="plugin-a">
+  <div class="plugin-icon">
     <div :style="wState.size">
       <i :class="wState.class" :style="wState.style"></i>
     </div>
@@ -39,15 +39,15 @@ export default {
   },
   created() {
     this.updateDragInfo({
-      w: 30,
-      h: 30,
+      w: 24,
+      h: 24,
       x: 0,
       y: 200
     })
   },
   methods: {
     executeContextCommand(command) {
-      this.$message.success('插件测试命令')
+      this.$message.success('Icon')
     },
     getMenuList() {
       return [
@@ -61,7 +61,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.plugin-a {
+.plugin-icon {
   width: 100%;
   height: 100%;
   color: #000;

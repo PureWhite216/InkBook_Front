@@ -51,19 +51,17 @@ function getState() {
 
 const state = getState()
 
-var cv_item = null
-
-var url = " ws://101.42.171.88:8090/ws"
-// var url = " ws://localhost:8090/ws"
+var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
 function initWebSocket () { // 建立连接
     // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
+    // var url = " ws://101.42.171.88:8090/ws"
     websock.onopen = websocketonopen;
     // this.websock.send = this.websocketsend;
-    websock.onerror = websocketonerror;
-    websock.onmessage = websocketonmessage;
-    websock.onclose = websocketclose;
+    websock.onerror = websocketonerror
+    websock.onmessage = websocketonmessage
+    websock.onclose = websocketclose
 }
 
 initWebSocket()
@@ -73,14 +71,14 @@ function websocketonopen () {
     websock.send(JSON.stringify({
     token: gts.getters.getToken(sta.state),
     user_id: gts.getters.getUserId(sta.state),
-    type: "axure",
+    type: 'axure',
     id: localStorage.getItem('axure_id')
     }))
-    console.log("WebSocket连接成功");
+    console.log('WebSocket连接成功')
 }
 // 发生错误时调用
 function websocketonerror () {
-    console.log("WebSocket连接发生错误");
+    console.log('WebSocket连接发生错误')
 }
 
 var isInit = false
@@ -90,33 +88,16 @@ var isInit = false
 function websocketonmessage (e) {
     const res = JSON.parse(e.data)
     console.log(res)
-    if (res.op == "add") {
+    if (res.op == 'add') {
         store.dispatch('poster/synAddItem', JSON.parse(res.item))
-    } else if (res.op == "drag") {
+    }
+    else if (res.op == "drag") {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
-    } else if (res.op == "update") {
-        store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
-    } else if (res.op == "copy") {
-        store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
-    } else if (res.op == "replace") {
-        store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
-    } else if (res.op == "bg") {
-        store.dispatch('poster/synAddBackground', JSON.parse(res.item))
-    } else if (res.op == "send_syn") {
-        store.dispatch('poster/synActivityPageConfig')
-    } else if (res.op == "syn") {
-        if (!isInit){
-            store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
-            isInit = true
-        }
-    } else if (res.op == "origin") {
-        store.dispatch('poster/initPageConfig')
-        isInit = true
     }
 }
 // 关闭连接时调用
 function websocketclose (e) {
-    console.log("connection closed (" + e.code + ")");
+    console.log('connection closed (' + e.code + ')')
 }
 
 // window.setInterval(print, 1000)
@@ -124,7 +105,7 @@ function websocketclose (e) {
 function print(state) {
     console.log(state)
 }
-  
+
 const getters = {
     posterItemIds(state, getters) {
         return state.posterItems.map(item => item.id)
@@ -344,10 +325,10 @@ const actions = {
     },
     addItem({ commit, dispatch, state }, item) {
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "add",
-            "item": JSON.stringify(item)
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'add',
+            'item': JSON.stringify(item)
         }))
         const widgetCountLimit = parseInt(item._widgetCountLimit)
         if (widgetCountLimit) {
@@ -367,7 +348,7 @@ const actions = {
     },
     // 同步添加组件
     synAddItem({ commit, dispatch, state }, item) {
-        console.log("I am synAdd.")
+        console.log('I am synAdd.')
         const widgetCountLimit = parseInt(item._widgetCountLimit)
         if (widgetCountLimit) {
             const currentCount = (state.posterItems.filter(i => i.type === item.type)).length
@@ -451,12 +432,7 @@ const actions = {
             "op": "drag",
             "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
         }))
-        console.log(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "drag",
-            "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
-        }))
+
         dragInfo = Object.assign({}, preDragInfo, dragInfo)
         if (updateSelfOnly) {
             widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
@@ -484,8 +460,8 @@ const actions = {
         // }
     },
     // 同步更新组件位置、大小等
-    synUpdateDragInfo({ state }, { dragInfo, widgetId, updateSelfOnly, activeItems}) {
-        console.log("I am synDrag.")
+    synUpdateDragInfo({ state }, { dragInfo, widgetId, updateSelfOnly, activeItems }) {
+        console.log('I am synDrag.')
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (!widgetItem) {
             return

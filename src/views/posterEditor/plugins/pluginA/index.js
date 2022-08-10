@@ -8,7 +8,7 @@ import extendSideBar from './extendSideBar'
 export default {
     leftSide: {
         icon: 'el-icon-news',
-        name: 'button',
+        name: '按钮',
         component: leftSide
     },
     widget: {
@@ -23,7 +23,7 @@ export default {
     },
     extendSideBar: {
         icon: 'el-icon-star-off',
-        name: '插件测试',
+        name: '按钮',
         component: extendSideBar
     }
 }

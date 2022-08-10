@@ -5,17 +5,20 @@ export default class PluginA extends Widget {
     constructor(config) {
         config = _merge({
             type: 'pluginA',
-            typeLabel: '插件测试',
+            typeLabel: '按钮',
             componentName: 'plugin-pluginA',
             icon: 'el-icon-news',
             replicable: false,
             wState: {
-                text: 'button',
+                text: 'Click',
                 style: {
-                  color: 'black',
-                  background: 'white',
+                  color: '#000000',
+                  background: '#ffffff',
                   width: '80px',
-                  height: '32px'
+                  height: '32px',
+                  border: 0,
+                  borderColor: '#000000',
+                  borderRadius: '5px'
                 }
             }
         }, config)

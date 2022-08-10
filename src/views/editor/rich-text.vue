@@ -41,7 +41,7 @@
     </el-dialog>
     <el-card :body-style="{padding: '0'}" style="max-width: 950px; margin: auto">
       <template #header>
-        <el-link :underline="false">文章标题</el-link>
+        <p style="color: black; font-family: 等线; font-size: 20px; font-weight: bold">Title</p>
       </template>
       <el-input
         v-model="title"
@@ -56,7 +56,6 @@
     >
       <template #header>
         <div class="flex">
-          <el-link :underline="false">文章内容</el-link>
           <div class="flex-sub"></div>
           <!--          <el-button-->
           <!--            style="margin-inline:10px; background: #49aaef; color: white; border: 0"-->
@@ -92,10 +91,16 @@
             导出</el-button>
           <el-button
             style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
-            @click="getHtmlContent"
+            @click="openPreview"
           >
             <i class="el-icon-share"></i>
-            分享</el-button>
+            生成预览</el-button>
+          <el-button
+            style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
+            @click="closePreview"
+          >
+            <i class="el-icon-s-release"></i>
+            关闭预览</el-button>
         </div>
       </template>
       <RichTextEditor
@@ -105,7 +110,7 @@
         :height="1000"
       />
     </el-card>
-    <div id="drag" v-drag class="drag-box">
+    <div id="drag" v-drag:#drag class="drag-box">
       <div class="boxhead">
         <i class="el-icon-menu"></i>
         <p>团队文档</p>
@@ -149,41 +154,16 @@ import { getters } from '@/store/modules/user.js'
 import { state } from '@/store/modules/user.js'
 import qs from 'qs'
 import store from '@/layouts/store'
+import { drag } from 'poster/poster.directives'
 
 export default {
   name: 'RichText',
   components: { RichTextEditor },
-  directives: {
-    drag: {
-      // 指令的定义
-      bind: function(el) {
-        const oDiv = el // 获取当前元素
-        oDiv.onmousedown = (e) => {
-          console.log('onmousedown')
-          // 算出鼠标相对元素的位置
-          const disX = e.clientX - oDiv.offsetLeft
-          const disY = e.clientY - oDiv.offsetTop
-
-          document.onmousemove = (e) => {
-            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-            const left = e.clientX - disX
-            const top = e.clientY - disY
-
-            oDiv.style.left = left + 'px'
-            oDiv.style.top = top + 'px'
-          }
-
-          document.onmouseup = (e) => {
-            document.onmousemove = null
-            document.onmouseup = null
-          }
-        }
-      }
-    }
-  },
+  directives: { drag },
   data() {
     return {
-      is_favorite: localStorage.getItem('is_favorite'),
+      url_preview: null,
+      is_favorite: localStorage.getItem('is_favorite') === 'true',
       form_likeDoc: {
         token: getters.getToken(state),
         doc_id: null,
@@ -194,6 +174,15 @@ export default {
       dialogCreateDir: false,
       prj_root_id: localStorage.getItem('prj_root_id'),
       dialogVisible_share: false,
+      form_openPreview: {
+        token: getters.getToken(state),
+        doc_id: localStorage.getItem('doc_id'),
+        html_code: null
+      },
+      form_closePreview: {
+        token: getters.getToken(state),
+        doc_id: localStorage.getItem('doc_id')
+      },
       form_createDoc: {
         token: getters.getToken(state),
         doc_name: '',
@@ -318,6 +307,30 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    openPreview() {
+      this.getHtmlContent()
+      this.form_openPreview.html_code = this.htmlContent
+      this.$axios.post('/doc/uploadDoc', qs.stringify(this.form_openPreview))
+        .then(res => {
+          if (res.data.success) {
+            this.url_preview = res.data.data[0].url
+            alert('您的分享链接是' + this.url_preview)
+            localStorage.setItem('refresh', '1')
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    closePreview() {
+      this.$axios.post('/doc/disableSharing', qs.stringify(this.form_closePreview))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     getModel() {
       this.$axios.get('/doc/getTemplateList', {
         params: {
@@ -590,6 +603,7 @@ export default {
     getHtmlContent() {
       this.htmlContent = this.$refs.richTextEditor.getHtmlContent()
       console.log(this.htmlContent)
+      // this.$message.success(this.htmlContent)
     },
     getJsonContent() {
       console.log(localStorage.getItem('flag'))

@@ -10,6 +10,7 @@ import '@/components/common'
 import LayoutStore from '@/layouts/index'
 import { resetRouter } from './router/index'
 import Cookies from 'js-cookie'
+import 'element-theme-chalk'
 
 import VueAddition from '@/addition'
 import PortalVue from 'portal-vue'

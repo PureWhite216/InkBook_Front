@@ -94,7 +94,7 @@
       </template>
     </TableHeader>
 
-    <el-dialog title="创建文档" :visible.sync="dialogWordVisible">
+    <el-dialog title="创建文档" :visible.sync="dialogWordVisible" style="width:120%">
       <el-form :model="form_word">
         <el-form-item label="文档名称" :label-width="formLabelWidth">
           <el-input v-model="form_word.doc_name" autocomplete="off" />
@@ -104,29 +104,30 @@
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
         <el-button @click="dialogWordVisible = false; createWord()">无模板创建</el-button>
       </div>
-      <el-row>
-        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }">
+      <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
+        <el-col v-for="(o, index) in 4" :key="o" :span="12">
+          <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
             <img v-if="index === 0" src="../../assets/id_4.jpg" class="image" />
             <img v-if="index === 1" src="../../assets/id_5.jpg" class="image" />
             <img v-if="index === 2" src="../../assets/id_6.jpg" class="image" />
             <img v-if="index === 3" src="../../assets/id_7.jpg" class="image" />
-            <div style="padding: 14px;">
+            <div style="padding: 0px;">
               <span v-if="index === 0">会议纪要</span>
               <span v-if="index === 1">项目工作汇报</span>
               <span v-if="index === 2">个人学习计划</span>
               <span v-if="index === 3">年度工作总结</span>
-              <div class="bottom clearfix">
+              <div>
                 <el-button type="text" class="button" @click="dialogWordVisible = false; form_word.template_id = index; createWord()">创建</el-button>
               </div>
             </div>
           </el-card>
+
         </el-col>
       </el-row>
     </el-dialog>
 
     <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
-      <el-form :model="form_page">
+      <el-form :model="form_createAxure">
         <el-form-item label="原型名称" :label-width="formLabelWidth">
           <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
         </el-form-item>
@@ -135,25 +136,24 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogPageVisible = false; form_page.page_name = '' ">取 消</el-button>
-        <el-button @click="createAxure(), dialogPageVisible = false">确 定</el-button>
+        <el-button @click="dialogPageVisible = false; form_createAxure.axure_name = '' ">取消</el-button>
+        <el-button @click="createAxure(), form_createAxure.axure_name = '',dialogPageVisible = false">空模板创建</el-button>
       </div>
-      <el-row>
-        <el-col v-for="(o, index) in 2" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }">
-            <img src="../../assets/work_logo.png" class="image" />
+
+      <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
+        <el-col v-for="(o, index) in 4" :key="o" :span="12">
+          <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
             <div style="padding: 14px;">
-              <span>模板{{ index }}</span>
+              <span v-if="index === 0">登录模板</span>
               <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button">预览</el-button>
+                <el-button type="text" class="button" @click="flag=index+1, toPreview()">预览</el-button>
+                <el-button type="text" class="button" @click="form_createAxure.axure_template_id = index + 1, createAxure(), dialogPageVisible = false">创建</el-button>
               </div>
             </div>
           </el-card>
         </el-col>
       </el-row>
     </el-dialog>
-
     <el-dialog title="修改项目信息" :visible.sync="dialogUpdateProjectVisible">
       <el-form :model="form_updateProject">
         <el-form-item label="项目新名称" :label-width="formLabelWidth">
@@ -185,7 +185,7 @@
     </el-dialog>
 
     <el-dialog title="修改原型信息" :visible.sync="dialogUpdateAxureInfoVisible">
-      <el-form :model="form_updateDocInfo">
+      <el-form :model="form_updateAxureInfo">
         <el-form-item label="原型新名称" :label-width="formLabelWidth">
           <el-input v-model="form_updateAxureInfo.axure_name" autocomplete="off" />
         </el-form-item>
@@ -194,7 +194,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogUpdateAxureInfoVisible = false">取 消</el-button>
+        <el-button @click="dialogUpdateAxureInfoVisible = false, form_updateAxureInfo.axure_name = '', form_updateAxureInfo.axure_info = ''">取 消</el-button>
         <el-button @click="updateAxureInfo(), dialogUpdateAxureInfoVisible = false">确 定</el-button>
       </div>
     </el-dialog>
@@ -395,6 +395,7 @@ export default {
     return {
       visible_setPerm: true,
       loading: false,
+      flag: '',
       form_likeAxure: {
         token: getters.getToken(state),
         axure_id: null
@@ -418,7 +419,8 @@ export default {
         token: getters.getToken(state),
         axure_name: null,
         axure_info: null,
-        project_id: localStorage.getItem('project_id')
+        project_id: localStorage.getItem('project_id'),
+        axure_template_id: 0
       },
       form_getAxureList: {
         token: getters.getToken(state),
@@ -532,12 +534,30 @@ export default {
     }
   },
   created() {
+    this.getModel()
     this.getDocList()
     this.getAxureList()
     localStorage.setItem('flag', 'user')
     localStorage.setItem('enable', 'true')
   },
   methods: {
+    toPreview() {
+      if (this.flag === 1) {
+        window.open('http://101.42.171.88:8090/file/1/2022-08-10_17:50:41.606_dcc3626135d50ed9d2c3c52a7a8678c.jpg')
+      }
+    },
+    getModel() {
+      this.$axios.get('/axure/getAxureTemplateList', {
+        params: {
+          token: getters.getToken(state)
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          console.log(res.data.data)
+        }
+      })
+    },
     likeAxure(item) {
       this.form_likeAxure.axure_id = item.axure_id
       item.isFavorite = true
@@ -834,9 +854,6 @@ export default {
       // window.open('https://www.draw.io/index.html', '_blank')
       // window.open = 'https://www.draw.io/index.html'
     },
-    CreatePage() {
-      this.$message.error('还没写接口哪！')
-    },
     setPerm(item) {
       this.form_setPerm.member_id = item.id
       this.$axios.post('/team/set_perm', qs.stringify(this.form_setPerm))
@@ -1047,7 +1064,7 @@ export default {
   margin: 10px;
 }
 .image{
-  width: 300px;
+  width: 250px;
   height: 300px;
 }
 </style>

@@ -5,7 +5,7 @@ export default class PluginIcon extends Widget {
     constructor(config) {
         config = _merge({
             type: 'pluginIcon',
-            typeLabel: '插件测试',
+            typeLabel: 'Icon',
             componentName: 'plugin-pluginIcon',
             icon: 'el-icon-news',
             replicable: false,
@@ -15,7 +15,7 @@ export default class PluginIcon extends Widget {
                   fontSize: '24px'
                 },
                 style: {
-                  color: 'black'
+                  color: '#000000'
                 }
             }
         }, config)

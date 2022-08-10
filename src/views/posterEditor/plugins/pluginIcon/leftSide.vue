@@ -1,18 +1,13 @@
 <template>
-  <div style="height: 250px; width: 150px; margin-top: 50px; margin-left: 20px; display: flex; flex-direction: column">
+  <div style="height: 250px; width: 150px; margin-top: 10px; margin-left: 20px">
     <i
       v-for="(item, index) in iconList"
       :key="index"
       :style="item.style"
       :class="item.class"
-      style="margin: auto"
+      style="margin-inline: 10px; margin-top: 10px"
       @click="add(item)"
     ></i>
-<!--    <el-button-->
-<!--      size="large"-->
-<!--      type="plain"-->
-<!--      @click="add(null)"-->
-<!--    >添加图标</el-button>-->
   </div>
 </template>
 
@@ -23,76 +18,136 @@ export default {
     return {
       iconList: [
         {
-          class: 'el-icon-setting',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-back'
         },
         {
-          class: 'el-icon-plus',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-bottom'
         },
         {
-          class: 'el-icon-right',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-top'
         },
         {
-          class: 'el-icon-folder',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-right'
         },
         {
-          class: 'el-icon-search',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-star-on'
         },
         {
-          class: 'el-icon-document',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-star-off'
         },
         {
-          class: 'el-icon-delete',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-info'
         },
         {
-          class: 'el-icon-user',
-          size: {
-            fontSize: '24px'
-          },
-          style: {
-            color: 'black'
-          }
+          class: 'el-icon-more'
+        },
+        {
+          class: 'el-icon-circle-plus-outline'
+        },
+        {
+          class: 'el-icon-remove-outline'
+        },
+        {
+          class: 'el-icon-circle-close'
+        },
+        {
+          class: 'el-icon-more-outline'
+        },
+        {
+          class: 'el-icon-setting'
+        },
+        {
+          class: 'el-icon-plus'
+        },
+        {
+          class: 'el-icon-arrow-down'
+        },
+        {
+          class: 'el-icon-folder'
+        },
+        {
+          class: 'el-icon-search'
+        },
+        {
+          class: 'el-icon-document'
+        },
+        {
+          class: 'el-icon-delete'
+        },
+        {
+          class: 'el-icon-user'
+        },
+        {
+          class: 'el-icon-picture'
+        },
+        {
+          class: 'el-icon-upload'
+        },
+        {
+          class: 'el-icon-bell'
+        },
+        {
+          class: 'el-icon-s-fold'
+        },
+        {
+          class: 'el-icon-camera'
+        },
+        {
+          class: 'el-icon-s-comment'
+        },
+        {
+          class: 'el-icon-menu'
+        },
+        {
+          class: 'el-icon-d-arrow-right'
+        },
+        {
+          class: 'el-icon-refresh-left'
+        },
+        {
+          class: 'el-icon-date'
+        },
+        {
+          class: 'el-icon-takeaway-box'
+        },
+        {
+          class: 'el-icon-paperclip'
+        },
+        {
+          class: 'el-icon-printer'
+        },
+        {
+          class: 'el-icon-headset'
+        },
+        {
+          class: 'el-icon-reading'
+        },
+        {
+          class: 'el-icon-mouse'
+        },
+        {
+          class: 'el-icon-pie-chart'
+        },
+        {
+          class: 'el-icon-house'
+        },
+        {
+          class: 'el-icon-link'
+        },
+        {
+          class: 'el-icon-position'
+        },
+        {
+          class: 'el-icon-microphone'
+        },
+        {
+          class: 'el-icon-alarm-clock'
+        },
+        {
+          class: 'el-icon-water-cup'
+        },
+        {
+          class: 'el-icon-apple'
         }
       ]
     }

@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     executeContextCommand(command) {
-      this.$message.success('插件测试命令')
+      this.$message.success('Input')
     },
     getMenuList() {
       return [
