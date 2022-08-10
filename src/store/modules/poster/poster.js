@@ -112,6 +112,9 @@ function websocketonmessage (e) {
     } else if (res.op == "origin") {
         store.dispatch('poster/initPageConfig')
         isInit = true
+    } else if (res.op == "canvas") {
+        store.dispatch('poster/synSetCanvasSize', JSON.parse(res.item))
+        store.dispatch('poster/seekBackgroundSize')
     }
 }
 // 关闭连接时调用
@@ -310,6 +313,16 @@ const actions = {
         commit(MTS.SET_UNSAVED_STATE, flag)
     },
     setCanvasSize({ state, dispatch }, data) {
+        // dispatch('history/push')
+        websock.send(JSON.stringify({
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'canvas',
+            'item': JSON.stringify(data)
+        }))
+        state.canvasSize = data
+    },
+    synSetCanvasSize({ state, dispatch }, data) {
         // dispatch('history/push')
         state.canvasSize = data
     },
