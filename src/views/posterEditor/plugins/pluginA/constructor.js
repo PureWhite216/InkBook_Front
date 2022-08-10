@@ -5,7 +5,7 @@ export default class PluginA extends Widget {
     constructor(config) {
         config = _merge({
             type: 'pluginA',
-            typeLabel: '插件测试',
+            typeLabel: '按钮',
             componentName: 'plugin-pluginA',
             icon: 'el-icon-news',
             replicable: false,
