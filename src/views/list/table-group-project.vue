@@ -94,19 +94,19 @@
       </template>
     </TableHeader>
 
-    <el-dialog title="创建文档" :visible.sync="dialogWordVisible" style="width:120%">
+    <el-dialog title="创建文档" :visible.sync="dialogWordVisible" style="width:100%; font-family: 等线">
       <el-form :model="form_word">
-        <el-form-item label="文档名称" :label-width="formLabelWidth">
+        <el-form-item label="文档名称">
           <el-input v-model="form_word.doc_name" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
-        <el-button @click="dialogWordVisible = false; createWord()">无模板创建</el-button>
+        <el-button @click="dialogWordVisible = false; createWord()">创建空白文档</el-button>
       </div>
-      <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
+      <el-row :gutter="10" style="display: flex; overflow: scroll">
         <el-col v-for="(o, index) in 4" :key="o" :span="12">
-          <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
+          <el-card :body-style="{ padding: '0px' }" style="width: 300px; text-align: center; font-weight: bold">
             <img v-if="index === 0" src="../../assets/id_4.jpg" class="image" />
             <img v-if="index === 1" src="../../assets/id_5.jpg" class="image" />
             <img v-if="index === 2" src="../../assets/id_6.jpg" class="image" />
@@ -126,13 +126,10 @@
       </el-row>
     </el-dialog>
 
-    <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
+    <el-dialog title="创建原型" :visible.sync="dialogPageVisible" style="font-family: 等线">
       <el-form :model="form_createAxure">
         <el-form-item label="原型名称" :label-width="formLabelWidth">
           <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="原型简介（可不填）" :label-width="formLabelWidth">
-          <el-input v-model="form_createAxure.axure_info" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

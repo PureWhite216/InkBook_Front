@@ -39,7 +39,7 @@
       v-for="(item,index) in recentTeamList"
       :key="index"
       ref="elMenu2"
-      style="margin-top: 10px"
+      style="margin-top: 0px; height: 45px"
       class="el-menu-vertical-demo"
     >
       <el-menu-item @click="toGroupFile(item)">
