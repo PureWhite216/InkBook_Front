@@ -74,14 +74,14 @@
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="likeDoc"
           >
-            <i class="el-icon-star-on"></i>
+            <i class="el-icon-star-off"></i>
             收藏</el-button>
           <el-button
             v-if="is_favorite"
             style="margin-inline:10px; background: orange; color: white; border: 0"
             @click="unlikeDoc"
           >
-            <i class="el-icon-star-off"></i>
+            <i class="el-icon-star-on"></i>
             取消收藏</el-button>
           <el-button
             style="margin-inline:10px; background: #16dcea; color: white; border: 0"
