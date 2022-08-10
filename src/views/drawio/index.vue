@@ -18,7 +18,7 @@
         title="drawio"
         width="100%"
         height="96%"
-        src="static/drawio/helloworld.html"
+        src="static/drawio/localstorage.html"
       >
       </iframe>
     </div>
