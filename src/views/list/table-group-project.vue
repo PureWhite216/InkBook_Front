@@ -94,7 +94,7 @@
       </template>
     </TableHeader>
 
-    <el-dialog title="创建文档" :visible.sync="dialogWordVisible">
+    <el-dialog title="创建文档" :visible.sync="dialogWordVisible" style="width:120%">
       <el-form :model="form_word">
         <el-form-item label="文档名称" :label-width="formLabelWidth">
           <el-input v-model="form_word.doc_name" autocomplete="off" />
@@ -104,23 +104,24 @@
         <el-button @click="dialogWordVisible = false; form_word.doc_name = '' ">取 消</el-button>
         <el-button @click="dialogWordVisible = false; createWord()">无模板创建</el-button>
       </div>
-      <el-row>
-        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }">
+      <el-row :gutter="10" type="flex" justify="start" style="flex-wrap: wrap; flex-direction: row">
+        <el-col v-for="(o, index) in 4" :key="o" :span="12">
+          <el-card :body-style="{ padding: '0px' }" style="margin-top: 20px; margin-left: 0px; width: 300px;">
             <img v-if="index === 0" src="../../assets/id_4.jpg" class="image" />
             <img v-if="index === 1" src="../../assets/id_5.jpg" class="image" />
             <img v-if="index === 2" src="../../assets/id_6.jpg" class="image" />
             <img v-if="index === 3" src="../../assets/id_7.jpg" class="image" />
-            <div style="padding: 14px;">
+            <div style="padding: 0px;">
               <span v-if="index === 0">会议纪要</span>
               <span v-if="index === 1">项目工作汇报</span>
               <span v-if="index === 2">个人学习计划</span>
               <span v-if="index === 3">年度工作总结</span>
-              <div class="bottom clearfix">
+              <div>
                 <el-button type="text" class="button" @click="dialogWordVisible = false; form_word.template_id = index; createWord()">创建</el-button>
               </div>
             </div>
           </el-card>
+
         </el-col>
       </el-row>
     </el-dialog>
@@ -1047,7 +1048,7 @@ export default {
   margin: 10px;
 }
 .image{
-  width: 300px;
+  width: 250px;
   height: 300px;
 }
 </style>

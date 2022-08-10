@@ -92,10 +92,16 @@
             导出</el-button>
           <el-button
             style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
-            @click="getHtmlContent"
+            @click="openPreview"
           >
             <i class="el-icon-share"></i>
-            分享</el-button>
+            生成预览</el-button>
+          <el-button
+            style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
+            @click="closePreview"
+          >
+            <i class="el-icon-s-release"></i>
+            关闭预览</el-button>
         </div>
       </template>
       <RichTextEditor
@@ -183,7 +189,8 @@ export default {
   },
   data() {
     return {
-      is_favorite: localStorage.getItem('is_favorite'),
+      url_preview: null,
+      is_favorite: localStorage.getItem('is_favorite') === 'true',
       form_likeDoc: {
         token: getters.getToken(state),
         doc_id: null,
@@ -194,6 +201,15 @@ export default {
       dialogCreateDir: false,
       prj_root_id: localStorage.getItem('prj_root_id'),
       dialogVisible_share: false,
+      form_openPreview: {
+        token: getters.getToken(state),
+        doc_id: localStorage.getItem('doc_id'),
+        html_code: null
+      },
+      form_closePreview: {
+        token: getters.getToken(state),
+        url: null
+      },
       form_createDoc: {
         token: getters.getToken(state),
         doc_name: '',
@@ -318,6 +334,31 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    openPreview() {
+      this.getHtmlContent()
+      this.form_openPreview.html_code = this.htmlContent
+      this.$axios.post('/doc/uploadDoc', qs.stringify(this.form_openPreview))
+        .then(res => {
+          if (res.data.success) {
+            this.url_preview = res.data.data[0].url
+            alert('您的分享链接是' + this.url_preview)
+            localStorage.setItem('refresh', '1')
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    closePreview() {
+      this.form_closePreview.url = this.url_preview
+      this.$axios.post('/user/deleteFile', qs.stringify(this.form_closePreview))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     getModel() {
       this.$axios.get('/doc/getTemplateList', {
         params: {
@@ -590,6 +631,7 @@ export default {
     getHtmlContent() {
       this.htmlContent = this.$refs.richTextEditor.getHtmlContent()
       console.log(this.htmlContent)
+      // this.$message.success(this.htmlContent)
     },
     getJsonContent() {
       console.log(localStorage.getItem('flag'))
