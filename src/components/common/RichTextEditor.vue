@@ -76,10 +76,10 @@ export default {
       }
       this.initWebSocket()
       this.quill = new Quill(this.$refs.richTextEditor, options)
-      // setInterval(() => {
-      //   this.syn_send_doc()
-      // }, 1000);
-      // this.quill.on('text-change', this.syn_send_doc)
+      setInterval(() => {
+        this.websock.send("")
+      }, 5000);
+      this.quill.on('text-change', this.syn_send_doc)
       // JSON.parse(localStorage.getItem('word_content'))
       if (localStorage.getItem('flag') === 'in') {
         this.quill.setContents(JSON.parse(localStorage.getItem('in_word_content')))
@@ -110,8 +110,8 @@ export default {
     },
     initWebSocket() { // 建立连接
         // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-        // var url = " ws://101.42.171.88:8090/ws"
-        var url = " ws://localhost:8090/ws"
+        var url = " ws://101.42.171.88:8090/ws"
+        // var url = " ws://localhost:8090/ws"
         this.websock = new WebSocket(url);
         this.websock.onopen = this.websocketonopen;
         // this.websock.send = this.websocketsend;
