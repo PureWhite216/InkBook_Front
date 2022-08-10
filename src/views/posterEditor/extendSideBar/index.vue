@@ -198,8 +198,7 @@ export default {
     },
     exportFile (file) {
       const fd = new FormData()
-      console.log('file', file)
-      fd.append('file', file.file)
+      fd.append('file', file)
       fd.append('token', getters.getToken(state))
       this.$axios('/axure/uploadAxure', {
         method: 'POST',
@@ -207,7 +206,15 @@ export default {
           'Content-Type': 'multipart/form-data'
         },
         data: fd
-      })
+      }).then(res => {
+          if (res.data.success) {
+            this.url_preview = res.data.data[0].url
+            alert('您的分享链接是' + this.url_preview)
+            localStorage.setItem('refresh', '1')
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     createImg() {
       const domName = 'mainPanel'
