@@ -34,6 +34,10 @@
       </transition>
     </div>
     <div id="drag" v-drag:#drag class="drag-box">
+      <div> 
+        <el-button icon="el-icon-circle-plus-outline" circle style="float:right"></el-button>
+      </div>
+        
       <el-table
         ref="table"
         v-loading="loading"
@@ -47,6 +51,29 @@
           label="页面列表"
           prop="axure_name"
         />
+        <el-table-column
+          align="center"
+          label="操作"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-dropdown trigger="click" @command="onCommad">
+              <div class="action-wrapper">
+                <span class="nick-name el-dropdown-link">
+                  <i class="el-icon-more"></i>
+                </span>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                  <el-button type="text" @click="form_updateDocInfo.doc_id = scope.row.doc_id, dialogUpdateDocInfoVisible = true">重命名</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                  <el-button type="text" @click="deleteDoc()">删除原型</el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
