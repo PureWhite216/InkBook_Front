@@ -33,7 +33,27 @@
         <layer-panel v-show="layerPanelOpened" />
       </transition>
     </div>
+    <div id="drag" v-drag class="drag-box">
+      <div class="boxhead">
+        <i class="el-icon-menu"></i>
+        <p>项目原型</p>
+      </div>
+      <el-table
+        ref="table"
+        v-loading="loading"
+        :data="axureList"
+        @row-dblclick="toAxureEditor"
+        style="margin-top:50px"
+      >
+        <el-table-column
+          align="left"
+          label="原型列表"
+          prop="axure_name"
+        />
+      </el-table>
+    </div>
   </div>
+  
 </template>
 
 <script>
@@ -65,6 +85,39 @@ export default {
     extendSideBar,
     layerPanel
   },
+  directives: {
+    drag: {
+      // 指令的定义
+      bind: function(el) {
+        const oDiv = el // 获取当前元素
+        oDiv.onmousedown = (e) => {
+          console.log('onmousedown')
+          // 算出鼠标相对元素的位置
+          const disX = e.clientX - oDiv.offsetLeft
+          const disY = e.clientY - oDiv.offsetTop
+
+          document.onmousemove = (e) => {
+            // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+            const left = e.clientX - disX
+            const top = e.clientY - disY
+
+            oDiv.style.left = left + 'px'
+            oDiv.style.top = top + 'px'
+          }
+
+          document.onmouseup = (e) => {
+            document.onmousemove = null
+            document.onmouseup = null
+          }
+        }
+      }
+    }
+  },
+  created() {
+    this.getAxureList()
+    localStorage.setItem('flag', 'user')
+    localStorage.setItem('enable', 'true')
+  },
   data() {
     return {
       form_update: {
@@ -77,7 +130,13 @@ export default {
         config: '',
         items: ''
       },
-      initLoading: false
+      initLoading: false,
+      axureList: [],
+      loading: false,
+      form_getAxureList: {
+        token: getters.getToken(state),
+        project_id: localStorage.getItem('project_id')
+      },
     }
   },
   computed: {
@@ -125,6 +184,58 @@ export default {
     this.killAutoSaveTask()
   },
   methods: {
+    getAxureList() {
+      this.loading = true
+      this.axureList = []
+      this.$axios.post('/axure/getAxureList', qs.stringify(this.form_getAxureList))
+        .then((res) => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
+              const axures = {
+                axure_info: null,
+                axure_id: null,
+                project_id: null,
+                axure_name: null,
+                title: null,
+                config: null,
+                items: null,
+                last_edit: null,
+                create_user: null,
+                isFavorite: null
+              }
+              axures.axure_info = res.data.data[i].axure_info
+              axures.axure_id = res.data.data[i].axure_id
+              axures.project_id = res.data.data[i].project_id
+              axures.axure_name = res.data.data[i].axure_name
+              axures.title = res.data.data[i].title
+              axures.config = res.data.data[i].config
+              axures.items = res.data.data[i].items
+              axures.last_edit = res.data.data[i].last_edit
+              axures.create_user = res.data.data[i].create_user
+              axures.isFavorite = res.data.data[i].isFavorite === 1
+              let flag = 0
+              for (let i = 0; i < this.axureList.length; i++) {
+                if (this.axureList[i].axure_id === axures.axure_id) {
+                  flag = 1
+                  break
+                }
+              }
+              if (!flag) { this.axureList.push(axures) }
+              // this.$message.success(res.data.message)
+            }
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
+    toAxureEditor(val) {
+      localStorage.setItem('axure_id', val.axure_id)
+      localStorage.setItem('axure_name', val.axure_name)
+      localStorage.setItem('axure_info', val.axure_info)
+      localStorage.setItem('Token', getters.getToken(state))
+      this.$router.push('/posterEditor')
+    },
     ...mapActions([
       'replacePosterItems',
       'replaceActiveItems',
@@ -242,6 +353,33 @@ export default {
 ::v-deep .title {
   color: #2c2c2c;
   background-color: #2c2c2c;
+}
+.drag-box {
+  position: absolute;
+  top: 100px;
+  left: 40px;
+  width: 240px;
+  height: 600px;
+  background: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, .15);
+}
+.boxhead {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 240px;
+  height: 40px;
+  background: #fffaf6;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, .1);
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #565656;
 }
 .backbutton {
   color: white;
