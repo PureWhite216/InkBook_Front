@@ -47,7 +47,7 @@
             class="button-style"
             style="border-color: #a15aff"
             @click="dialogPageVisible = true"
-          >创建原型
+          >创建页面
             <i class="el-icon-plus"></i>
           </el-button>
         </el-popover>
@@ -126,9 +126,9 @@
       </el-row>
     </el-dialog>
 
-    <el-dialog title="创建原型" :visible.sync="dialogPageVisible" style="font-family: 等线">
+    <el-dialog title="创建原型页面" :visible.sync="dialogPageVisible" style="font-family: 等线">
       <el-form :model="form_createAxure">
-        <el-form-item label="原型名称" :label-width="formLabelWidth">
+        <el-form-item label="页面名称" :label-width="formLabelWidth">
           <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -183,12 +183,12 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改原型信息" :visible.sync="dialogUpdateAxureInfoVisible">
+    <el-dialog title="修改页面信息" :visible.sync="dialogUpdateAxureInfoVisible">
       <el-form :model="form_updateAxureInfo">
-        <el-form-item label="原型新名称" :label-width="formLabelWidth">
+        <el-form-item label="页面新名称" :label-width="formLabelWidth">
           <el-input v-model="form_updateAxureInfo.axure_name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="原型新简介（可不填）" :label-width="formLabelWidth">
+        <el-form-item label="页面新简介（可选）" :label-width="formLabelWidth">
           <el-input v-model="form_updateAxureInfo.axure_info" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -272,7 +272,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane>
-            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c"><i class="el-icon-monitor"></i>原型</span>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c"><i class="el-icon-monitor"></i>页面</span>
             <el-table
               ref="table"
               v-loading="loading"
@@ -334,7 +334,7 @@
                         <el-button type="text" @click="form_updateAxureInfo.axure_id = scope.row.axure_id, dialogUpdateAxureInfoVisible = true">重命名</el-button>
                       </el-dropdown-item>
                       <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                        <el-button type="text" @click="deleteAxure(scope.row)">删除原型</el-button>
+                        <el-button type="text" @click="deleteAxure(scope.row)">删除页面</el-button>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -638,7 +638,7 @@ export default {
          })
     },
     deleteAxure(item) {
-      this.$confirm('此操作将使您删除此原型' + ', 是否继续?', '提示', {
+      this.$confirm('此操作将使您删除此页面' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消 ',
         type: 'warning'

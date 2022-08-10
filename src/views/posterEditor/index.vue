@@ -104,7 +104,7 @@
                   <el-button type="text" @click="form_updateAxureInfo.axure_id = scope.row.axure_id, dialogUpdateAxureInfoVisible = true">重命名</el-button>
                 </el-dropdown-item>
                 <el-dropdown-item icon="el-icon-switch-button" command="logout">
-                  <el-button type="text" @click="deleteAxure(scope.row)">删除原型</el-button>
+                  <el-button type="text" @click="deleteAxure(scope.row)">删除页面</el-button>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
