@@ -42,8 +42,8 @@
         ref="table"
         v-loading="loading"
         :data="axureList"
-        @row-dblclick="toAxureEditor"
         style="margin-top:50px"
+        @row-dblclick="toAxureEditor"
       >
         <el-table-column
           align="left"
@@ -53,7 +53,6 @@
       </el-table>
     </div>
   </div>
-  
 </template>
 
 <script>
@@ -67,6 +66,8 @@ import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
 import router from '@/router'
 import qs from 'qs'
+import { getters } from '@/store/modules/user.js'
+import { state } from '@/store/modules/user.js'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -113,11 +114,6 @@ export default {
       }
     }
   },
-  created() {
-    this.getAxureList()
-    localStorage.setItem('flag', 'user')
-    localStorage.setItem('enable', 'true')
-  },
   data() {
     return {
       form_update: {
@@ -136,7 +132,7 @@ export default {
       form_getAxureList: {
         token: getters.getToken(state),
         project_id: localStorage.getItem('project_id')
-      },
+      }
     }
   },
   computed: {
@@ -160,6 +156,7 @@ export default {
     }
   },
   async created() {
+    this.getAxureList()
     this.initLoading = true
     // if (!store.hasModule('poster')) return
     const loading = this.$loading({
@@ -234,7 +231,7 @@ export default {
       localStorage.setItem('axure_name', val.axure_name)
       localStorage.setItem('axure_info', val.axure_info)
       localStorage.setItem('Token', getters.getToken(state))
-      this.$router.push('/posterEditor')
+      this.$router.push('/redirect/posterEditor')
     },
     ...mapActions([
       'replacePosterItems',
