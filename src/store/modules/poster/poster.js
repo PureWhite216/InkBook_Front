@@ -123,10 +123,10 @@ function websocketclose (e) {
     console.log('connection closed (' + e.code + ')')
 }
 
-// window.setInterval(print, 1000)
+window.setInterval(print, 5000)
 
-function print(state) {
-    console.log(state)
+function print() {
+    websock.send("")
 }
 
 const getters = {

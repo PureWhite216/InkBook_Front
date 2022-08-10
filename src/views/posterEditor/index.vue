@@ -416,7 +416,7 @@ export default {
       router.push('/list/table-group-project')
     },
     reloaded() {
-      if (location.href.indexOf("#reloaded") == -1) {
+      if (location.href.indexOf("#reloaded") === -1) {
         location.href = location.href + "#reloaded"
         window.location.reload()
       }

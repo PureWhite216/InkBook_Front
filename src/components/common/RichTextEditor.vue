@@ -76,9 +76,9 @@ export default {
       }
       this.initWebSocket()
       this.quill = new Quill(this.$refs.richTextEditor, options)
-      // setInterval(() => {
-      //   this.syn_send_doc()
-      // }, 1000);
+      setInterval(() => {
+        this.websock.send("")
+      }, 5000);
       this.quill.on('text-change', this.syn_send_doc)
       // JSON.parse(localStorage.getItem('word_content'))
       if (localStorage.getItem('flag') === 'in') {
