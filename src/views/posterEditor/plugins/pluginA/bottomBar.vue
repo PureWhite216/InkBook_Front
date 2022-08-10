@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-a">
-    #插件测试
+    #按钮
   </div>
 </template>
 

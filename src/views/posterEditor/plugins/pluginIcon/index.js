@@ -23,7 +23,7 @@ export default {
     },
     extendSideBar: {
         icon: 'el-icon-star-off',
-        name: '插件测试',
+        name: 'Icon',
         component: extendSideBar
     }
 }

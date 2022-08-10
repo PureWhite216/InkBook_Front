@@ -1,6 +1,6 @@
 <template>
   <div class="plugin-icon">
-    #插件测试
+    #Icon
   </div>
 </template>
 
