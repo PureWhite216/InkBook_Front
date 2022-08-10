@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="main-container" style="font-family: 等线">
     <el-row style="background: #2f2f2f; min-height: 40px">
       <el-col :span="8">
         <el-button class="backbutton" style="margin-left: 20px; margin-top: 3px" @click="back">
@@ -34,20 +34,17 @@
       </transition>
     </div>
     <div id="drag" v-drag class="drag-box">
-      <div class="boxhead">
-        <i class="el-icon-menu"></i>
-        <p>项目原型</p>
-      </div>
       <el-table
         ref="table"
         v-loading="loading"
         :data="axureList"
-        style="margin-top:50px"
+        style="margin-top:0px"
+        header-cell-style="color: #000000"
         @row-dblclick="toAxureEditor"
       >
         <el-table-column
           align="left"
-          label="原型列表"
+          label="页面列表"
           prop="axure_name"
         />
       </el-table>
@@ -149,7 +146,7 @@ export default {
   watch: {
     pageConfig: {
       handle (newName, oldName) {
-        console.log("改改改")
+        console.log('改改改')
       },
       deep: true
     }
@@ -183,7 +180,7 @@ export default {
     document.addEventListener('keydown', this.keydownHandle)
     this.body = document.body
     this.mainPanelRef = this.$refs.main.$refs.mainPanel
-    //初始化websocket
+    // 初始化websocket
     // this.initWebSocket()
     // this.$nextTick(() => {
     //   setInterval(this.save, 1000)
@@ -288,14 +285,14 @@ export default {
             ]
         }
         */
-      console.log("test>>>")
+      console.log('test>>>')
       // console.log(JSON.stringify(requestData))
       // console.log(poster.getters.posterItems)
-      console.log("<<<test")
+      console.log('<<<test')
       const res = this.$store.dispatch('poster/saveActivityPageConfig', null)
       res.then(r => {
         this.websock.send(JSON.stringify({
-          type: "axure",
+          type: 'axure',
           id: localStorage.getItem('axure_id'),
           config: r.config,
           items: r.items,
@@ -395,8 +392,7 @@ export default {
         default:
           break
       }
-    }/*,
-    initWebSocket: function () { // 建立连接
+    }, /*,    initWebSocket: function () { // 建立连接
         // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
         // var url = " ws://101.42.171.88:8090/ws"
         var url = " ws://localhost:8090/ws"
@@ -441,7 +437,7 @@ export default {
     // 关闭连接时调用
     websocketclose: function (e) {
       console.log("connection closed (" + e.code + ")");
-    }*/,
+    }*/
     sendMsg() {
       // this.websock.send(JSON.stringify({
       //   type: "axure",
@@ -462,11 +458,11 @@ export default {
 }
 .drag-box {
   position: absolute;
-  top: 100px;
-  left: 40px;
-  width: 240px;
-  height: 600px;
-  background: #ffffff;
+  top: 50%;
+  left: 2.8%;
+  width: 195px;
+  height: 400px;
+  background: #ececec;
   border-radius: 5px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, .15);
 }
