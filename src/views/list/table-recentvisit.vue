@@ -49,7 +49,7 @@
                 align="center"
                 label="更新时间"
                 prop="last_edit_time"
-                width="200px"
+                width="300px"
               />
               <el-table-column
                 align="center"
@@ -57,7 +57,7 @@
                 prop="creator_name"
                 width="200px"
               />
-              <el-table-column
+              <!-- <el-table-column
                 align="center"
                 label="操作"
                 width="100"
@@ -79,7 +79,7 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
 
             <!--<el-select v-model="selectteam" placeholder="请选择">
@@ -130,7 +130,7 @@
                 align="center"
                 label="更新时间"
                 prop="last_edit"
-                width="200px"
+                width="300px"
               />
               <el-table-column
                 align="center"
@@ -138,7 +138,7 @@
                 prop="create_user"
                 width="200px"
               />
-              <el-table-column
+              <!-- <el-table-column
                 align="center"
                 label="操作"
                 width="100"
@@ -160,7 +160,7 @@
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
           </el-tab-pane>
         </el-tabs>
@@ -304,7 +304,7 @@ export default {
     this.getgroup()
   },
   methods: {
-    filterTag(value, row) { 
+    filterTag(value, row) {
       console.log(value)
       return row.tag === value
     },
