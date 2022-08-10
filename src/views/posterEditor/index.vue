@@ -231,7 +231,8 @@ export default {
       background: 'rgba(255, 255, 255, 0.6)'
     })
     await this.resetState()
-    await this.updatePage()
+    await this.nothing()
+    // await this.updatePage()
     loading.close()
     this.initLoading = false
   },
@@ -428,6 +429,9 @@ export default {
     //
     //         console.log(this.pageConfig)
     // },
+    nothing() {
+      this.$store.dispatch('poster/nothing')
+    },
     updatePage() {
       this.$axios.post('/axure/getAxureInfo', qs.stringify(this.form_update))
         .then(res => {
@@ -488,12 +492,12 @@ export default {
           e.preventDefault()
           this.setReferenceLineVisible(!this.referenceLineOpened)
           break
-        case keyCode === UNDO_KEY && ctrl && shift:
-          this.redo()
-          break
-        case keyCode === UNDO_KEY && ctrl:
-          this.undo()
-          break
+        // case keyCode === UNDO_KEY && ctrl && shift:
+        //   this.redo()
+        //   break
+        // case keyCode === UNDO_KEY && ctrl:
+        //   this.undo()
+        //   break
         case keyCode === BACKUP_KEY && ctrl:
           e.preventDefault()
           this.backupInvoker()

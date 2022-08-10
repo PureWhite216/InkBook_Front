@@ -51,13 +51,15 @@ function getState() {
 
 const state = getState()
 
-var url = ' ws://101.42.171.88:8090/ws'
+var cv_item = null
+
+var url = " ws://101.42.171.88:8090/ws"
+// var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
 function initWebSocket () { // 建立连接
     // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-    var url = ' ws://101.42.171.88:8090/ws'
-    websock.onopen = websocketonopen
+    websock.onopen = websocketonopen;
     // this.websock.send = this.websocketsend;
     websock.onerror = websocketonerror
     websock.onmessage = websocketonmessage
@@ -81,19 +83,43 @@ function websocketonerror () {
     console.log('WebSocket连接发生错误')
 }
 
+var isInit = false
+
 // 接收后端消息
 // vue 客户端根据返回的cmd类型处理不同的业务响应
 function websocketonmessage (e) {
     const res = JSON.parse(e.data)
-    console.log(res)
+    // console.log(res)
     if (res.op == 'add') {
         store.dispatch('poster/synAddItem', JSON.parse(res.item))
-    } else if (res.op == 'drag') {
+    } else if (res.op == "drag") {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
+    } else if (res.op == "update") {
+        store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
+    } else if (res.op == "copy") {
+        store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
+    } else if (res.op == "replace") {
+        store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
+    } else if (res.op == "bg") {
+        store.dispatch('poster/synAddBackground', JSON.parse(res.item))
+    } else if (res.op == "send_syn") {
+        store.dispatch('poster/synActivityPageConfig')
+    } else if (res.op == "syn") {
+        if (!isInit){
+            store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
+            isInit = true
+        }
+    } else if (res.op == "origin") {
+        store.dispatch('poster/initPageConfig')
+        isInit = true
+    } else if (res.op == "canvas") {
+        store.dispatch('poster/synSetCanvasSize', JSON.parse(res.item))
+        store.dispatch('poster/seekBackgroundSize')
     }
 }
 // 关闭连接时调用
 function websocketclose (e) {
+    alert('您已离线，请刷新页面或重新登陆！')
     console.log('connection closed (' + e.code + ')')
 }
 
@@ -140,6 +166,9 @@ const mutations = {
             state.background = item
         }
     },
+    [MTS.SYN_ADD_BACKGROUND](state, item) {
+        state.background = item
+    },
     [MTS.REMOVE_BACKGROUND](state) {
         state.background = new BackgroundWidget()
     },
@@ -155,7 +184,7 @@ const mutations = {
         }
     },
     // 添加同步组件
-    [MTS.ADD_SYN_ITEM](state, item) {
+    [MTS.SYN_ADD_ITEM](state, item) {
         state.posterItems.push(item)
     },
     // 删除组件
@@ -221,12 +250,21 @@ const mutations = {
                 return i
             })
         state.copiedWidgets = finalItems.length > 0 ? finalItems : null
+        cv_item = state.copiedWidgets
     },
     // 粘贴组件
     [MTS.PASTE_WIDGET](state) {
         const copiedWidgets = state.copiedWidgets
         if (copiedWidgets && copiedWidgets.length > 0) {
             copiedWidgets.forEach(item => {
+                state.posterItems.push(new CopiedWidget(item))
+            })
+        }
+    },
+    // 粘贴组件
+    [MTS.SYN_PASTE_WIDGET](state, items) {
+        if (items && items.length > 0) {
+            items.forEach(item => {
                 state.posterItems.push(new CopiedWidget(item))
             })
         }
@@ -276,13 +314,32 @@ const actions = {
     },
     setCanvasSize({ state, dispatch }, data) {
         // dispatch('history/push')
+        websock.send(JSON.stringify({
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'canvas',
+            'item': JSON.stringify(data)
+        }))
+        state.canvasSize = data
+    },
+    synSetCanvasSize({ state, dispatch }, data) {
+        // dispatch('history/push')
         state.canvasSize = data
     },
     addBackground({ state, commit, dispatch }, item) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "bg",
+            "item": JSON.stringify(item)
+        }))
         if (state.background) {
             dispatch('history/push')
         }
         commit(MTS.ADD_BACKGROUND, item)
+    },
+    synAddBackground({ state, commit, dispatch }, item) {
+        commit(MTS.SYN_ADD_BACKGROUND, item)
     },
     removeBackground({ commit, dispatch }) {
         dispatch('history/push')
@@ -324,7 +381,7 @@ const actions = {
     },
     // 同步添加组件
     synAddItem({ commit, dispatch, state }, item) {
-        console.log('I am synAdd.')
+        // console.log('I am synAdd.')
         const widgetCountLimit = parseInt(item._widgetCountLimit)
         if (widgetCountLimit) {
             const currentCount = (state.posterItems.filter(i => i.type === item.type)).length
@@ -334,7 +391,7 @@ const actions = {
             }
         }
         dispatch('history/push')
-        commit(MTS.ADD_SYN_ITEM, item)
+        commit(MTS.SYN_ADD_ITEM, item)
     },
     removeItem({ commit, getters, dispatch }, item) {
         if (item.lock) {
@@ -347,9 +404,18 @@ const actions = {
         commit(MTS.REMOVE_ITEM, item)
     },
     replacePosterItems({ commit, dispatch }, items) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "replace",
+            "item": JSON.stringify(items)
+        }))
         dispatch('history/push')
         commit(MTS.REPLACE_POSTER_ITEMS, items)
         commit(MTS.REPLACE_ACTIVE_ITEMS, [])
+    },
+    synReplacePosterItems({ commit, dispatch }, items) {
+        commit(MTS.REPLACE_POSTER_ITEMS, items)
     },
     addActiveItem({ commit, getters, dispatch }, item) {
         if (getters.activeItemIds.includes(item.id)) {
@@ -399,7 +465,6 @@ const actions = {
             'op': 'drag',
             'item': JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
         }))
-
         dragInfo = Object.assign({}, preDragInfo, dragInfo)
         if (updateSelfOnly) {
             widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
@@ -428,7 +493,7 @@ const actions = {
     },
     // 同步更新组件位置、大小等
     synUpdateDragInfo({ state }, { dragInfo, widgetId, updateSelfOnly, activeItems }) {
-        console.log('I am synDrag.')
+        // console.log('I am synDrag.')
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (!widgetItem) {
             return
@@ -467,6 +532,24 @@ const actions = {
     },
     // 更新组件state
     updateWidgetState({ state, dispatch }, { keyPath, value, widgetId, pushHistory = true }) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "update",
+            "item": JSON.stringify({ keyPath, value, widgetId, pushHistory })
+        }))
+        
+        const widgetItem = state.posterItems.find(i => i.id === widgetId)
+        if (widgetItem) {
+            // 某些操作不添加进历史记录栈
+            if (pushHistory) {
+                dispatch('history/push')
+            }
+            _set(widgetItem.wState, keyPath, value)
+        }
+    },
+    // 同步更新组件state
+    synUpdateWidgetState({ state, dispatch }, { keyPath, value, widgetId, pushHistory = true }) {
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (widgetItem) {
             // 某些操作不添加进历史记录栈
@@ -532,8 +615,18 @@ const actions = {
         commit(MTS.COPY_WIDGET, item)
     },
     pasteWidget({ commit, dispatch }) {
+        // console.log(JSON.stringify(cv_item))
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "copy",
+            "item": JSON.stringify(cv_item)
+        }))
         dispatch('history/push')
         commit(MTS.PASTE_WIDGET)
+    },
+    synPasteWidget({ commit, dispatch }, item) {
+        commit(MTS.SYN_PASTE_WIDGET, item)
     },
     addReferenceLine({ commit, dispatch }, item) {
         dispatch('history/push')
@@ -561,7 +654,7 @@ const actions = {
      * 参数pageConfig是从后台获取到的页面配置信息
      */
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
-      console.log(pageConfig)
+      // console.log(pageConfig)
         let recoverData = {}
         if (!pageConfig || !isPlainObject(pageConfig)) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
@@ -598,6 +691,48 @@ const actions = {
       // console.log(recoverData)
         dispatch('backup/recover', recoverData)
         commit(MTS.SET_UNSAVED_STATE, false)
+    },
+    /**
+     * 同步当前页面配置
+     * 参数pageConfig是从后台获取到的页面配置信息
+     */
+    synUpdatePageConfig({ dispatch, state, commit }, pageConfig) {
+        let recoverData = {}
+        if (!pageConfig || !isPlainObject(pageConfig)) {
+            commit(MTS.SET_PAGE_CONFIG_ID, '')
+            recoverData = {
+                background: new BackgroundWidget(),
+                posterItems: [],
+                referenceLine: getState().referenceLine
+            }
+        } else {
+            commit(MTS.SET_PAGE_CONFIG_ID, pageConfig.pageConfigId)
+            const baseConfig = pageConfig.config
+            const posterItems = pageConfig.items
+            let background
+            try {
+                const backgroundItem = posterItems.splice(
+                    posterItems.findIndex(i => i.type === 'background'), 1
+                )[0]
+                if (backgroundItem) {
+                    background = JSON.parse(backgroundItem.config)
+                }
+            } catch (e) {
+                console.error(e)
+                background = new BackgroundWidget()
+            }
+            const defaultState = getState()
+            recoverData = {
+                background,
+                posterItems: posterItems.map(item => JSON.parse(item.config)),
+                referenceLine: baseConfig.referenceLine || defaultState.referenceLine,
+                canvasSize: baseConfig.canvasSize || defaultState.canvasSize,
+                pageTitle: pageConfig.title || ''
+            }
+        }
+      // console.log(recoverData)
+       dispatch('backup/recover', recoverData)
+       commit(MTS.SET_UNSAVED_STATE, false)
     },
     /**
      * 保存/新增当前的活动页配置
@@ -638,7 +773,7 @@ const actions = {
       // console.log(form_saveAxure)
      axios.post('/axure/update', qs.stringify(form_saveAxure))
         .then(res => {
-            // Message.success('保存成功')
+            Message.success('保存成功')
             return res
           },
           () => {
@@ -647,6 +782,66 @@ const actions = {
           }
         )
         return form_saveAxure
+    },
+    /**
+     * 当只有一位编辑者时，从数据库获得数据
+     */
+    initPageConfig ({ dispatch, state, commit }) {
+        axios.post('/axure/getAxureInfo', qs.stringify({
+            token: localStorage.getItem('Token'),
+            axure_id: localStorage.getItem('axure_id')
+          }))
+        .then(res => {
+          if (res.data.success) {
+            let pageConfig = {}
+            pageConfig = {
+              pageConfigId: res.data.data[0].config_id,
+              config: JSON.parse(res.data.data[0].config),
+              items: JSON.parse(res.data.data[0].items),
+              title: res.data.data[0].title
+            }
+            dispatch('updatePageConfig', pageConfig)
+          }
+        })
+    },
+    /**
+     * 同步当前的活动页配置
+     */
+    synActivityPageConfig({ state, commit, rootGetters }) {
+        const requestData = {
+            title: state.pageTitle,
+            // baseConfig
+            config: JSON.stringify({
+                referenceLine: state.referenceLine,
+                canvasSize: state.canvasSize
+            }),
+            items: [
+                {
+                    type: state.background.type,
+                    content: '',
+                    config: JSON.stringify(state.background)
+                },
+                ...state.posterItems.map((item, index) => {
+                    return {
+                        type: item.type,
+                        content: '',
+                        config: JSON.stringify({
+                            ...item,
+                            _sort: index + 1
+                        })
+                    }
+                })
+            ]
+        }
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "syn",
+            "item": JSON.stringify(requestData)
+        }))
+    },
+    nothing({ dispatch, state, commit }) {
+
     }
 }
 
