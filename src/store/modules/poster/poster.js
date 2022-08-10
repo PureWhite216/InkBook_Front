@@ -324,6 +324,16 @@ const actions = {
     },
     synSetCanvasSize({ state, dispatch }, data) {
         // dispatch('history/push')
+        websock.send(JSON.stringify({
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'canvas',
+            'item': JSON.stringify(data)
+        }))
+        state.canvasSize = data
+    },
+    synSetCanvasSize({ state, dispatch }, data) {
+        // dispatch('history/push')
         state.canvasSize = data
     },
     addBackground({ state, commit, dispatch }, item) {
@@ -615,7 +625,7 @@ const actions = {
         commit(MTS.COPY_WIDGET, item)
     },
     pasteWidget({ commit, dispatch }) {
-        // console.log(JSON.stringify(cv_item))
+        // // console.log(JSON.stringify(cv_item))
         websock.send(JSON.stringify({
             'type': 'axure',
             'id': localStorage.getItem('axure_id'),
@@ -654,7 +664,7 @@ const actions = {
      * 参数pageConfig是从后台获取到的页面配置信息
      */
     updatePageConfig({ dispatch, state, commit }, pageConfig) {
-      // console.log(pageConfig)
+      // // console.log(pageConfig)
         let recoverData = {}
         if (!pageConfig || !isPlainObject(pageConfig)) {
             commit(MTS.SET_PAGE_CONFIG_ID, '')
