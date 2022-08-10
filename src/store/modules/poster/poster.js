@@ -53,13 +53,13 @@ const state = getState()
 
 var cv_item = null
 
-var url = " ws://101.42.171.88:8090/ws"
+var url = ' ws://101.42.171.88:8090/ws'
 // var url = " ws://localhost:8090/ws"
 const websock = new WebSocket(url)
 
 function initWebSocket () { // 建立连接
     // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-    websock.onopen = websocketonopen;
+    websock.onopen = websocketonopen
     // this.websock.send = this.websocketsend;
     websock.onerror = websocketonerror
     websock.onmessage = websocketonmessage
@@ -92,27 +92,27 @@ function websocketonmessage (e) {
     // console.log(res)
     if (res.op == 'add') {
         store.dispatch('poster/synAddItem', JSON.parse(res.item))
-    } else if (res.op == "drag") {
+    } else if (res.op == 'drag') {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
-    } else if (res.op == "update") {
+    } else if (res.op == 'update') {
         store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
-    } else if (res.op == "copy") {
+    } else if (res.op == 'copy') {
         store.dispatch('poster/synPasteWidget', JSON.parse(res.item))
-    } else if (res.op == "replace") {
+    } else if (res.op == 'replace') {
         store.dispatch('poster/synReplacePosterItems', JSON.parse(res.item))
-    } else if (res.op == "bg") {
+    } else if (res.op == 'bg') {
         store.dispatch('poster/synAddBackground', JSON.parse(res.item))
-    } else if (res.op == "send_syn") {
+    } else if (res.op == 'send_syn') {
         store.dispatch('poster/synActivityPageConfig')
-    } else if (res.op == "syn") {
-        if (!isInit){
+    } else if (res.op == 'syn') {
+        if (!isInit) {
             store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
             isInit = true
         }
-    } else if (res.op == "origin") {
+    } else if (res.op == 'origin') {
         store.dispatch('poster/initPageConfig')
         isInit = true
-    } else if (res.op == "canvas") {
+    } else if (res.op == 'canvas') {
         store.dispatch('poster/synSetCanvasSize', JSON.parse(res.item))
         store.dispatch('poster/seekBackgroundSize')
     }
@@ -328,10 +328,10 @@ const actions = {
     },
     addBackground({ state, commit, dispatch }, item) {
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "bg",
-            "item": JSON.stringify(item)
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'bg',
+            'item': JSON.stringify(item)
         }))
         if (state.background) {
             dispatch('history/push')
@@ -405,10 +405,10 @@ const actions = {
     },
     replacePosterItems({ commit, dispatch }, items) {
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "replace",
-            "item": JSON.stringify(items)
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'replace',
+            'item': JSON.stringify(items)
         }))
         dispatch('history/push')
         commit(MTS.REPLACE_POSTER_ITEMS, items)
@@ -533,12 +533,12 @@ const actions = {
     // 更新组件state
     updateWidgetState({ state, dispatch }, { keyPath, value, widgetId, pushHistory = true }) {
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "update",
-            "item": JSON.stringify({ keyPath, value, widgetId, pushHistory })
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'update',
+            'item': JSON.stringify({ keyPath, value, widgetId, pushHistory })
         }))
-        
+
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (widgetItem) {
             // 某些操作不添加进历史记录栈
@@ -617,10 +617,10 @@ const actions = {
     pasteWidget({ commit, dispatch }) {
         // console.log(JSON.stringify(cv_item))
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "copy",
-            "item": JSON.stringify(cv_item)
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'copy',
+            'item': JSON.stringify(cv_item)
         }))
         dispatch('history/push')
         commit(MTS.PASTE_WIDGET)
@@ -834,10 +834,10 @@ const actions = {
             ]
         }
         websock.send(JSON.stringify({
-            "type": "axure",
-            "id": localStorage.getItem('axure_id'),
-            "op": "syn",
-            "item": JSON.stringify(requestData)
+            'type': 'axure',
+            'id': localStorage.getItem('axure_id'),
+            'op': 'syn',
+            'item': JSON.stringify(requestData)
         }))
     },
     nothing({ dispatch, state, commit }) {
