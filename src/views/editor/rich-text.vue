@@ -181,7 +181,7 @@ export default {
       },
       form_closePreview: {
         token: getters.getToken(state),
-        url: null
+        doc_id: localStorage.getItem('doc_id')
       },
       form_createDoc: {
         token: getters.getToken(state),
@@ -322,8 +322,7 @@ export default {
         })
     },
     closePreview() {
-      this.form_closePreview.url = this.url_preview
-      this.$axios.post('/user/deleteFile', qs.stringify(this.form_closePreview))
+      this.$axios.post('/doc/disableSharing', qs.stringify(this.form_closePreview))
         .then(res => {
           if (res.data.success) {
             this.$message.success(res.data.message)
