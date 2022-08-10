@@ -20,7 +20,7 @@
           <el-table-column v-if="value_search === 1" property="doc_name" label="名称" align="left" />
           <el-table-column v-if="value_search === 2" property="axure_name" label="名称" align="left" />
         </el-table>
-        <el-input slot="reference" v-model="keyword_search" placeholder="搜索" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="visible_search = true,getSearchList()" />
+        <el-input slot="reference"  class="search-input" v-model="keyword_search" placeholder="搜索" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="visible_search = true,getSearchList()" />
       </el-popover>
       <!-- <el-popover
         v-model="searchProject_visible"
@@ -542,4 +542,17 @@ export default {
     height: 100%;
   }
 }
+</style>
+<style lang="scss">
+    .search-input{
+        .el-input__inner{
+          height: 50px!important;
+          border:none;
+          background-color: rgba(62, 62, 61, 0.627) !important;
+          color: azure !important;;
+        }
+        .el-input__inner:focus{
+          border:important;
+        }
+    }
 </style>

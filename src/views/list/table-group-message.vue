@@ -434,7 +434,7 @@
             <el-table-column v-if="value_search === 1" property="doc_name" label="名称" align="left" />
             <el-table-column v-if="value_search === 2" property="axure_name" label="名称" align="left" />
           </el-table>
-          <el-input slot="reference" v-model="keyword_search" placeholder="搜索" prefix-icon="el-icon-search" size="mini" style="width: 200px; margin-left: 20px" @input="visible_search = true,getSearchList()" />
+          <el-input slot="reference" v-model="keyword_search" placeholder="搜索" class="login-input" style="width: 250px; margin-left: 20px; margin-bottom:25px" prefix-icon="el-icon-search" @input="visible_search = true,getSearchList()" />
         </el-popover>
         <div class="rightsidefont">
           About
@@ -1352,3 +1352,16 @@ export default {
   margin: 10px;
 }
 </style>
+<style lang="scss">
+    .login-input{
+        .el-input__inner{
+          height: 50px!important;
+          border:2px solid #636363!important;
+          background-color: rgba(236, 238, 103, 0.155) !important;
+        }
+        .el-input__inner:focus{
+          border:2px solid #717171!important;
+        }
+    }
+</style>
+
