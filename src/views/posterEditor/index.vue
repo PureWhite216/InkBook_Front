@@ -88,12 +88,11 @@
       >
         <el-table-column
           align="left"
-          label="页面列表"
+          label="页面"
           prop="axure_name"
         />
         <el-table-column
           align="center"
-          label="操作"
           width="100"
         >
           <template slot-scope="scope">
