@@ -17,32 +17,29 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="创建原型" :visible.sync="dialogPageVisible">
-      <el-form :model="form_createAxure">
-        <el-form-item label="原型名称" :label-width="formLabelWidth">
+    <el-dialog title="创建原型" :visible.sync="dialogPageVisible" style="width: 50%">
+      <el-form :model="form_createAxure" style="margin: 0">
+        <el-form-item label="原型名称" :label-width="formLabelWidth" style="margin-bottom: 0">
           <el-input v-model="form_createAxure.axure_name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="原型简介（可不填）" :label-width="formLabelWidth">
-          <el-input v-model="form_createAxure.axure_info" autocomplete="off" />
-        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" style="display: flex; align-items: center">
         <el-button @click="dialogPageVisible = false; form_createAxure.axure_name = '' ">取消</el-button>
-        <el-button @click="createAxure(), form_createAxure.axure_name = '',dialogPageVisible = false">空模板创建</el-button>
+        <el-button @click="createAxure(), form_createAxure.axure_name = '',dialogPageVisible = false">创建新页面</el-button>
       </div>
-      <el-row>
-        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">
-          <el-card :body-style="{ padding: '0px' }">
-            <div style="padding: 14px;">
-              <span v-if="index === 0">登录模板</span>
-              <div class="bottom clearfix">
-                <el-button type="text" class="button" @click="flag=index+1, toPreview()">预览</el-button>
-                <el-button type="text" class="button" @click="form_createAxure.axure_template_id = index + 1, createAxure(), dialogPageVisible = false">创建</el-button>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+<!--      <el-row>-->
+<!--        <el-col v-for="(o, index) in 4" :key="o" :span="8" :offset="index > 0 ? 2 : 0">-->
+<!--          <el-card :body-style="{ padding: '0px' }">-->
+<!--            <div style="padding: 14px;">-->
+<!--              <span v-if="index === 0">登录模板</span>-->
+<!--              <div class="bottom clearfix">-->
+<!--                <el-button type="text" class="button" @click="flag=index+1, toPreview()">预览</el-button>-->
+<!--                <el-button type="text" class="button" @click="form_createAxure.axure_template_id = index + 1, createAxure(), dialogPageVisible = false">创建</el-button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </el-card>-->
+<!--        </el-col>-->
+<!--      </el-row>-->
     </el-dialog>
     <el-dialog title="修改原型信息" :visible.sync="dialogUpdateAxureInfoVisible">
       <el-form :model="form_updateAxureInfo">
