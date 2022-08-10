@@ -147,7 +147,7 @@ export default {
   data() {
     return {
       settingCenterVisible: false,
-      axure_openPreview: {
+      axure_closePreview: {
         token: getters.getToken(state),
         axure_id: localStorage.getItem('axure_id'),
         html_code: null
@@ -232,7 +232,7 @@ export default {
         })
     },
     closePreview() {
-      this.$axios.post('/axure/disableSharing', qs.stringify(this.form_closePreview))
+      this.$axios.post('/axure/disableSharing', qs.stringify(this.axure_closePreview))
         .then(res => {
           if (res.data.success) {
             this.$message.success(res.data.message)
