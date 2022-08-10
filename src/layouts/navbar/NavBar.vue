@@ -323,16 +323,12 @@ export default {
                 project_id: 0,
                 team_id: 0,
                 project_name: '',
-                project_info: '',
-                team_name: null,
-                team_info: null
+                project_info: ''
               }
               projects.project_id = res.data.data[i].project_id
               projects.team_id = res.data.data[i].team_id
               projects.project_name = res.data.data[i].project_name
               projects.project_info = res.data.data[i].project_info
-              projects.team_name = res.data.data[i].team_name
-              projects.team_info = res.data.data[i].team_info
               if (!res.data.data[i].deprecated) { this.searchProjectList.push(projects) }
               // this.$message.success(res.data.message)
             }
