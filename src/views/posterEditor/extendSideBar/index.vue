@@ -91,6 +91,16 @@
       </el-tooltip>
       <el-tooltip
         effect="dark"
+        content="停止预览"
+        placement="left"
+        transition="el-zoom-in-center"
+      >
+        <div class="item" @click="closePreview">
+          <i class="el-icon-close"></i>
+        </div>
+      </el-tooltip>
+      <el-tooltip
+        effect="dark"
         content="快捷键参考"
         placement="left"
         transition="el-zoom-in-center"
@@ -136,7 +146,12 @@ export default {
   components: { referenceLine, settingCenter },
   data() {
     return {
-      settingCenterVisible: false
+      settingCenterVisible: false,
+      axure_openPreview: {
+        token: getters.getToken(state),
+        axure_id: localStorage.getItem('axure_id'),
+        html_code: null
+      }
     }
   },
   computed: {
@@ -211,6 +226,16 @@ export default {
             this.url_preview = res.data.data[0].url
             alert('您的分享链接是' + this.url_preview)
             localStorage.setItem('refresh', '1')
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    closePreview() {
+      this.$axios.post('/axure/disableSharing', qs.stringify(this.form_closePreview))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
           } else {
             this.$message.error(res.data.message)
           }
