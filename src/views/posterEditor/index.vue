@@ -131,10 +131,10 @@ export default {
     this.body = document.body
     this.mainPanelRef = this.$refs.main.$refs.mainPanel
     //初始化websocket
-    this.initWebSocket()
-    this.$nextTick(() => {
-      setInterval(this.save, 1000)
-    })
+    // this.initWebSocket()
+    // this.$nextTick(() => {
+    //   setInterval(this.save, 1000)
+    // })
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keydownHandle)
@@ -161,8 +161,32 @@ export default {
       killAutoSaveTask: 'backup/killAutoSaveTask',
       backupInvoker: 'backup/invoker'
     }),
-    save() {
-      console.log(poster.state)
+    save() {   
+      /*     
+      const requestData = {
+            items: [
+                {
+                    type: poster.state.background.type,
+                    content: '',
+                    config: JSON.stringify(poster.state.background)
+                },
+                ...poster.state.posterItems.map((item, index) => {
+                    return {
+                        type: item.type,
+                        content: '',
+                        config: JSON.stringify({
+                            ...item,
+                            _sort: index + 1
+                        })
+                    }
+                })
+            ]
+        }
+        */
+      console.log("test>>>")
+      // console.log(JSON.stringify(requestData))
+      // console.log(poster.getters.posterItems)
+      console.log("<<<test")
       const res = this.$store.dispatch('poster/saveActivityPageConfig', null)
       res.then(r => {
         this.websock.send(JSON.stringify({
@@ -266,7 +290,7 @@ export default {
         default:
           break
       }
-    },
+    }/*,
     initWebSocket: function () { // 建立连接
         // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
         // var url = " ws://101.42.171.88:8090/ws"
@@ -301,7 +325,7 @@ export default {
     websocketonmessage: function (e) {
       let pageConfig = {}
       const res = JSON.parse(e.data)
-      console.log(res.items)
+      // console.log(res.items)
       pageConfig = {
         pageConfigId: 0,
         config: JSON.parse(res.config),
@@ -312,7 +336,7 @@ export default {
     // 关闭连接时调用
     websocketclose: function (e) {
       console.log("connection closed (" + e.code + ")");
-    },
+    }*/,
     sendMsg() {
       // this.websock.send(JSON.stringify({
       //   type: "axure",

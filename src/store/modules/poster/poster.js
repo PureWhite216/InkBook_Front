@@ -12,6 +12,11 @@ import backup from './backup'
 import { Message } from 'element-ui'
 import qs from 'qs'
 import axios from 'axios'
+import { addItem } from '@/model/BaseModel'
+import * as gts from '@/store/modules/user.js'
+import * as sta from '@/store/modules/user.js'
+import store from '@/store'
+import RectWidget from '@/views/posterEditor/widgetConstructor/rectWidget'
 
 function getState() {
     const state = {
@@ -44,8 +49,61 @@ function getState() {
     return state
 }
 
-export const state = getState()
+const state = getState()
 
+var url = " ws://localhost:8090/ws"
+const websock = new WebSocket(url)
+
+function initWebSocket () { // 建立连接
+    // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
+    // var url = " ws://101.42.171.88:8090/ws"
+    websock.onopen = websocketonopen;
+    // this.websock.send = this.websocketsend;
+    websock.onerror = websocketonerror;
+    websock.onmessage = websocketonmessage;
+    websock.onclose = websocketclose;
+}
+
+initWebSocket()
+
+// 连接成功后调用
+function websocketonopen () {
+    websock.send(JSON.stringify({
+    token: gts.getters.getToken(sta.state),
+    user_id: gts.getters.getUserId(sta.state),
+    type: "axure",
+    id: localStorage.getItem('axure_id')
+    }))
+    console.log("WebSocket连接成功");
+}
+// 发生错误时调用
+function websocketonerror () {
+    console.log("WebSocket连接发生错误");
+}
+
+// 接收后端消息
+// vue 客户端根据返回的cmd类型处理不同的业务响应
+function websocketonmessage (e) {
+    const res = JSON.parse(e.data)
+    console.log(res)
+    if (res.op == "add") {
+        store.dispatch('poster/synAddItem', JSON.parse(res.item))
+    }
+    else if (res.op == "drag") {
+        store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
+    }
+}
+// 关闭连接时调用
+function websocketclose (e) {
+    console.log("connection closed (" + e.code + ")");
+}
+
+// window.setInterval(print, 1000)
+
+function print(state) {
+    console.log(state)
+}
+  
 const getters = {
     posterItemIds(state, getters) {
         return state.posterItems.map(item => item.id)
@@ -96,6 +154,10 @@ const mutations = {
         if (item instanceof Widget) {
             state.posterItems.push(item)
         }
+    },
+    // 添加同步组件
+    [MTS.ADD_SYN_ITEM](state, item) {
+        state.posterItems.push(item)
     },
     // 删除组件
     [MTS.REMOVE_ITEM](state, item) {
@@ -239,6 +301,12 @@ const actions = {
         }
     },
     addItem({ commit, dispatch, state }, item) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "add",
+            "item": JSON.stringify(item)
+        }))
         const widgetCountLimit = parseInt(item._widgetCountLimit)
         if (widgetCountLimit) {
             const currentCount = (state.posterItems.filter(i => i.type === item.type)).length
@@ -254,6 +322,20 @@ const actions = {
             }
             commit(MTS.ADD_ITEM, item)
         }
+    },
+    // 同步添加组件
+    synAddItem({ commit, dispatch, state }, item) {
+        console.log("I am synAdd.")
+        const widgetCountLimit = parseInt(item._widgetCountLimit)
+        if (widgetCountLimit) {
+            const currentCount = (state.posterItems.filter(i => i.type === item.type)).length
+            if (currentCount >= widgetCountLimit) {
+                Message.error(`<${item.typeLabel || item.type}>类型的组件最多有${widgetCountLimit}个`)
+                return
+            }
+        }
+        dispatch('history/push')
+        commit(MTS.ADD_SYN_ITEM, item)
     },
     removeItem({ commit, getters, dispatch }, item) {
         if (item.lock) {
@@ -312,6 +394,13 @@ const actions = {
         // if (isMoving) {
         const preDragInfo = widgetItem.dragInfo
         const activeItems = state.activeItems
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "drag",
+            "item": JSON.stringify({ dragInfo, widgetId, updateSelfOnly, activeItems })
+        }))
+
         dragInfo = Object.assign({}, preDragInfo, dragInfo)
         if (updateSelfOnly) {
             widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
@@ -331,6 +420,45 @@ const actions = {
                     w: w + diffDragInfo.w,
                     h: h + diffDragInfo.h,
                     rotateZ: rotateZ + diffDragInfo.rotateZ
+                }
+            })
+        }
+        // } else {
+        //     widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
+        // }
+    },
+    // 同步更新组件位置、大小等
+    synUpdateDragInfo({ state }, { dragInfo, widgetId, updateSelfOnly, activeItems}) {
+        console.log("I am synDrag.")
+        const widgetItem = state.posterItems.find(i => i.id === widgetId)
+        if (!widgetItem) {
+            return
+        }
+        // if (isMoving) {
+        const preDragInfo = widgetItem.dragInfo
+        const localItems = state.posterItems
+        const synItems = activeItems.map(item => item.id)
+        dragInfo = Object.assign({}, preDragInfo, dragInfo)
+        if (updateSelfOnly) {
+            widgetItem.dragInfo = Object.assign({}, widgetItem.dragInfo, dragInfo)
+        } else if (activeItems.length > 0) {
+            const diffDragInfo = {
+                w: dragInfo.w - preDragInfo.w,
+                h: dragInfo.h - preDragInfo.h,
+                x: dragInfo.x - preDragInfo.x,
+                y: dragInfo.y - preDragInfo.y,
+                rotateZ: dragInfo.rotateZ - preDragInfo.rotateZ
+            }
+            localItems.forEach(item => {
+                if (synItems.indexOf(item.id) > -1) {
+                    const { x, y, w, h, rotateZ } = item.dragInfo
+                    item.dragInfo = {
+                        x: x + diffDragInfo.x,
+                        y: y + diffDragInfo.y,
+                        w: w + diffDragInfo.w,
+                        h: h + diffDragInfo.h,
+                        rotateZ: rotateZ + diffDragInfo.rotateZ
+                    }
                 }
             })
         }
