@@ -18,6 +18,18 @@ export default {
     return {
       iconList: [
         {
+          class: 'el-icon-back'
+        },
+        {
+          class: 'el-icon-bottom'
+        },
+        {
+          class: 'el-icon-top'
+        },
+        {
+          class: 'el-icon-right'
+        },
+        {
           class: 'el-icon-star-on'
         },
         {
@@ -48,7 +60,7 @@ export default {
           class: 'el-icon-plus'
         },
         {
-          class: 'el-icon-right'
+          class: 'el-icon-arrow-down'
         },
         {
           class: 'el-icon-folder'
