@@ -83,6 +83,8 @@ function websocketonerror () {
     console.log("WebSocket连接发生错误");
 }
 
+var isInit = false
+
 // 接收后端消息
 // vue 客户端根据返回的cmd类型处理不同的业务响应
 function websocketonmessage (e) {
@@ -103,9 +105,13 @@ function websocketonmessage (e) {
     } else if (res.op == "send_syn") {
         store.dispatch('poster/synActivityPageConfig')
     } else if (res.op == "syn") {
-        store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
+        if (!isInit){
+            store.dispatch('poster/synUpdatePageConfig', JSON.parse(res.item))
+            isInit = true
+        }
     } else if (res.op == "origin") {
         store.dispatch('poster/initPageConfig')
+        isInit = true
     }
 }
 // 关闭连接时调用
