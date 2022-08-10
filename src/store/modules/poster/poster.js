@@ -88,9 +88,10 @@ function websocketonmessage (e) {
     console.log(res)
     if (res.op == "add") {
         store.dispatch('poster/synAddItem', JSON.parse(res.item))
-    }
-    else if (res.op == "drag") {
+    } else if (res.op == "drag") {
         store.dispatch('poster/synUpdateDragInfo', JSON.parse(res.item))
+    } else if (res.op == "update") {
+        store.dispatch('poster/synUpdateWidgetState', JSON.parse(res.item))
     }
 }
 // 关闭连接时调用
@@ -468,6 +469,24 @@ const actions = {
     },
     // 更新组件state
     updateWidgetState({ state, dispatch }, { keyPath, value, widgetId, pushHistory = true }) {
+        websock.send(JSON.stringify({
+            "type": "axure",
+            "id": localStorage.getItem('axure_id'),
+            "op": "update",
+            "item": JSON.stringify({ keyPath, value, widgetId, pushHistory })
+        }))
+        
+        const widgetItem = state.posterItems.find(i => i.id === widgetId)
+        if (widgetItem) {
+            // 某些操作不添加进历史记录栈
+            if (pushHistory) {
+                dispatch('history/push')
+            }
+            _set(widgetItem.wState, keyPath, value)
+        }
+    },
+    // 同步更新组件state
+    synUpdateWidgetState({ state, dispatch }, { keyPath, value, widgetId, pushHistory = true }) {
         const widgetItem = state.posterItems.find(i => i.id === widgetId)
         if (widgetItem) {
             // 某些操作不添加进历史记录栈
