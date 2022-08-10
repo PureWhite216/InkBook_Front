@@ -22,6 +22,7 @@
               :size="tableConfig.size"
               :cell-style="tableConfig.cellStyle"
               @row-dblclick="toDocEditor"
+              @filter-change="filterChange"
             >
               <el-table-column
                 align="center"
@@ -34,6 +35,9 @@
                 label="所属团队"
                 prop="team_name"
                 width="200px"
+                :filter-multiple="true"
+                :filters="options"
+                :filter-method="filterHandler"
               />
               <el-table-column
                 align="center"
@@ -77,6 +81,16 @@
                 </template>
               </el-table-column>
             </el-table>
+
+            <!--<el-select v-model="selectteam" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>-->
+
           </el-tab-pane>
           <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">原型</span>
@@ -197,6 +211,10 @@ export default {
       form_getAxureList: {
         token: getters.getToken(state)
       },
+      form: {
+        token: getters.getToken(state),
+        user_id: getters.getUserId(state)
+      },
       form_member: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -244,10 +262,12 @@ export default {
       dialogInviteVisible: false,
       dialogProjectVisible: false,
       dialogMethodVisible: false,
+      selectteam:null,
       memberList: [],
       deleteMemberList: [],
       docList: [],
       axureList: [],
+      options:[],
       powerOptions: [
         {
           value: 1,
@@ -278,8 +298,55 @@ export default {
   created() {
     this.getDocList()
     this.getAxureList()
+    this.getgroup()
   },
   methods: {
+    filterTag(value, row) { 
+      console.log(value)
+      return row.tag === value
+    },
+    filterHandler(value, row, column) {
+        const property = column['property'];
+        return row[property] === value;
+    },
+    getgroup() {
+       this.tableLoading = true
+       this.$axios.post('/team/getTeamList', qs.stringify(this.form))
+         .then((res) => {
+           if (res.data.success === true) {
+             for (let i = 0; i < res.data.data.length; i++) {
+               const teams = {
+                 name: '',
+                 time: '',
+                 member_num: 0,
+                 word_num: 0,
+                 power: '',
+                 id: 0,
+                 dialogVisible: false,
+                 text:'',
+                 value:''
+                }
+               teams.name = res.data.data[i].team_name
+               teams.info = res.data.data[i].team_info
+               teams.id = res.data.data[i].team_id
+               teams.text=res.data.data[i].team_name
+               teams.value=res.data.data[i].team_name
+               let flag = 0
+               for (let i = 0; i < this.options.length; i++) {
+                 if (this.options[i].id === teams.id) {
+                   flag = 1
+                   break
+                 }
+               }
+               if (!flag) { this.options.push(teams) }
+               console.log(this.options)
+             }
+           } else {
+             // this.$message.error(res.data.message)
+           }
+           this.tableLoading = false
+         })
+    },
     toAxureEditor(val) {
       localStorage.setItem('axure_id', val.axure_id)
       localStorage.setItem('axure_name', val.axure_name)
