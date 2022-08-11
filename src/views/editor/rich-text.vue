@@ -42,7 +42,7 @@
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
-      style="max-width: 1050px; margin: auto"
+      style="max-width: 950px; margin: auto"
     >
       <template #header>
         <div class="flex">
@@ -85,12 +85,12 @@
           >
             <i class="el-icon-upload"></i>
             导出docx</el-button>
-          <el-button
+          <!-- <el-button
             style="margin-inline:10px; background: #16dcea; color: white; border: 0"
             @click="exportPng"
           >
             <i class="el-icon-upload"></i>
-            导出png</el-button>
+            导出png</el-button> -->
           <el-button
             style="margin-inline:10px; background: #16dcea; color: white; border: 0"
             @click="exportPDF"
