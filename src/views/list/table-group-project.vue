@@ -373,8 +373,16 @@
               :header-cell-style="tableConfig.headerCellStyle"
               :cell-style="tableConfig.cellStyle"
               :size="tableConfig.size"
-              @row-dblclick="createUML"
+              @row-dblclick="toUmlEditor"
             >
+              <el-table-column
+                align="center"
+                width="30"
+              >
+                <template slot-scope="scope">
+                  <i v-if="scope.row.isFavorite" class="el-icon-star-on"></i>
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 label="名称"
@@ -1021,7 +1029,8 @@ export default {
           }
         })
     },
-    createUML() {
+    toUmlEditor(val) {
+      localStorage.setItem('uml_id', val.uml_id)
       router.push('/drawio')
       // window.open('https://www.draw.io/index.html', '_blank')
       // window.open = 'https://www.draw.io/index.html'

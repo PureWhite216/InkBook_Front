@@ -163,6 +163,77 @@
               </el-table-column> -->
             </el-table>
           </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">UML</span>
+            <el-table
+              ref="table"
+              v-loading="loading"
+              class="table-custom"
+              :data="umlList"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :size="tableConfig.size"
+              :cell-style="tableConfig.cellStyle"
+              @selection-change="handleSelectionChange"
+              @row-dblclick="toUmlEditor"
+            >
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="uml_name"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="所属团队"
+                prop="team_name"
+                width="200px"
+                :filter-multiple="true"
+                :filters="options"
+                :filter-method="filterHandler"
+              />
+              <el-table-column
+                align="center"
+                label="所属项目"
+                prop="project_name"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="更新时间"
+                prop="last_edit"
+                width="300px"
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="create_user"
+                width="200px"
+              />
+              <!-- <el-table-column
+                align="center"
+                label="操作"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <el-dropdown trigger="click" @command="onCommad">
+                    <div class="action-wrapper">
+                      <span class="nick-name el-dropdown-link">
+                        <i class="el-icon-more"></i>
+                      </span>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                        <el-button type="text">重命名</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        <el-button type="text">删除文件</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
+              </el-table-column> -->
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </template>
     </TableBody>
@@ -265,12 +336,13 @@ export default {
       dialogInviteVisible: false,
       dialogProjectVisible: false,
       dialogMethodVisible: false,
-      selectteam:null,
+      selectteam: null,
       memberList: [],
       deleteMemberList: [],
       docList: [],
       axureList: [],
-      options:[],
+      umlList: [],
+      options: [],
       powerOptions: [
         {
           value: 1,
@@ -302,8 +374,29 @@ export default {
     this.getDocList()
     this.getAxureList()
     this.getgroup()
+    this.getUmlList()
   },
   methods: {
+    toUmlEditor(val) {
+      localStorage.setItem('uml_id', val.uml_id)
+      this.$router.push('/drawio')
+    },
+    getUmlList() {
+      this.loading = true
+      this.$axios.get('/axure/getFavoriteAxureList', {
+              params: {
+                token: getters.getToken(state)
+              }
+            })
+        .then((res) => {
+          if (res.data.success) {
+            this.umlList = res.data.data
+          } else {
+             // this.$message.error(res.data.message)
+          }
+           this.loading = false
+         })
+    },
     filterTag(value, row) {
       console.log(value)
       return row.tag === value
