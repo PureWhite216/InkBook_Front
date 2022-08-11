@@ -1,5 +1,7 @@
 <html>
 <title>Draw.io Embedded</title>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/qs/6.10.1/qs.js"></script>
 <head>
 	<style type="text/css">
 		html, body, #wrapper {
@@ -28,9 +30,11 @@
 		}
 	</style>
 	<script type="text/javascript">
+		// import axios from 'axios'
 		var editor = 'https://embed.diagrams.net/?embed=1&ui=atlas&spin=1&proto=json';
 		var initial = null;
 		var name = null;
+		let qs = Qs
 
 		function edit(image)
 		{
@@ -63,18 +67,7 @@
 
 					if (msg.event == 'init')
 					{
-						if (draft != null)
-						{
-							iframe.contentWindow.postMessage(JSON.stringify({action: 'load',
-								autosave: 1, xml: draft.xml}), '*');
-							iframe.contentWindow.postMessage(JSON.stringify({action: 'status',
-								modified: true}), '*');
-						}
-						else
-						{
-							iframe.contentWindow.postMessage(JSON.stringify({action: 'load',
-								autosave: 1, xmlpng: image.getAttribute('src')}), '*');
-						}
+						setContent(iframe)
 					}
 					else if (msg.event == 'export')
 					{
@@ -87,12 +80,14 @@
 					else if (msg.event == 'autosave')
 					{
 						localStorage.setItem('.draft-' + name, JSON.stringify({lastModified: new Date(), xml: msg.xml}));
+						savaToBackend(msg);
 					}
 					else if (msg.event == 'save')
 					{
 						iframe.contentWindow.postMessage(JSON.stringify({action: 'export',
 							format: 'xmlpng', xml: msg.xml, spin: 'Updating page'}), '*');
 						localStorage.setItem('.draft-' + name, JSON.stringify({lastModified: new Date(), xml: msg.xml}));
+						savaToBackend(msg);
 					}
 					else if (msg.event == 'exit')
 					{
@@ -106,6 +101,37 @@
 			window.addEventListener('message', receive);
 			iframe.setAttribute('src', editor);
 			document.body.appendChild(iframe);
+		};
+
+		function savaToBackend(msg)
+		{
+			axios.post('http://101.42.171.88:8090/uml/update', qs.stringify({
+				'token': localStorage.getItem('Token'),
+				'uml_id': localStorage.getItem('uml_id'),
+				'lastModified': new Date(),
+				'xml': msg.xml
+			}))
+		};
+
+		function setContent(iframe)
+		{
+			axios.post('http://101.42.171.88:8090/uml/getUMLInfo', qs.stringify({
+				'token': localStorage.getItem('Token'),
+				'uml_id': localStorage.getItem('uml_id'),
+			}))
+				.then((res) => {
+					if (res.data.success) {
+						if (res.data.data.length > 0) {
+							iframe.contentWindow.postMessage(JSON.stringify({action: 'load',
+									autosave: 1, xml: res.data.data[0].xml}), '*');
+							iframe.contentWindow.postMessage(JSON.stringify({action: 'status',
+								modified: true}), '*');
+						} else {
+							iframe.contentWindow.postMessage(JSON.stringify({action: 'load',
+								autosave: 1, xmlpng: image.getAttribute('src')}), '*');
+						}
+					}
+				})
 		};
 
 		function load()
