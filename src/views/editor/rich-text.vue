@@ -42,7 +42,7 @@
     <el-card
       :body-style="{padding: '0'}"
       class="margin-top-xs"
-      style="max-width: 950px; margin: auto"
+      style="max-width: 1050px; margin: auto"
     >
       <template #header>
         <div class="flex">
@@ -75,10 +75,28 @@
             取消收藏</el-button>
           <el-button
             style="margin-inline:10px; background: #16dcea; color: white; border: 0"
+            @click="exportmd"
+          >
+            <i class="el-icon-upload"></i>
+            导出md</el-button>
+          <el-button
+            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
+            @click="exportDocx"
+          >
+            <i class="el-icon-upload"></i>
+            导出docx</el-button>
+          <el-button
+            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
+            @click="exportPng"
+          >
+            <i class="el-icon-upload"></i>
+            导出png</el-button>
+          <el-button
+            style="margin-inline:10px; background: #16dcea; color: white; border: 0"
             @click="exportPDF"
           >
             <i class="el-icon-upload"></i>
-            导出</el-button>
+            导出pdf</el-button>
           <el-button
             style="margin-inline:10px; background: #2ce8b9; color: white; border: 0"
             @click="openPreview"
@@ -164,6 +182,10 @@ export default {
       dialogCreateDir: false,
       prj_root_id: localStorage.getItem('prj_root_id'),
       dialogVisible_share: false,
+      form_html2: {
+        token: getters.getToken(state),
+        url: null
+      },
       form_openPreview: {
         token: getters.getToken(state),
         doc_id: localStorage.getItem('doc_id'),
@@ -297,6 +319,57 @@ export default {
     store.toggleCollapse(false)
   },
   methods: {
+    exportmd() {
+      this.getHtmlContent()
+      this.form_openPreview.html_code = this.htmlContent
+      this.$axios.post('/doc/uploadDoc', qs.stringify(this.form_openPreview))
+        .then(res => {
+          if (res.data.success) {
+            this.form_html2.url = res.data.data[0].url
+            this.$axios.post('/doc/htmlToMarkdown', qs.stringify(this.form_html2))
+            .then(res => {
+              if (res.data.success) {
+                this.$message.success(res.data.message)
+                window.open(res.data.data[0].url, '_blank')
+          }
+        })
+          }
+        })
+    },
+    exportDocx() {
+      this.getHtmlContent()
+      this.form_openPreview.html_code = this.htmlContent
+      this.$axios.post('/doc/uploadDoc', qs.stringify(this.form_openPreview))
+        .then(res => {
+          if (res.data.success) {
+            this.form_html2.url = res.data.data[0].url
+            this.$axios.post('/doc/htmlToDocx', qs.stringify(this.form_html2))
+            .then(res => {
+              if (res.data.success) {
+                this.$message.success(res.data.message)
+                window.open(res.data.data[0].url, '_blank')
+          }
+        })
+          }
+        })
+    },
+    exportPng() {
+      this.getHtmlContent()
+      this.form_openPreview.html_code = this.htmlContent
+      this.$axios.post('/doc/uploadDoc', qs.stringify(this.form_openPreview))
+        .then(res => {
+          if (res.data.success) {
+            this.form_html2.url = res.data.data[0].url
+            this.$axios.post('/doc/htmlToPNG', qs.stringify(this.form_html2))
+            .then(res => {
+              if (res.data.success) {
+                this.$message.success(res.data.message)
+                window.open(res.data.data[0].url, '_blank')
+          }
+        })
+          }
+        })
+    },
     openPreview() {
       this.getHtmlContent()
       this.form_openPreview.html_code = this.htmlContent
