@@ -61,7 +61,7 @@
             slot="reference"
             class="button-style"
             style="border-color: #ffd45c"
-            @click="createUML()"
+            @click="dialogUMLVisible = true"
           >创建uml
             <i class="el-icon-plus"></i>
           </el-button>
@@ -167,7 +167,17 @@
         <el-button @click="updateProject(), dialogUpdateProjectVisible = false">确 定</el-button>
       </div>
     </el-dialog>
-
+    <el-dialog title="创建UML" :visible.sync="dialogUMLVisible" style="font-family: 等线">
+      <el-form :model="form_createUML">
+        <el-form-item label="UML名称" :label-width="formLabelWidth">
+          <el-input v-model="form_createUML.uml_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUMLVisible = false; form_createUML.uml_name = '' ">取消</el-button>
+        <el-button @click="createNewUML(), form_createUML.uml_name = '',dialogUMLVisible = false">确定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog title="修改文档信息" :visible.sync="dialogUpdateDocInfoVisible">
       <el-form :model="form_updateDocInfo">
         <el-form-item label="文档新名称" :label-width="formLabelWidth">
@@ -195,6 +205,17 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdateAxureInfoVisible = false, form_updateAxureInfo.axure_name = '', form_updateAxureInfo.axure_info = ''">取 消</el-button>
         <el-button @click="updateAxureInfo(), dialogUpdateAxureInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="uml重命名" :visible.sync="dialogUpdateUMLInfoVisible">
+      <el-form :model="form_updateUMLInfo">
+        <el-form-item label="uml新名称" :label-width="formLabelWidth">
+          <el-input v-model="form_updateUMLInfo.uml_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateAxureInfoVisible = false, form_updateUMLInfo.uml_name = ''">取 消</el-button>
+        <el-button @click="updateUMLInfo(), dialogUpdateUMLInfoVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <TableBody ref="tableBody" class="temptablebody">
@@ -342,6 +363,63 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c"><i class="el-icon-folder-opened"></i>UML</span>
+            <el-table
+              ref="table"
+              v-loading="tableloading"
+              class="table-custom"
+              :data="UMLList"
+              :header-cell-style="tableConfig.headerCellStyle"
+              :cell-style="tableConfig.cellStyle"
+              :size="tableConfig.size"
+              @row-dblclick="createUML"
+            >
+              <el-table-column
+                align="center"
+                label="名称"
+                prop="uml_name"
+                width="365px"
+                sortable
+              />
+              <el-table-column
+                align="center"
+                label="更新时间"
+                prop="last_modified"
+                width="250px"
+                sortable
+              />
+              <el-table-column
+                align="center"
+                label="创建者"
+                prop="creator"
+                width="200px"
+              />
+              <el-table-column
+                align="center"
+                label="操作"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <el-dropdown trigger="click" @command="onCommad">
+                    <div class="action-wrapper">
+                      <span class="nick-name el-dropdown-link">
+                        <i class="el-icon-more"></i>
+                      </span>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-edit-outline" command="personalCenter">
+                        <el-button type="text" @click="form_updateUMLInfo.uml_id = scope.row.uml_id, form_updateUMLInfo.uml_name = scope.row.uml_name,dialogUpdateUMLInfoVisible = true">重命名</el-button>
+                      </el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-switch-button" command="logout">
+                        <el-button type="text" @click="deleteUML(scope.row)">删除UML</el-button>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </template>
     </TableBody>
@@ -424,6 +502,10 @@ export default {
         token: getters.getToken(state),
         axure_id: null
       },
+      form_deleteUML: {
+        token: getters.getToken(state),
+        uml_id: null
+      },
       form_createAxure: {
         token: getters.getToken(state),
         axure_name: null,
@@ -458,6 +540,11 @@ export default {
         project_name: '',
         project_info: ''
       },
+      form_updateUMLInfo: {
+        token: getters.getToken(state),
+        uml_id: '',
+        uml_name: ''
+      },
       form_member: {
         token: getters.getToken(state),
         username: getters.getUserName(state),
@@ -472,6 +559,11 @@ export default {
         doc_name: '',
         doc_description: '',
         template_id: ''
+      },
+      form_createUML: {
+        token: getters.getToken(state),
+        project_id: localStorage.getItem('project_id'),
+        uml_name: ''
       },
       form_page: {
         token: getters.getToken(state),
@@ -508,10 +600,13 @@ export default {
       team_name: localStorage.getItem('team_name'),
       dialogWordVisible: false,
       dialogPageVisible: false,
+      dialogUMLVisible: false,
       dialogMethodVisible: false,
+      dialogUpdateUMLInfoVisible: false,
       dialogUpdateProjectVisible: false,
       dialogUpdateDocInfoVisible: false,
       dialogUpdateAxureInfoVisible: false,
+      UMLList: [],
       axureList: [],
       deleteMemberList: [],
       docList: [],
@@ -544,6 +639,7 @@ export default {
   },
   created() {
     this.getModel()
+    this.getUMLList()
     this.getDocList()
     this.getAxureList()
     localStorage.setItem('flag', 'user')
@@ -567,35 +663,35 @@ export default {
           token: getters.getToken(state)
         }
       })
-      .then(res => {
-        if (res.data.success) {
-          console.log(res.data.data)
-        }
-      })
+        .then(res => {
+          if (res.data.success) {
+            console.log(res.data.data)
+          }
+        })
     },
     likeAxure(item) {
       this.form_likeAxure.axure_id = item.axure_id
       item.isFavorite = true
       this.$axios.post('/axure/addFavoriteAxure', qs.stringify(this.form_likeAxure))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     unlikeAxure(item) {
       this.form_likeAxure.axure_id = item.axure_id
       item.isFavorite = false
       this.$axios.post('/axure/deleteFavoriteAxure', qs.stringify(this.form_likeAxure))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     updateAxureInfo() {
       this.$axios.post('/axure/updateInfo', qs.stringify(this.form_updateAxureInfo))
@@ -609,33 +705,67 @@ export default {
           }
         })
     },
+    updateUMLInfo() {
+      this.$axios.post('/uml/updateInfo', qs.stringify(this.form_updateUMLInfo))
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getUMLList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     likeDoc(item) {
       this.form_likeDoc.doc_id = item.doc_id
       this.form_likeDoc.undo = false
       item.is_favorite = true
       this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
             //  this.getDocList()
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     unlikeDoc(item) {
       this.form_likeDoc.doc_id = item.doc_id
       this.form_likeDoc.undo = true
       item.is_favorite = false
       this.$axios.post('/user/favorite', qs.stringify(this.form_likeDoc))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
             //  this.getDocList()
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    deleteUML(item) {
+      this.$confirm('此操作将使您删除此UML' + ', 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消 ',
+        type: 'warning'
+      }).then(() => {
+        this.form_deleteUML.uml_id = item.uml_id
+        this.$axios.post('/uml/delete', qs.stringify(this.form_deleteUML))
+          .then((res) => {
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+              this.getUMLList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
     },
     deleteAxure(item) {
       this.$confirm('此操作将使您删除此页面' + ', 是否继续?', '提示', {
@@ -643,17 +773,17 @@ export default {
         cancelButtonText: '取消 ',
         type: 'warning'
       }).then(() => {
-      this.form_deleteAxure.axure_id = item.axure_id
-      this.$axios.post('/axure/delete', qs.stringify(this.form_deleteAxure))
-        .then((res) => {
-          // console.log(5)
-          if (res.data.success) {
-            this.$message.success(res.data.message)
-            this.getAxureList()
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
+        this.form_deleteAxure.axure_id = item.axure_id
+        this.$axios.post('/axure/delete', qs.stringify(this.form_deleteAxure))
+          .then((res) => {
+            // console.log(5)
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+              this.getAxureList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -670,14 +800,25 @@ export default {
     },
     createAxure() {
       this.$axios.post('/axure/create', qs.stringify(this.form_createAxure))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
-             this.getAxureList()
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getAxureList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
+    createNewUML() {
+      this.$axios.post('/uml/create', qs.stringify(this.form_createUML))
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getUMLList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     getAxureList() {
       this.loading = true
@@ -719,10 +860,10 @@ export default {
               // this.$message.success(res.data.message)
             }
           } else {
-             // this.$message.error(res.data.message)
+            // this.$message.error(res.data.message)
           }
-           this.loading = false
-         })
+          this.loading = false
+        })
     },
     toDocEditor(val) {
       localStorage.setItem('flag', 'out')
@@ -735,31 +876,31 @@ export default {
           doc_id: localStorage.getItem('doc_id')
         }
       })
-      .then(res => {
-        if (res.data.success) {
-          localStorage.setItem('doc_content', res.data.data[0].doc_content)
-          this.$router.push('/editor/rich-text')
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
+        .then(res => {
+          if (res.data.success) {
+            localStorage.setItem('doc_content', res.data.data[0].doc_content)
+            this.$router.push('/editor/rich-text')
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     deleteDoc() {
       this.$confirm('此操作将使您删除此文档' + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-    }).then(() => {
-      this.$axios.post('/doc/deleteDoc', qs.stringify(this.form_deleteDoc))
-        .then((res) => {
-          // console.log(5)
-          if (res.data.success) {
-            this.$message.success(res.data.message)
-            this.getDocList()
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
+      }).then(() => {
+        this.$axios.post('/doc/deleteDoc', qs.stringify(this.form_deleteDoc))
+          .then((res) => {
+            // console.log(5)
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+              this.getDocList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -784,17 +925,17 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-    }).then(() => {
-      this.$axios.post('/project/delete', qs.stringify(this.form_deleteProject))
-        .then((res) => {
-          // console.log(5)
-          if (res.data.success) {
-            this.$message.success(res.data.message)
-            this.toProject()
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
+      }).then(() => {
+        this.$axios.post('/project/delete', qs.stringify(this.form_deleteProject))
+          .then((res) => {
+            // console.log(5)
+            if (res.data.success) {
+              this.$message.success(res.data.message)
+              this.toProject()
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -818,17 +959,33 @@ export default {
           }
         })
     },
+    getUMLList() {
+      this.UMLList = []
+      this.$axios.get('/uml/getUMLList', {
+        params: {
+          token: getters.getToken(state),
+          project_id: localStorage.getItem('project_id')
+        }
+      })
+        .then(res => {
+          if (res.data.success) {
+            this.UMLList = res.data.data
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     getDocList() {
       this.docList = []
       this.$axios.get('/doc/getDocList', {
-              params: {
-                token: getters.getToken(state),
-                project_id: localStorage.getItem('project_id')
-              }
-            })
-            .then(res => {
-              if (res.data.success) {
-                for (let i = 0; i < res.data.data.length; i++) {
+        params: {
+          token: getters.getToken(state),
+          project_id: localStorage.getItem('project_id')
+        }
+      })
+        .then(res => {
+          if (res.data.success) {
+            for (let i = 0; i < res.data.data.length; i++) {
               const docs = {
                 doc_name: null,
                 last_edit_time: null,
@@ -859,10 +1016,10 @@ export default {
               if (!flag) { this.docList.push(docs) }
               // this.$message.success(res.data.message)
             }
-              } else {
-                this.$message.error(res.data.message)
-              }
-            })
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     createUML() {
       router.push('/drawio')
@@ -888,8 +1045,8 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-      }).then(() => {
-        this.quitTeam()
+        }).then(() => {
+          this.quitTeam()
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -901,8 +1058,8 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-      }).then(() => {
-        this.deleteMember(item)
+        }).then(() => {
+          this.deleteMember(item)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -916,20 +1073,20 @@ export default {
     },
     deleteMultiItem() {
       this.$confirm('此操作将踢出您选中的所有成员, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         for (let i = 0; i < this.deleteMemberList.length; i++) {
           this.deleteMember(this.deleteMemberList[i])
         }
         this.getMemberList()
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消踢出'
-          })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消踢出'
         })
+      })
     },
     deleteMember(item) {
       this.form_deleteMember.deleted_id = item.id
@@ -974,14 +1131,14 @@ export default {
       if (this.form_word.template_id === 2) { this.form_word.template_id = 6 }
       if (this.form_word.template_id === 3) { this.form_word.template_id = 7 }
       this.$axios.post('/doc/newDoc', qs.stringify(this.form_word))
-         .then((res) => {
-           if (res.data.success) {
-             this.$message.success(res.data.message)
-             this.getDocList()
-           } else {
-             this.$message.error(res.data.message)
-           }
-         })
+        .then((res) => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getDocList()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     onRichTextEditor() {
       store.toRichTextEditor && store.toRichTextEditor()
