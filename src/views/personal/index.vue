@@ -168,6 +168,7 @@ export default {
       },
       imageUrl: '',
       baseInfoModel: {
+        token: getters.getToken(state),
         username: '',
         id: '',
         real_name: '',
@@ -181,7 +182,7 @@ export default {
     this.getPersonalInformation()
   },
   methods: {
-    changePerson () {
+    changePersonal () {
       this.$axios.post('/user/modifyUserInfo', qs.stringify(this.baseInfoModel))
         .then(res => {
           if (res.data.success) {
