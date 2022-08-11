@@ -108,20 +108,17 @@
             修改个人信息
           </el-button>
           <el-dialog title="修改个人信息" :visible.sync="dialogVisiblechange" width="40%" center>
-            <el-form :model="form_changePassword">
+            <el-form :model="baseInfoModel">
               <el-form-item label="名称" :label-width="formLabelWidth">
-                <el-input v-model="baseInfoModel.name" autocomplete="off" />
+                <el-input v-model="baseInfoModel.username" autocomplete="off" />
               </el-form-item>
               <el-form-item label="真实姓名" :label-width="formLabelWidth">
                 <el-input v-model="baseInfoModel.real_name" autocomplete="off" />
               </el-form-item>
-              <el-form-item label="邮箱" :label-width="formLabelWidth">
-                <el-input v-model="baseInfoModel.email" autocomplete="off" />
-              </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogVisiblechange = false, clearPassword()">取 消</el-button>
-              <el-button @click="changePassword(), dialogVisiblechange = false, clearPassword()">确 定</el-button>
+              <el-button @click="changePersonal(), dialogVisiblechange = false, clearPassword()">确 定</el-button>
             </div>
           </el-dialog>
         </el-form>
@@ -171,7 +168,7 @@ export default {
       },
       imageUrl: '',
       baseInfoModel: {
-        name: '',
+        username: '',
         id: '',
         real_name: '',
         email: '',
@@ -184,6 +181,18 @@ export default {
     this.getPersonalInformation()
   },
   methods: {
+    changePerson () {
+      this.$axios.post('/user/modifyUserInfo', qs.stringify(this.baseInfoModel))
+        .then(res => {
+          if (res.data.success) {
+            this.$message.success(res.data.message)
+            this.getPersonalInformation()
+            location.reload()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+    },
     changeFile (file) {
       console.log('file', file)
       const fd = new FormData()
