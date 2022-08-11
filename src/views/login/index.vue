@@ -121,7 +121,7 @@ export default {
   methods: {
     login() {
       if (!this.form.username) {
-        this.$errorMsg('请输入用户名')
+        this.$errorMsg('请输入用户名 ')
         return
       }
       if (!this.form.password) {
