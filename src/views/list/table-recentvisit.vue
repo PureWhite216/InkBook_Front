@@ -163,7 +163,7 @@
               </el-table-column> -->
             </el-table>
           </el-tab-pane>
-          <el-tab-pane>
+          <!-- <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">UML</span>
             <el-table
               ref="table"
@@ -208,7 +208,7 @@
                 label="创建者"
                 prop="create_user"
                 width="200px"
-              />
+              /> -->
               <!-- <el-table-column
                 align="center"
                 label="操作"
@@ -232,8 +232,8 @@
                   </el-dropdown>
                 </template>
               </el-table-column> -->
-            </el-table>
-          </el-tab-pane>
+            <!-- </el-table>
+          </el-tab-pane> -->
         </el-tabs>
       </template>
     </TableBody>

@@ -154,7 +154,7 @@
               </el-table-column> -->
             </el-table>
           </el-tab-pane>
-          <el-tab-pane>
+          <!-- <el-tab-pane>
             <span slot="label" class="fontClass" style="font-size: large; color: #2c2c2c">UML</span>
             <el-table
               ref="table"
@@ -199,8 +199,8 @@
                 label="创建者"
                 prop="create_user"
                 width="200px"
-              />
-              <!-- <el-table-column
+              /> -->
+          <!-- <el-table-column
                 align="center"
                 label="操作"
                 width="100"
@@ -223,8 +223,8 @@
                   </el-dropdown>
                 </template>
               </el-table-column> -->
-            </el-table>
-          </el-tab-pane>
+          <!-- </el-table>
+          </el-tab-pane> -->
         </el-tabs>
       </template>
     </TableBody>
@@ -389,8 +389,8 @@ export default {
       return row.tag === value
     },
     filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
+        const property = column['property']
+        return row[property] === value
     },
     getgroup() {
        this.tableLoading = true
@@ -406,14 +406,14 @@ export default {
                  power: '',
                  id: 0,
                  dialogVisible: false,
-                 text:'',
-                 value:''
+                 text: '',
+                 value: ''
                 }
                teams.name = res.data.data[i].team_name
                teams.info = res.data.data[i].team_info
                teams.id = res.data.data[i].team_id
-               teams.text=res.data.data[i].team_name
-               teams.value=res.data.data[i].team_name
+               teams.text = res.data.data[i].team_name
+               teams.value = res.data.data[i].team_name
                let flag = 0
                for (let i = 0; i < this.options.length; i++) {
                  if (this.options[i].id === teams.id) {
